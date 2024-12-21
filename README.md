@@ -21,8 +21,8 @@ This is the initial version of the new USPS RESTful Module for ZenCart.
 USPS API Documentation: https://developers.usps.com/apis  
 _This API takes advantage of four API's: Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 
-ZenCart Plugins Download: &lt;Link to plugin here&gt; (or use the Releases function on the GitHub repository)  
-ZenCart support thread: &lt;Link to thread here&gt;
+[ZenCart Plugins Download](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)  
+[ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr))
 
 ** This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in its megathread: https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread
 
@@ -128,7 +128,7 @@ For the update
 
 ```
 - LICENSE
-- README.md
+- README.md (this file)
 - \zc_plugins\USPSRestful\v0.0.1\changelog.md
 - \zc_plugins\USPSRestful\v0.0.1\manifest.php
 - \zc_plugins\USPSRestful\v0.0.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
