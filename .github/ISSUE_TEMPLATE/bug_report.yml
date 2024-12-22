@@ -4,6 +4,7 @@ title: "[Bug]: "
 labels: ["bug"]
 body:
   - type: markdown
+    id: Intro
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can submit them as comments to the post this form will make.
