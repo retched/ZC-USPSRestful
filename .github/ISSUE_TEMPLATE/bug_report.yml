@@ -38,8 +38,8 @@ body:
         - 1.5.x
         - Older
       default: 0
-      validations:
-        required: true
+    validations:
+      required: true
   - type: dropdown
     id: php-version
     attributes:
