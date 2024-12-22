@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can submit them as comments to the post this form will make.
+        Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can either submit them as comments to the post this form will make or include them in the first form field.
   - type: textarea
     id: what-happened
     attributes:
@@ -38,6 +38,8 @@ body:
         - 1.5.x
         - Older
       default: 0
+      validations:
+        required: true
   - type: dropdown
     id: php-version
     attributes:
@@ -48,6 +50,8 @@ body:
         - PHP 7.x
         - Older
       default: 0
+    validations:
+      required: true
   - type: textarea
     id: logs
     attributes:
