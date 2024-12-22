@@ -1,5 +1,5 @@
 ---
-name: Bug
+name: Bug Report
 about: File a bug/issue
 title: '[BUG] <title>'
 labels: Bug
@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 <!--
-Note: Please search to see if an issue already exists for the bug you encountered.
+Note: Please search to see if an issue already exists for the bug you encountered. You can leave the comments as is or clear out the HTML Comment tags and use what is there.
 -->
 
 ### What happened? Describe the bug in detail:
@@ -17,22 +17,23 @@ Note: Please search to see if an issue already exists for the bug you encountere
 ### Environment:
 <!--
 Example:
-- USPSr Version: Ubuntu 20.04
-- ZenCart Version: 13.14.0
-- PHP Version: 7.6.3
+- USPSr Version: 0.1.0
+- ZenCart Version: 2.0.1
+- PHP Version: 8.2.4
+- Any other details you feel may be relevant (What shipping and tax modules you are running? What template you're running? Etc.)
 -->
-
-### Relevant Log Output
-<!-- Please copy and paste any relevant log output from the ZenCart logs directory. Obfubiscate any directory names if you wish. This will be automatically formatted into code, so no need for backticks. ->
 
 ### Steps To Reproduce:
 <!--
 Example: steps to reproduce the behavior:
 1. In this environment...
-1. With this config...
-1. Run '...'
-1. See error...
+2. With this config...
+3. Run '...'
+4. See error...
 -->
+
+### Relevant Log Output
+<!-- Please copy and paste any relevant log output from the ZenCart logs directory. Obfubiscate any directory names if you wish. -->
 
 ### Anything else:
 <!--
