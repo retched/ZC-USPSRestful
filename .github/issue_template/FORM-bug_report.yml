@@ -1,0 +1,57 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+projects: 
+assignees:
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can submit them as comments to the post this form will make.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details (email)
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: markdown
+    id: what-happened
+    attributes:
+      label: What happened? Describe the bug in detail.
+      description: Also tell us, what did you expect to happen? If you're getting visual errors, include a screen shot here.
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: uspsr-version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 0.1.0 (Current Version)
+        - 0.1.1 (Development)
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: zencart-version
+    attributes:
+      label: What version of ZenCart are you running?
+      multiple: false
+      required: true
+      options:
+        - 2.1.x
+        - 2.0.x
+        - 1.5.x
+        - Older
+      default: 0
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output from the ZenCart logs directory. Obfubiscate any directory names if you wish. This will be automatically formatted into code, so no need for backticks.
+      render: shell
