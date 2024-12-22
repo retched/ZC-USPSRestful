@@ -4,11 +4,10 @@ title: "[Bug]: "
 labels: ["bug"]
 body:
   - type: markdown
-    id: Intro
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can submit them as comments to the post this form will make.
-  - type: markdown
+  - type: textarea
     id: what-happened
     attributes:
       label: What happened? Describe the bug in detail
@@ -33,7 +32,6 @@ body:
     attributes:
       label: ZenCart Version
       multiple: false
-      required: true
       options:
         - 2.1.x
         - 2.0.x
@@ -45,7 +43,6 @@ body:
     attributes:
       label: PHP Version
       multiple: false
-      required: true
       options:
         - PHP 8.x
         - PHP 7.x
