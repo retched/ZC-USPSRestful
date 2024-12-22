@@ -7,15 +7,6 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! Please complete this form in detail with as many details as possible. If you're going to submit screenshots, you can either submit them as comments to the post this form will make or include them in the first form field.
-  - type: textarea
-    id: what-happened
-    attributes:
-      label: What happened? Describe the bug in detail
-      description: Also tell us, what did you expect to happen? If you're getting visual errors, include a screen shot here.
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
-    validations:
-      required: true
   - type: dropdown
     id: uspsr-version
     attributes:
@@ -31,6 +22,7 @@ body:
     id: zencart-version
     attributes:
       label: ZenCart Version
+      description: What version of our ZenCart are you running? If you're running an Older or non-published version, please selected "Older" and describe above.
       multiple: false
       options:
         - 2.1.x
@@ -44,12 +36,21 @@ body:
     id: php-version
     attributes:
       label: PHP Version
+      description: As a reminder, this script was written with PHP8 in mind. Older versions, especially older than PHP7, is not guaranteed.
       multiple: false
       options:
         - PHP 8.x
         - PHP 7.x
         - Older
       default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened? Describe the bug in detail
+      description: Also tell us, what did you expect to happen? If you're getting visual errors, include a screen shot here.
+      placeholder: Tell us what you see!
     validations:
       required: true
   - type: textarea
