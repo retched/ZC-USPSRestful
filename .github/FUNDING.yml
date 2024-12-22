@@ -1,8 +1,8 @@
 # These are supported funding model platforms
 
-github: retched # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
-patreon: retched # Replace with a single Patreon username
-ko_fi: retched # Replace with a single Ko-fi username
-buy_me_a_coffee: retched # Replace with a single Buy Me a Coffee username
-thanks_dev: retched # Replace with a single thanks.dev username
-custom: 'https://cashapp.com/retched', 'https://paypal.me/retched' # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
+github: retched
+patreon: retched
+ko_fi: retched
+buy_me_a_coffee: retched
+thanks_dev: retched
+custom: 'https://cashapp.com/retched', 'https://paypal.me/retched'
