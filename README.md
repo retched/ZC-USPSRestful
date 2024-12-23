@@ -4,9 +4,13 @@ This module provides sellers a chance to offer United States Postal Service (USP
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
-## Current Version: 0.1.1
+## Current Version: 0.1.0
 
 This is the initial version of the new USPS RESTful Module for ZenCart.
+
+In Development: 0.1.1
+
+- Minor bugfixes. Read notes for details.
 
 ## Version History
 
