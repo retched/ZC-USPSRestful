@@ -4,7 +4,7 @@ This module provides sellers a chance to offer United States Postal Service (USP
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
-## Current Version: 0.1.0
+## Current Version: 0.1.1
 
 This is the initial version of the new USPS RESTful Module for ZenCart.
 
@@ -30,7 +30,7 @@ _This API takes advantage of four API's: Domestic Prices 3.0, International Pric
 
 ### ZenCart 1.5.8 and above
 
-This module is an encapsulated plugin. You can take the contents of the zc_plugins Directory (which is just one folder named `USPSRestful`) and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart dashboard backend and visit `Modules > Plugin Manager`. Find the USPS Restful entry and click `Install`. You should then be able to proceed to the Shipping Module manager (`ADMIN > Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provided the details requested, customize the module to your content.
+This module is an encapsulated plugin. You can take the contents of the zc_plugins Directory (which is just one folder named `USPSRestful`) and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart dashboard backend and visit `Modules > Plugin Manager`. Find the USPS Restful entry and click `Install`. You should then be able to proceed to the Shipping Module manager (`ADMIN > Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provided the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service.
 
 ### ZenCart 1.5.7 and before
 
@@ -41,6 +41,10 @@ Backwards compatibility with earlier ZenCart's is not guaranteed. You're welcome
 If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button. If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you. 
 
 If you installed this module by extracting the uspsr.php and other files into your catalog directory, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that you aren't still trying to load it and generating errors in ZenCart.) Use the filelist below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif`) or you can overwrite it.
+
+### Upgrading
+
+To update the module, copy the entire folder onto itself. If you are using the Encapsulated version, be sure to visit the plugin manager and run the "Upgrade" option when prompted. Your database settings will be fine. If you're running the non-encapsulated version, simply overwrite all files in the appropriate directories.
 
 ## Frequently Asked Questions
 
@@ -60,7 +64,7 @@ The USPS created an "in-before-the-lock" situation with regards to the API Tools
 
 ### What is this OAuth Token? Do I need to get one?
 
-An OAuth token is a unique string of characters that allows a third-party application (like this one) to access a user's data without exposing their password. Effectively making it a temporary password of sorts. You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of cost of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it's done with the API call.
+An OAuth token is a unique string of characters that allows a third-party application (like this one) to access a user's data without exposing their password. Effectively making it a temporary (generated) password of sorts. You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of cost of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it's done with the API call.
 
 ### I'm not seeing the USPS Connect rate even though I selected it, what's going on?
 
@@ -72,7 +76,7 @@ Make sure that you store is configured to ship out of the United States and that
 
 ### "I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don't see it as an option during checkout, what gives?"
 
-That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the packages destination is not to one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the [USPS Postal Store online](https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB) and request them. (Remember these boxes can ONLY be used for APO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away and I'll start working on a patch.
+That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the packages destination is not to one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the [USPS Postal Store online](https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB) and request them. (Remember these boxes can ONLY be used for APO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away. It's likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.
 
 ### What is the handling field for? Where are the min/max fields of the original USPS module?
 
@@ -103,14 +107,14 @@ The USPS API needs the size and weight values to be sent in imperial units.
 
 If these settings are NOT present or are not a part of the typical ZC installation:
 
-- Yes. You will have to convert everything MANUALLY, on your own, to be pounds. This means that if you set up your store as to ship out using kgs and cms, by way of brute force or other means, you will have to set everything back up as pounds and inches as this script will not be able to pick it up.
+- Yes. You will have to convert everything MANUALLY, on your own, to be pounds. This means that if you set up your store as to ship out using kgs and cms, by way of brute force or other means, you will have to set everything back up as pounds and inches as this script will not be able to pick it up. (This script will dispatch a quote request to the USPS assuming everything is in pounds and inches already.)
 
 ## Known Limitations/Issues
 
 - For some reason, the API does not return rates for First-Class Mail International Package Service when one of the selected add-ons is insurance or if there is a declared value. To that end, the script will not present the Insurance option to the API for calculation by default. This can be overridden by commenting out the line 1291 and uncommenting line 1300.
 - As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix although if asked or suggested, I could theoretically put them back in the appropriate places.
 - Trying to visit `cmd=configuration&gID=6` while this module is active, will cause that admin configurator to break. This is likely because the display functions uses custom functions that are cooked directly into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when you're ready, reenable it.
-- Not all of the Observers/Notifier triggers made it here. I kind of eye-balled this and tried to place the original triggers and observers where I best-guessed they fit in at. But I'm not going to lie, I'm not too confident I got them all or even applied them in the correct manner. If you are a developer/siteowner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (Missing about six of them as of this release, but I'll pass through and readd them as I can.)
+- Not all of the Observers/Notifier triggers made it here from the original USPS module. I kind of eye-balled this and tried to place the original triggers and observers where I best-guessed they fit in at. But I'm not going to lie, I'm not too confident I got them all or even applied them in the correct manner. If you are a developer/siteowner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (Missing about six of them as of this release, but I'll pass through and readd them as I can.)
 
 ## Credits
 
@@ -129,12 +133,18 @@ For the update
 ```
 - LICENSE
 - README.md (this file)
-- \zc_plugins\USPSRestful\v0.0.1\changelog.md
-- \zc_plugins\USPSRestful\v0.0.1\manifest.php
-- \zc_plugins\USPSRestful\v0.0.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.1\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.1\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.1.0\changelog.md
+- \zc_plugins\USPSRestful\v0.1.0\manifest.php
+- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.1.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.1.1\changelog.md
+- \zc_plugins\USPSRestful\v0.1.1\manifest.php
+- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.1.1\Installer\ScriptedInstaller.php
 ```
 
 ## License
