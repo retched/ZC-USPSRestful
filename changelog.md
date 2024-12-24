@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Changed the module's installation message with regards to the measurements. (Going forward, if the store owner changes the setting for `SHIPPING_WEIGHT_UNITS` at the time of installation, the message for the default measurements will also change.)
-- Changed the ZenCart Plugin Manager message to a bit more descriptive.
+- Changed the ZenCart Plugin Manager message to be a bit more descriptive.
 - Deleted the changelog attached to the release directory and removed the reference from the encapsulated manifest file. Going forward will instead hot link to the releases tab on the repository at GitHub. The 0.1.0 release manifest has been changed to redirect.
 
 ### Fixed
