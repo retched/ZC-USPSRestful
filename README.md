@@ -1,5 +1,7 @@
 # USPS Shipping (RESTful) for Zen Cart
 
+![Coded with PHP 8](https://badgen.net/badge/icon/php?icon=php&label&color=purple)  ![Licensed via GPL-3.0](https://badgen.net/github/license/retched/ZC-USPSRestful?color=purple)  ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=purple)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=purple)
+
 This module provides sellers a chance to offer United States Postal Service (USPS) shipping rates to customers during checkout. This is done by pulling the rates directly from the USPS' REST API.
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
@@ -150,6 +152,12 @@ For the update
 - \zc_plugins\USPSRestful\v0.1.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.1.1\Installer\ScriptedInstaller.php
 ```
+
+## Support the author
+<!-- Should this repository be forked, please remove this section -->
+
+![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcashapp.com%2Fretched) ![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)  ![Support via Patreon](https://badgen.net/badge/icon/patreon?icon=patreon&label&color=purple)  ![Support via BuyMeACoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label&color=purple)  ![Support via Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label&color=purple)  
+
 
 ## License
 
