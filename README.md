@@ -152,7 +152,7 @@ For the update
 ## Support the author
 <!-- Should this repository be forked, please remove this section -->
 
-[![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcash.app%2Fretched)](https://cash.app/$retched) [![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)](https://paypal.com/retched)  [![Support via Patreon](https://badgen.net/badge/icon/patreon?icon=patreon&label&color=purple)](https://www.patreon.com/retched)  [![Support via BuyMeACoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label&color=purple)](https://buymeacoffee.com/retched)  [![Support via Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label&color=purple)](https://kofi.com/retched)  
+[![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcash.app%2Fretched)](https://cash.app/$retched) [![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)](https://paypal.me/retched)  [![Support via Patreon](https://badgen.net/badge/icon/patreon?icon=patreon&label&color=purple)](https://www.patreon.com/retched)  [![Support via BuyMeACoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label&color=purple)](https://buymeacoffee.com/retched)  [![Support via Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label&color=purple)](https://kofi.com/retched)  
 
 ## License
 
