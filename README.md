@@ -10,21 +10,17 @@ This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and bac
 
 This is the initial version of the new USPS RESTful Module for ZenCart.
 
-In Development: 0.1.1
-
-- Minor bugfixes. Read notes for details.
-
 ## Version History
 
 - _0.0.0
     Nothing. This is a placeholder for the module and should NOT be downloaded nor installed._
 
 - 0.1.0
-    First "release". Merged some of the code of the original USPS Module but changed everything to use JSON instead. Rewrote a lot of the logic behind it too. The module works the same way but some key differences. (Especially how to get the rates. Namely using the full "FULL" name, not just the "friendly name", to retrieve the rates and "standards" (aka how many days and when to estimate delivery). Through filtering shenanigans, the script returns the friendly name though.) Also added the ability to specify an EPS (Enterprise Payment System), meter, or permit account number with the USPS to gather contract specific pricing. Filtering of the carts to disable USPS Media Mail if certain categories are used is also available. (Previously this was done by using an optional observer class which had to be installed separately. Remember, Media Mail has strict requirements with regards to what is allowed.) In a future update, products will be able to be listed by way of product ID to include. An observer class can also knock out a shipping method by way of sending back `FALSE` to the appropriate observer class. Same with modifying the title of the shipping method too.
+    First "release".
 
 ## Additional Links
 
-USPS API Documentation: https://developers.usps.com/apis  
+[USPS API Documentation](https://developers.usps.com/apis)
 _This API takes advantage of four API's: Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 
 [ZenCart Plugins Download](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)  
@@ -86,7 +82,7 @@ That rate is only available for packages being sent to a known APO (Air/Army Pos
 
 ### What is the handling field for? Where are the min/max fields of the original USPS module?
 
-There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per method basis. 
+There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per method basis.
 
 The handling field of the methods selection is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each "box", or both). If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added onto the quoted shipping method. If instead you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)
 
@@ -157,7 +153,6 @@ For the update
 <!-- Should this repository be forked, please remove this section -->
 
 [![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcashapp.com%2Fretched)](https://cashapp.com/$retched) [![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)](https://paypal.com/retched)  [![Support via Patreon](https://badgen.net/badge/icon/patreon?icon=patreon&label&color=purple)](https://www.patreon.com/retched)  [![Support via BuyMeACoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label&color=purple)](https://buymeacoffee.com/retched)  [![Support via Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label&color=purple)](https://kofi.com/retched)  
-
 
 ## License
 
