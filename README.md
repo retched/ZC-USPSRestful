@@ -30,7 +30,7 @@ _This API takes advantage of four API's: Domestic Prices 3.0, International Pric
 [ZenCart Plugins Download](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)  
 [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr))
 
-** This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in its megathread: https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread
+** This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
 
 ## Setup and Install
 
@@ -62,7 +62,7 @@ The original USPS module works by using the older USPS Web Tools API. For years,
 
 ### I already have a `USERID` and `PASSWORD` under the old system, but I'm getting error messages while I try to retrieve quotes.
 
-The older `USERID` and `PASSWORD` are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained here: https://developers.usps.com/getting-started
+The older `USERID` and `PASSWORD` are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [here](https://developers.usps.com/getting-started).
 
 ### Why should I use this versus the one that's out there now?
 
@@ -136,16 +136,16 @@ For the update
 
 ## File Listing
 
-```
+``` text
+- CONTRIBUTING.md
 - LICENSE
 - README.md (this file)
-- \zc_plugins\USPSRestful\v0.1.0\changelog.md
+- changelog.md
 - \zc_plugins\USPSRestful\v0.1.0\manifest.php
 - \zc_plugins\USPSRestful\v0.1.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.1.0\catalog\includes\modules\shipping\uspsr.php
 - \zc_plugins\USPSRestful\v0.1.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.1.0\Installer\ScriptedInstaller.php
-- \zc_plugins\USPSRestful\v0.1.1\changelog.md
 - \zc_plugins\USPSRestful\v0.1.1\manifest.php
 - \zc_plugins\USPSRestful\v0.1.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.1.1\catalog\includes\modules\shipping\uspsr.php
