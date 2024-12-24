@@ -2,11 +2,11 @@
 /**
  * USPS Shipping (RESTful) for Zen Cart
  * Version 0.1.1
- * 
+ *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
- * @author Paul Williams (retched) 
+ * @author Paul Williams (retched)
  * @version $Id: uspsr.php 2024-12-12 retched Version 0.1.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
@@ -31,37 +31,47 @@ use Zencart\PluginSupport\ScriptedInstaller as ScriptedInstallBase;
 
 class ScriptedInstaller extends ScriptedInstallBase
 {
-    protected function executeInstall(): void
+    protected function executeInstall()
     {
 
         /**
-         * No, do not install the module from here! 
+         * No, do not install the module from here!
          * You should install the module from the Shipping Module section of the admin.
-         */ 
-
-    }
-    
-    protected function executeUpgrade(): void
-    {
-        global $db;
-
-        /**
-         * [0.2.0+] We need to change one of the ZenCart setting descriptions to remove the mention of inches from it. 
-         * Generally speaking, the cart will automatically be converted to inches one way or the other. So going forward,
-         * change the dialog to indicate as such.
-         * 
          */
 
-        // If the shipping weight units are CMs, changed the description to notify the storeowner that the measurements will be changed to inches.
-        if(defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
-            $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
-        } else {
-            $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
-        }
+        return true;
 
     }
 
-    protected function executeUninstall(): void
+    protected function executeUpgrade($oldVersion)
+    {
+        // $version contains the old version being upgrade from.
+
+        switch ($oldVersion){
+            case "v0.1.0":
+                /**
+                 * [0.1.1 and onward] We need to change one of the ZenCart setting descriptions to remove the mention of inches from it.
+                 * Generally speaking, the cart will automatically be converted to inches one way or the other. So going forward,
+                 * change the dialog to indicate as such.
+                 *
+                 */
+
+                // If the shipping weight units are CMs, changed the description to notify the storeowner that the measurements will be changed to inches.
+                if(defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
+                    $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
+                } else {
+                    $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
+                }
+
+
+                break;
+        }
+
+        return true;
+
+    }
+
+    protected function executeUninstall()
     {
         global $db;
 
@@ -76,9 +86,11 @@ class ScriptedInstaller extends ScriptedInstallBase
         // Shouldn't be empty... there SHOULD be a key returned as it's part of ZenCart's base install... but...
         if (zen_not_null($module_listing->fields['configuration_value'])) {
             $updated_listing = preg_replace("/uspsr.php;?/", '', $module_listing->fields['configuration_value']);
-            
+
             $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $updated_listing . "' WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
         }
+
+        return true;
 
     }
 }
