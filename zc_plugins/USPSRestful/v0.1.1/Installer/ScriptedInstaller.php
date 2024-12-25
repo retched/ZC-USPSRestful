@@ -74,15 +74,42 @@ class ScriptedInstaller extends ScriptedInstallBase
     protected function executeUninstall()
     {
 
-        // On uninstallation, remove the configuration values from the table.
-        $uninstall_sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '%USPSR_%'";
+        // Best practice > Use deleteConfigurationKeys
+        $this->deleteConfigurationKeys([
+            'MODULE_SHIPPING_USPSR_VERSION',
+            'MODULE_SHIPPING_USPSR_STATUS',
+            'MODULE_SHIPPING_USPSR_TITLE_SIZE',
+            'MODULE_SHIPPING_USPSR_API_KEY',
+            'MODULE_SHIPPING_USPSR_API_SECRET',
+            'MODULE_SHIPPING_USPSR_QUOTE_SORT',
+            'MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC',
+            'MODULE_SHIPPING_USPSR_HANDLING_INTL',
+            'MODULE_SHIPPING_USPSR_HANDLING_METHOD',
+            'MODULE_SHIPPING_USPSR_TAX_CLASS',
+            'MODULE_SHIPPING_USPSR_TAX_BASIS',
+            'MODULE_SHIPPING_USPSR_ZONE',
+            'MODULE_SHIPPING_USPSR_PROCESSING_CLASS',
+            'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT',
+            'MODULE_SHIPPING_USPSR_HANDLING_TIME',
+            'MODULE_SHIPPING_USPSR_DIMMENSIONS',
+            'MODULE_SHIPPING_USPSR_TYPES',
+            'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
+            'MODULE_SHIPPING_USPSR_CONNECT_LOCAL_ZIP',
+            'MODULE_SHIPPING_USPSR_DMST_SERVICES',
+            'MODULE_SHIPPING_USPSR_INTL_SERVICES',
+            'MODULE_SHIPPING_USPSR_PRICING',
+            'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
+            'MODULE_SHIPPING_USPSR_ACCT_NUMBER',
+            'MODULE_SHIPPING_USPSR_DEBUG_MODE',
+            'MODULE_SHIPPING_USPSR_SORT_ORDER',
 
-        $this->executeInstallerSql($uninstall_sql);
+        ]);
 
         // Additionally, we should force the module off by removing uspsr.php from the configuration value of MODULE_SHIPPING_INSTALLED
         $module_listing = $this->executeInstallerSelectQuery("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
 
         // Shouldn't be empty... there SHOULD be a key returned as it's part of ZenCart's base install... but...
+        // we're going to remove the uspsr.php; bit of it.
         if (zen_not_null($module_listing->fields['configuration_value'])) {
             $updated_listing = preg_replace("/uspsr.php;?/", '', $module_listing->fields['configuration_value']);
 
