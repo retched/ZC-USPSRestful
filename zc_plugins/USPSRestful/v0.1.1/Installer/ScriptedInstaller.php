@@ -73,7 +73,6 @@ class ScriptedInstaller extends ScriptedInstallBase
 
     protected function executeUninstall()
     {
-        global $db;
 
         // On uninstallation, remove the configuration values from the table.
         $uninstall_sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '%USPSR_%'";
@@ -81,13 +80,13 @@ class ScriptedInstaller extends ScriptedInstallBase
         $this->executeInstallerSql($uninstall_sql);
 
         // Additionally, we should force the module off by removing uspsr.php from the configuration value of MODULE_SHIPPING_INSTALLED
-        $module_listing = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
+        $module_listing = $this->executeInstallerSelectQuery("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
 
         // Shouldn't be empty... there SHOULD be a key returned as it's part of ZenCart's base install... but...
         if (zen_not_null($module_listing->fields['configuration_value'])) {
             $updated_listing = preg_replace("/uspsr.php;?/", '', $module_listing->fields['configuration_value']);
 
-            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $updated_listing . "' WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
+            $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $updated_listing . "' WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
         }
 
         return true;
