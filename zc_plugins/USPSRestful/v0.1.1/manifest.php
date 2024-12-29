@@ -29,7 +29,7 @@ return [
     'pluginName' => 'USPS Shipping (w/REST API) for Zen Cart',
     'pluginDescription' => 'This module provides sellers a chance to offer United States Postal Service (USPS) shipping rates to customers during checkout. This is done by pulling the rates directly from the USPS\' REST API.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)',
     'pluginAuthor' => 'Paul Williams (retched)',
-    'pluginId' => 0, // Temporarily numbering this to 0 until approved by ZenCart.
+    'pluginId' => 2395,
     'zcVersions' => ['v158', 'v200', 'v201'],
     'changelog' => 'https://github.com/retched/ZC-USPSRestful/releases', 
     'github_repo' => 'https://github.com/retched/ZC-USPSRestful',
