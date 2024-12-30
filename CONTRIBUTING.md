@@ -6,13 +6,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 ``` txt
 And if you like the project, but just don't have time to contribute, that's fine. 
-There are other easy ways to support the project and show your appreciation, 
-which we would also be very happy about:
-
-- Star the project
-- Tweet about it
-- Refer this project in your project's readme
-- Mention the project at local meetups and tell your friends/colleagues
+You can also just star the repository.
 ```
 
 ## "I Have a Question!"
@@ -23,13 +17,13 @@ If you then still feel the need to ask a question and need clarification, we rec
 
 - Open an [Issue](https://github.com/retched/ZC-USPSRestful/issues/new).
 - Provide as much context as you can about what you're running into.
-- Provide project and platform versions (nodejs, npm, etc), depending on what seems relevant.
+
 
 **Great Bug Reports** tend to have:
 
 - A quick summary and/or background
 - Steps to reproduce
-  - Be specific!
+  - Be specific! If you have any other modules or non-standard changes to your ZenCart, you should list them too.
 - What you expected would happen
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
@@ -49,9 +43,10 @@ We use github to host code, to track issues and feature requests, as well as acc
 
 Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://guides.github.com/introduction/flow/index.html)). We actively welcome your pull requests:
 
-1. Fork the repo and create your branch from `main` (do not use the versioned branches ).
-2. Make sure your code lints.
+1. Fork the repo and create your branch from `main` (do not use any of the side branches).
+2. Make the changes you wish to suggest.
 3. Issue that pull request!
+   - Be as descriptive as you can in your Pull Request notes. (What's being changed? Why is it being changed? Is it a benefit or boon to the project as a whole? What issue does your code solve?)
 
 ## Coding Style
 

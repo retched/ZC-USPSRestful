@@ -1324,7 +1324,6 @@ class uspsr extends base
             // Set focus to the Domestic API
             $focus = "rates-domestic";
 
-            // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
             $mailClasses = [
                 "USPS_GROUND_ADVANTAGE",
                 "PRIORITY_MAIL",
