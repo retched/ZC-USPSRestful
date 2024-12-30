@@ -153,14 +153,14 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    const USPSR_CURRENT_VERSION = '0.1.0';
+    private const USPSR_CURRENT_VERSION = '0.1.0';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
      * DPOs (Diplomatic Post Offices). This should not be removed as it will disable the APO/FPO/DPO Flat Rate.
      * @var array
      */
-    const USPSR_MILITARY_MAIL_ZIP = [
+    private const USPSR_MILITARY_MAIL_ZIP = [
         '09002', '09003', '09004', '09005', '09006', '09008', '09009', '09010', '09011', '09012',
         '09013', '09014', '09015', '09016', '09017', '09018', '09020', '09021', '09034', '09044',
         '09046', '09049', '09053', '09060', '09067', '09068', '09069', '09079', '09094', '09095',
@@ -1324,6 +1324,7 @@ class uspsr extends base
             // Set focus to the Domestic API
             $focus = "rates-domestic";
 
+            // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
             $mailClasses = [
                 "USPS_GROUND_ADVANTAGE",
                 "PRIORITY_MAIL",
@@ -1521,7 +1522,6 @@ class uspsr extends base
          *
          */
 
-        // If the $array_body is set, build a
 
 
         $usps_calls = [
@@ -1589,7 +1589,6 @@ class uspsr extends base
         return $body;
 
     }
-
     protected function quoteLogCurlBody($request)
     {
         global $order;
@@ -1609,7 +1608,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function quoteLogCurlResponse($request)
     {
         global $order;
@@ -1629,7 +1627,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function quoteLogJSONResponse($response)
     {
         if ($this->debug_enabled === false) {
@@ -1641,7 +1638,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function getBearerToken()
     {
         global $request_type;
@@ -1716,7 +1712,6 @@ class uspsr extends base
 
         return $token;
     }
-
     protected function revokeBearerToken()
     {
         global $request_type;
@@ -1804,7 +1799,6 @@ class uspsr extends base
      *
      * @return void
      */
-
     protected function _calcCart()
     {
         global $order, $uninsurable_value;
