@@ -734,10 +734,15 @@ class uspsr extends base
         }
 
         global $sniffer;
-        $results = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'varchar(255)', true);
-        if ($results !== true) {
-            $sql = "ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''";
-            $db->Execute($sql);
+
+        $is_text = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'TEXT');
+        $is_mediumtext = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'MEDIUMTEXT');
+        $is_blob = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'BLOB');
+
+        # If the column is the column is a text, mediumtext, or blob: DO NOTHING.
+        # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to )
+        if (!$is_text || !$is_mediumtext || !$is_blob) {
+            $db->Execute("ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_CHECK');
@@ -1324,6 +1329,7 @@ class uspsr extends base
             // Set focus to the Domestic API
             $focus = "rates-domestic";
 
+            // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
             $mailClasses = [
                 "USPS_GROUND_ADVANTAGE",
                 "PRIORITY_MAIL",
