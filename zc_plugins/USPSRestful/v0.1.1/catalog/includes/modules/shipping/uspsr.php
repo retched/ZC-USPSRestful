@@ -735,13 +735,13 @@ class uspsr extends base
 
         global $sniffer;
 
-        $is_text = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'TEXT');
-        $is_mediumtext = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'MEDIUMTEXT');
-        $is_blob = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'BLOB');
+        $is_text = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'text');
+        $is_mediumtext = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'mediumtext');
+        $is_blob = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'blob');
 
         # If the column is the column is a text, mediumtext, or blob: DO NOTHING.
-        # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to )
-        if ($is_text && $is_mediumtext && $is_blob) {
+        # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to text, change THOSE to be VARCHAR(255))
+        if (($is_text || $is_mediumtext || $is_blob) === FALSE ) {
             $db->Execute("ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''");
         }
 
