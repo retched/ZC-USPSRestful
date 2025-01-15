@@ -741,7 +741,7 @@ class uspsr extends base
 
         # If the column is the column is a text, mediumtext, or blob: DO NOTHING.
         # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to )
-        if (!$is_text || !$is_mediumtext || !$is_blob) {
+        if ($is_text && $is_mediumtext && $is_blob) {
             $db->Execute("ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''");
         }
 
