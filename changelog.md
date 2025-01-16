@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ~~[BUG] Resolved issue [#4](https://github.com/retched/ZC-USPSRestful/issues/4): (Loading the file via Plugin Manager generates a crash). This was resolved by an emergency patch to the release files but is being properly deployed now.~~
   This patch has been undone as the module is now active on the ZenCart Plugins Database.
 - [BUG] Resolved issue [#5](https://github.com/retched/ZC-USPSRestful/issues/5): Stops error message complaining about a `NULL` value for `$order->delivery['street_address']` when searching if a delivery address is either a `PO_BOX` or `STREET` address. This normally happens when you try to use the module on something like the Shipping Estimator where there is no address set.
+- [BUG] Resolved issue [#7](https://github.com/retched/ZC-USPSRestful/issues/7):  First Class Mail International Service missing from quotes. This was apparently repaired by the USPS API Tech Team. The quote is now reinstated. Additionally, both quotes now will carry the estimated value of the cart alongside it. This is important as there are no limits on domestic shipments but there is a limit of $400 for First Class Mail Package Service and a limit of about $600 for other services. If the request is too much, the quote will not return anything.
 
 ## [0.1.0] - 2024-12-21
 
