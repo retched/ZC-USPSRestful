@@ -153,7 +153,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = '0.1.0';
+    private const USPSR_CURRENT_VERSION = '0.1.1';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
