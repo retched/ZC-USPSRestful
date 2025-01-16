@@ -718,6 +718,12 @@ class uspsr extends base
          *
          */
 
+        $message = '';
+        $message .= "\n" . '===============================================' . "\n";
+        $message .= 'Revoking Bearer Token...' . "\n";
+        $this->uspsrDebug($message);
+
+
         $this->revokeBearerToken();
 
         return $this->quotes;
