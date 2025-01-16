@@ -1323,7 +1323,7 @@ class uspsr extends base
             /**
              * Is this package going to a APO/FPO/DPO?
              */
-            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode']), self::USPSR_MILITARY_MAIL_ZIP);
+            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'), self::USPSR_MILITARY_MAIL_ZIP);
 
             /**
              * Check to see if the products in the cart are ALL eligible for USPS Media Mail.
@@ -1331,11 +1331,11 @@ class uspsr extends base
             if ($this->enable_media_mail) { $mailClasses[] = "MEDIA_MAIL"; }
 
             // Check to see if the order fits for USPS Connect Local
-            if (uspsr_check_connect_local($order->delivery['postcode'])) $mailClasses[] = "USPS_CONNECT_LOCAL";
+            if (uspsr_check_connect_local($order->delivery['postcode'] ?? '00000')) $mailClasses[] = "USPS_CONNECT_LOCAL";
 
             $json_body = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode']),
+                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
                 'weight' => $shipping_weight,
                 'length' => $domm_length,
                 'width' => $domm_width,
@@ -1349,7 +1349,7 @@ class uspsr extends base
             // Let's make a standards request now.
             $standards_query = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode']),
+                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
                 'mailClass' => 'ALL',
                 'weight' => $shipping_weight
             ];
