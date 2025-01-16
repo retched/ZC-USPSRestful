@@ -434,7 +434,7 @@ class uspsr extends base
         // request quotes
         $this->notify('NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes);
 
-        // Create
+        // Create the main quote
         $this->_getQuote();
 
         // Okay let's start processing this.
@@ -868,7 +868,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Irregular\'], ', now())"
+                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".)', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Irregular\'], ', now())"
         );
 
         /**
@@ -1062,7 +1062,7 @@ class uspsr extends base
 
     protected function quoteLogConfiguration()
     {
-        global $order, $shipping_weight, $currencies;
+        global $order, $currencies;
 
         if ($this->debug_enabled === false) {
             return;
@@ -1088,8 +1088,8 @@ class uspsr extends base
         $ounces = ($this->quote_weight - $pounds) * 16;
 
         $message = '' . "\n\n";
-        $message .= 'USPSRestful Configuration Report' . "\n";
-        $message .= "=========================================================" . "\n";
+        $message .= "USPSRestful Configuration Report\n";
+        $message .= "=========================================================\n";
         $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . "\n\n";
         $message .= 'Quote Request Rate Type: ' . MODULE_SHIPPING_USPSR_PRICING . "\n";
         $message .= 'Quote from main_page: ' . $_GET['main_page'] . "\n";
@@ -1292,26 +1292,10 @@ class uspsr extends base
             $service = (int)$service;
         }
 
-        /**
-         * The array of international services. (There's only three as the rest
-         * are hazardous materials)
-         *
-         * @var array
-         * @todo The API does not return First Class Mail International if Insurance is selected.
-         * For right now, disable 930/931 being added until the code can be reworked around
-         * to still at least present the option for First Class Mail International.
-         */
         $services_intl = array_filter(explode(', ', MODULE_SHIPPING_USPSR_INTL_SERVICES));
-        if (in_array(930, $services_intl)) $services_intl = array_diff($services_intl, [930]);
-
-        /**
-         * The above line removes Insurance from being presented to the API since it also knocks out the
-         * First Class Mail International service. To that end if you want to enable Insurance anyway, disable
-         * or delete line 1291 above and uncomment the line below to enable Insurance anyway and to cover the
-         * spread like this script does for Domestic packages.
-         */
-
-        // if (in_array(930, $services_dmst)) $services_dmst[] = 931;
+        if (in_array(930, $services_intl)) {
+            $services_intl[] = 931;
+        }
 
         // Make sure that we only have numbers in the array
         foreach ($services_intl as &$service) {
@@ -2023,7 +2007,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         922 => ['Adult Signature Required', FALSE],
         940 => ['Registered Mail', FALSE],
         915 => ['Collect on Delivery', FALSE],
-        955 => ['Return Receipt', TRUE],
+        955 => ['Return Receipt', FALSE],
         957 => ['Return Receipt Electronic', FALSE],
         921 => ['Signature Confirmation', FALSE],
         911 => ['Certified Mail Restricted Delivery', FALSE],
