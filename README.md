@@ -1,12 +1,13 @@
 # USPS Shipping (RESTful) for Zen Cart
 
-![Coded with PHP 8](https://badgen.net/badge/icon/php?icon=php&label&color=purple)  ![Licensed via GPL-3.0](https://badgen.net/github/license/retched/ZC-USPSRestful?color=purple)  ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=purple)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=purple)
+![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=purple)
+  ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=purple&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=purple&labelColor=black&labelColor=white)
 
 This module provides sellers a chance to offer United States Postal Service (USPS) shipping rates to customers during checkout. This is done by pulling the rates directly from the USPS' REST API.
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
-## Current Version: 0.1.0
+## Current Version: 0.1.1
 
 This is the initial version of the new USPS RESTful Module for ZenCart.
 
@@ -17,6 +18,9 @@ This is the initial version of the new USPS RESTful Module for ZenCart.
 
 - 0.1.0
     First "release".
+
+- 0.1.1
+    Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool. There are limits to this service. Namely that the package and order value cannot be too high or else First Class Mail International cannot be used if the order is more than $400 USD.
 
 ## Additional Links
 
@@ -152,7 +156,7 @@ For the update
 ## Support the author
 <!-- Should this repository be forked, please remove this section -->
 
-[![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcash.app%2Fretched)](https://cash.app/$retched) [![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)](https://paypal.me/retched)  [![Support via Patreon](https://badgen.net/badge/icon/patreon?icon=patreon&label&color=purple)](https://www.patreon.com/retched)  [![Support via BuyMeACoffee](https://badgen.net/badge/icon/buymeacoffee?icon=buymeacoffee&label&color=purple)](https://buymeacoffee.com/retched)  [![Support via Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label&color=purple)](https://kofi.com/retched)  
+[![Support via CashApp](https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcash.app%2Fretched)](https://cash.app/$retched) [![Support via PayPal](https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple)](https://paypal.me/retched)  [![Support via Patreon](https://img.shields.io/badge/patreon-white?style=flat&logo=patreon&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fwww.patreon.com%2Fretched)](https://www.patreon.com/retched)  [![Support via BuyMeACoffee](https://img.shields.io/badge/buymeacoffee-white?style=flat&logo=buymeacoffee&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fbuymeacoffee.com%2Fretched)](https://buymeacoffee.com/retched)  [![Support via Kofi](https://img.shields.io/badge/kofi-white?style=flat&logo=buymeacoffee&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fkofi.com%2Fretched)](https://kofi.com/retched)  
 
 ## License
 
