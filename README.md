@@ -1,15 +1,12 @@
 # USPS Shipping (RESTful) for Zen Cart
 
-![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=purple)
-  ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=purple&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=purple&labelColor=black&labelColor=white)
+![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=851185) ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&labelColor=black&labelColor=white)
 
-This module provides sellers a chance to offer United States Postal Service (USPS) shipping rates to customers during checkout. This is done by pulling the rates directly from the USPS' REST API.
+This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS' REST API.
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
 ## Current Version: 0.1.1
-
-This is the initial version of the new USPS RESTful Module for ZenCart.
 
 ## Version History
 
@@ -20,7 +17,7 @@ This is the initial version of the new USPS RESTful Module for ZenCart.
     First "release".
 
 - 0.1.1
-    Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool. There are limits to this service. Namely that the package and order value cannot be too high or else First Class Mail International cannot be used if the order is more than $400 USD.
+    Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
 
 ## Additional Links
 
@@ -107,7 +104,7 @@ Those symbols don't appear within the new USPS API calls like they do on the ori
 If these settings are present:
 
 - On installation of the module, the script will convert the "default" box measurements to the measurement of the cart. If you chose to measure in centimeters, the script will multiply all measurements by 2.54 and will set those as the default size. During checkout, any number input there will be divided by 2.54 to reverse from centimeters to inches. That number will be sent along with the order details to make up the quote. If it's in inches, no conversion will be done.
-- During checkout with a cart configured with kilograms as the cart's weight, the total weight of the cart will be divided by (approximately) 2.205 to obtain the total number of pounds and will dispatch that as part of the quoting process. 
+- During checkout with a cart configured with kilograms as the cart's weight, the total weight of the cart will be divided by (approximately) 2.205 to obtain the total number of pounds and will dispatch that as part of the quoting process.
 
 The USPS API needs the size and weight values to be sent in imperial units.
 
