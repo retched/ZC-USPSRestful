@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2024-12-22 retched Version 0.1.1 $
+ * @version $Id: uspsr.php 2025-01-16 retched Version 0.1.1 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
