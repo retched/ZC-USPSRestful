@@ -734,10 +734,15 @@ class uspsr extends base
         }
 
         global $sniffer;
-        $results = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'varchar(255)', true);
-        if ($results !== true) {
-            $sql = "ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''";
-            $db->Execute($sql);
+
+        $is_text = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'text');
+        $is_mediumtext = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'mediumtext');
+        $is_blob = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'blob');
+
+        # If the column is the column is a text, mediumtext, or blob: DO NOTHING.
+        # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to text, change THOSE to be VARCHAR(255))
+        if (($is_text || $is_mediumtext || $is_blob) === FALSE ) {
+            $db->Execute("ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_CHECK');
@@ -2002,7 +2007,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         922 => ['Adult Signature Required', FALSE],
         940 => ['Registered Mail', FALSE],
         915 => ['Collect on Delivery', FALSE],
-        955 => ['Return Receipt', TRUE],
+        955 => ['Return Receipt', FALSE],
         957 => ['Return Receipt Electronic', FALSE],
         921 => ['Signature Confirmation', FALSE],
         911 => ['Certified Mail Restricted Delivery', FALSE],
