@@ -44,7 +44,7 @@ If you are running this as an unencapsulated module, visit `Modules > Shipping` 
 ### Upgrading
 
 - If you are using the encapsulated version: To update the module, copy the entire folder onto itself. Be sure to visit the plugin manager and run the "Upgrade Available" option when prompted to finish the upgrade. Your database settings will be retained.
-- If you're running the non-encapsulated version: backup your module settings and simply overwrite all files in the appropriate directories.
+- If you're running the non-encapsulated version: backup your module settings **FIRST**, uninstall the module in the Shipping Module configuration, and simply overwrite all files in the appropriate directories. Once the files are settled, re-enable the module and re-enter your configurations.
 
 ## Frequently Asked Questions
 
