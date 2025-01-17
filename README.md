@@ -1,5 +1,7 @@
 # USPS Shipping (RESTful) for Zen Cart
 
+![ZC-USPSRestful](https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=0&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
+
 ![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=851185) ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&labelColor=black&labelColor=white)
 
 This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
@@ -176,7 +178,7 @@ For the update
 ``` txt
 USPS Shipping (RESTful) for Zen Cart
 A shipping module for ZenCart, an e-commerce platform
-Copyright (C) 2024  Paul Williams (retched / retched@hotmail.com)
+Copyright (C) 2024 Paul Williams (retched / retched@hotmail.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -185,9 +187,9 @@ the Free Software Foundation, either version 3 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
