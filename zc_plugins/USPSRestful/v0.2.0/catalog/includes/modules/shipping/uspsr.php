@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.1.1
+ * Version 0.2.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2025-01-16 retched Version 0.1.1 $
+ * @version $Id: uspsr.php 2025-01-17 retched Version 0.2.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -153,7 +153,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = '0.1.1';
+    private const USPSR_CURRENT_VERSION = '0.2.0';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
@@ -623,7 +623,7 @@ class uspsr extends base
 
                                 $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
 
-                            } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Time"
+                            } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
 
                                 // We only need the number of days from the JSON.
                                 $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
@@ -884,7 +884,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed. Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Time\'], ', now())"
+                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed. Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], ', now())"
         );
 
         $db->Execute(
@@ -2125,10 +2125,11 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Package Service/',
                         '/ISC/',
                         '/Machinable DDU/',
-                        '/Machinable/',
+                        '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
                         '/Non-Soft Pack Tier 1/',
+                        '/\s{2,}/'
                     ],
                     [
                         'Intl',
@@ -2147,9 +2148,10 @@ function zen_cfg_uspsr_showservices($key_value)
                         '',
                         '',
                         '',
+                        ' ',
                         '',
                         '',
-                        ''
+                        ' '
                     ],
                     $methods
                 );
@@ -2171,8 +2173,8 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Package\hService\h-\hRetail/',
                         '/Package Service/',
                         '/ISC/',
-                        '/Machinable DDU/',
-                        '/Machinable/',
+                        '/Machinable DDU\s+/',
+                        '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
                         '/Non-Soft Pack Tier 1/',

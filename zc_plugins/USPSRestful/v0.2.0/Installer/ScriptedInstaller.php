@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.1.1
+ * Version 0.2.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2024-12-12 retched Version 0.1.0 $
+ * @version $Id: uspsr.php 2025-01-17 retched Version 0.2.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -47,25 +47,48 @@ class ScriptedInstaller extends ScriptedInstallBase
     {
         // $version contains the old version being upgrade from.
 
+        /**
+         * [0.2.0 and onward] We need to change one of the ZenCart setting descriptions to remove the mention of inches from it.
+         * Generally speaking, the cart will automatically be converted to inches one way or the other. So going forward,
+         * change the dialog to indicate as such.
+         *
+         */
+
+        // If the shipping weight units are CMs, changed the description to notify the storeowner that the measurements will be changed to inches.
+        if(defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DIMMENSIONS', [
+                'configuration_description' => 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>'
+            ]);
+        } else {
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DIMMENSIONS', [
+                'configuration_description' => 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>'
+            ]);
+        }
+
         switch ($oldVersion){
             case "v0.1.0":
-                /**
-                 * [0.1.1 and onward] We need to change one of the ZenCart setting descriptions to remove the mention of inches from it.
-                 * Generally speaking, the cart will automatically be converted to inches one way or the other. So going forward,
-                 * change the dialog to indicate as such.
-                 *
-                 */
 
-                // If the shipping weight units are CMs, changed the description to notify the storeowner that the measurements will be changed to inches.
-                if(defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
-                    $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
-                } else {
-                    $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_description = 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_DIMMENSIONS'");
+                // Update the Configuration descriptions that had spelling errors.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_PROCESSING_CLASS', [
+                    'configuration_description' => 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".)'
+                ]);
+
+                // Changing this to be a more descriptive description.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
+                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
+                ]);
+
+                // If the Constant is set to "Estimate Time, we should update the value too.
+                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
+                        'configuration_value' => 'Estimate Transit Time'
+                    ]);
                 }
-
-
                 break;
         }
+
+        // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).
+        $this->executeInstallerSql("UPDATE " . TABLE_PLUGIN_CONTROL . " SET description = 'This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS\' REST API using OAuth.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)' WHERE unique_key = 'USPSRestful' ");
 
         return true;
 

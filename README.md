@@ -6,34 +6,30 @@ This module provides sellers the ability to offer United States Postal Service (
 
 This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
-## Current Version: 0.1.1
+## Current Version: 0.2.0
 
 ## Version History
 
 - _0.0.0
-    Nothing. This is a placeholder for the module and should NOT be downloaded nor installed._
+    Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README.md._
 
 - 0.1.0
     First "release".
 
-- 0.1.1
+- 0.2.0
     Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
 
 ## Additional Links
 
-[USPS API Documentation](https://developers.usps.com/apis)
-_This API takes advantage of four API's: Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
+- [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four API's: Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
+- [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
+- [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
 
-[ZenCart Plugins Download](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)  
-[ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr))
-
-** This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
-
-## Setup and Install
+## Setup, Install, and Upgrading
 
 ### ZenCart 1.5.8 and above
 
-This module is an encapsulated plugin. You can take the contents of the zc_plugins Directory (which is just one folder named `USPSRestful`) and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart dashboard backend and visit `Modules > Plugin Manager`. Find the USPS Restful entry and click `Install`. You should then be able to proceed to the Shipping Module manager (`ADMIN > Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provided the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service.
+This module is an encapsulated plugin. You can take the contents of the `zc_plugins` directory (which is just one folder named `USPSRestful`) and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart admin dashboard and visit `ADMIN > Modules > Plugin Manager`. Find the USPSRestful entry and click `Install`. (When prompted, you should install the most recent version.) Next, proceed to the Shipping Module manager (`ADMIN > Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provided the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service. (If you prefer a non-encapsulated version, a non-encapsulated version is available from the Releases page on GitHub or by visiting the ZenCart Plugins Directory using the link above and finding the "Encapsulated: No" version in the plugin/module directory.)
 
 ### ZenCart 1.5.7 and before
 
@@ -41,13 +37,14 @@ Backwards compatibility with earlier ZenCart's is not guaranteed. You're welcome
 
 ### Uninstallation
 
-If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button. If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you. 
+If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button as it appears in the Plugin Manager. (The module will be disabled and removed.) If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you.
 
-If you installed this module by extracting the uspsr.php and other files into your catalog directory, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that you aren't still trying to load it and generating errors in ZenCart.) Use the filelist below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif`) or you can overwrite it.
+If you are running this as unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that you aren't still trying to load it and generating errors in ZenCart.) Use the filelist below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
 
 ### Upgrading
 
-To update the module, copy the entire folder onto itself. If you are using the Encapsulated version, be sure to visit the plugin manager and run the "Upgrade" option when prompted. Your database settings will be fine. If you're running the non-encapsulated version, simply overwrite all files in the appropriate directories.
+- If you are using the encapsulated version: To update the module, copy the entire folder onto itself. Be sure to visit the plugin manager and run the "Upgrade Available" option when prompted to finish the upgrade. Your database settings will be retained.
+- If you're running the non-encapsulated version: backup your module settings and simply overwrite all files in the appropriate directories.
 
 ## Frequently Asked Questions
 
@@ -114,7 +111,6 @@ If these settings are NOT present or are not a part of the typical ZC installati
 
 ## Known Limitations/Issues
 
-- For some reason, the API does not return rates for First-Class Mail International Package Service when one of the selected add-ons is insurance or if there is a declared value. To that end, the script will not present the Insurance option to the API for calculation by default. This can be overridden by commenting out the line 1291 and uncommenting line 1300.
 - As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix although if asked or suggested, I could theoretically put them back in the appropriate places.
 - Trying to visit `cmd=configuration&gID=6` while this module is active, will cause that admin configurator to break. This is likely because the display functions uses custom functions that are cooked directly into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when you're ready, reenable it.
 - Not all of the Observers/Notifier triggers made it here from the original USPS module. I kind of eye-balled this and tried to place the original triggers and observers where I best-guessed they fit in at. But I'm not going to lie, I'm not too confident I got them all or even applied them in the correct manner. If you are a developer/siteowner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (Missing about six of them as of this release, but I'll pass through and readd them as I can.)
@@ -133,6 +129,8 @@ For the update
 
 ## File Listing
 
+### Encapsulated File Listing
+
 ``` text
 - CONTRIBUTING.md
 - LICENSE
@@ -143,11 +141,23 @@ For the update
 - \zc_plugins\USPSRestful\v0.1.0\catalog\includes\modules\shipping\uspsr.php
 - \zc_plugins\USPSRestful\v0.1.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.1.0\Installer\ScriptedInstaller.php
-- \zc_plugins\USPSRestful\v0.1.1\manifest.php
-- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.1.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.1.1\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.2.0\manifest.php
+- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.2.0\Installer\ScriptedInstaller.php
+```
+
+### Non-encapsulated File Listing
+
+``` txt
+- CONTRIBUTING.md
+- LICENSE
+- README.md (this file)
+- changelog.md
+- \catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \catalog\includes\modules\shipping\uspsr.php
+- \catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 ```
 
 ## Support the author

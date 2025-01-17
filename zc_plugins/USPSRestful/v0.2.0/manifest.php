@@ -1,10 +1,13 @@
 <?php
 /**
- * USPS Shipping (w/REST API) for Zen Cart
- * Version 0.1.1
+ * USPS Shipping (RESTful) for Zen Cart
+ * Version 0.2.0
+ *
+ * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
- * @author Paul Williams (retched) 
- * @version $Id: manifest.php 2024-12-12 retched Version 0.1.1 $
+ * @copyright Portions adapted from 2012 osCbyJetta
+ * @author Paul Williams (retched)
+ * @version $Id: uspsr.php 2025-01-16 retched Version 0.2.0 $
 ****************************************************************************
     USPS Shipping (w/REST API) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -25,13 +28,13 @@
 ****************************************************************************/
 
 return [
-    'pluginVersion' => 'v0.1.1',
+    'pluginVersion' => 'v0.2.0',
     'pluginName' => 'USPS Shipping (w/REST API) for Zen Cart',
-    'pluginDescription' => 'This module provides sellers a chance to offer United States Postal Service (USPS) shipping rates to customers during checkout. This is done by pulling the rates directly from the USPS\' REST API.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)',
+    'pluginDescription' => "This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS' REST API using OAuth.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)",
     'pluginAuthor' => 'Paul Williams (retched)',
     'pluginId' => 2395,
     'zcVersions' => ['v158', 'v200', 'v201'],
-    'changelog' => 'https://github.com/retched/ZC-USPSRestful/releases', 
+    'changelog' => 'https://github.com/retched/ZC-USPSRestful/releases',
     'github_repo' => 'https://github.com/retched/ZC-USPSRestful',
     'pluginGroups' => [],
 ];

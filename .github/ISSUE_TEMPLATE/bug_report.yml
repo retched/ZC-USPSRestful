@@ -1,6 +1,6 @@
 name: Bug Report
-description: File a bug report.
-title: "[Bug]: "
+description: File a bug report. Use this to explain, in detail, that something is going on with the script. (This SHOULD NOT be used to report general ZenCart errors.)
+title: "[BUG]: "
 labels: ["bug"]
 body:
   - type: markdown
@@ -13,9 +13,10 @@ body:
       label: USPSr Version
       description: What version of our software are you running?
       options:
-        - 0.1.0 (Current Version)
-        - 0.1.1 (Development)
-      default: 0
+        - 0.1.0
+        - 0.2.0 (Current Version)
+        - N/A (pulled straight from main branch)
+      default: 1
     validations:
       required: true
   - type: dropdown
@@ -49,8 +50,8 @@ body:
     id: what-happened
     attributes:
       label: What happened? Describe the bug in detail
-      description: Also tell us, what did you expect to happen? If you're getting visual errors, include a screen shot here.
-      placeholder: Tell us what you see!
+      description: What did you expect to happen? If you're getting visual errors, include a screen shot here. (If you're getting errors from ZenCart, be sure to include those too.)
+      placeholder: What's going on?
     validations:
       required: true
   - type: textarea
