@@ -8,6 +8,8 @@ This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and bac
 
 ## Current Version: 0.2.0
 
+Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
+
 ## Version History
 
 - _0.0.0
