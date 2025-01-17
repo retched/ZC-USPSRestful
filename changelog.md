@@ -22,7 +22,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 - Changed the module's installation message with regards to the measurements. (Going forward, if the store owner changes the setting for `SHIPPING_WEIGHT_UNITS` at the time of installation, the message for the default measurements will also change.)
-- Changed the ZenCart Plugin Manager message to be a bit more descriptive.
 - Changed the value of "Estimate Time" to "Estimate Transit Time" for the `MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT` constant for clarity. During the upgrade, if "Estimate Time" is the option, it will change to "Estimate Transit Time" automatically.
 - Changed the encapsulated plugin's "description" to read a bit better. (This has no function on the operation of the plugin but it was irritating to look at as it referenced parts not available in the regular parts of the module.)
 
