@@ -4,9 +4,9 @@
 
 ![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=851185) ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&labelColor=black&labelColor=white)
 
-This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
+This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
+This module supports ZenCart versions 1.5.8 onward innately. (Support for 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
 ## Current Version: 0.2.0
 
@@ -33,11 +33,15 @@ Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0
 
 ### ZenCart 1.5.8 and above
 
-This module is an encapsulated plugin. You can take the contents of the `zc_plugins` directory and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart admin dashboard and visit `ADMIN > Modules > Plugin Manager`. Find the USPSRestful entry and click `Install`. (When prompted, you should install the most recent version.) Next, proceed to the Shipping Module manager (`ADMIN > Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provide the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service. (If you prefer a non-encapsulated version, a non-encapsulated version is available from the Releases page on GitHub or by visiting the ZenCart Plugins Directory using the link above and finding the "Encapsulated: No" version in the plugin/module directory.)
+This module is available as an encapsulated plugin. You can take the contents of the `zc_plugins` directory and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart admin dashboard and visit `Modules > Plugin Manager`. Find the USPSRestful entry and click `Install`. (When prompted, you should install the most recent version.) Next, proceed to the Shipping Module manager (`Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provide the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service. (If you prefer a non-encapsulated version, a non-encapsulated version is available from the Releases page on GitHub or by visiting the ZenCart Plugins Directory using the link above and finding the "Encapsulated: No" version in the plugin/module directory.)
 
 ### ZenCart 1.5.7 and before
 
-Backward compatibility with earlier ZenCart's is not guaranteed. You're welcome to try to use the module on earlier ZenCart versions but you cannot use the Plugin Manager directly. (Unless you make various changes to your core code.) Instead, you can extract the files from the file listing below and upload them to the appropriate places in your installation. To activate the module for use, simply visit the Shipping Module manager (again: `ADMIN > Modules > Shipping`). Customize your module to your content.
+Backward compatibility with earlier ZenCart's is not guaranteed. You're welcome to try to use the module on earlier ZenCart versions but you cannot use the Plugin Manager directly. (Unless you make various changes to your core code.) Instead, you should download the non-encapsulated version of the module and upload its files to the relevant directories in your ZenCart installation. (This plainly means extract the contents of the zip file and upload the contents of the `catalog` directory into the root of your ZenCart install.) To activate the module for use, simply visit the Shipping Module manager (again: `Modules > Shipping`). Customize the module to your content.
+
+### Any version of ZenCart
+
+Be sure that you set your shop's "Origin Zip Code" in the Configuration module of the ZenCart back end.
 
 ### Uninstallation
 
