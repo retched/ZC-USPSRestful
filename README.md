@@ -179,7 +179,7 @@ For the update
 
 ## License
 
-``` txt
+``` text
 USPS Shipping (RESTful) for Zen Cart
 A shipping module for ZenCart, an e-commerce platform
 Copyright (C) 2024 Paul Williams (retched / retched@hotmail.com)
