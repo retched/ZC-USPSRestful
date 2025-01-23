@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.1.0
+ * Version 0.2.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2024-12-12 retched Version 0.1.0 $
+ * @version $Id: uspsr.php 2025-01-17 retched Version 0.2.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -153,14 +153,14 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    const USPSR_CURRENT_VERSION = '0.1.0';
+    private const USPSR_CURRENT_VERSION = '0.2.0';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
      * DPOs (Diplomatic Post Offices). This should not be removed as it will disable the APO/FPO/DPO Flat Rate.
      * @var array
      */
-    const USPSR_MILITARY_MAIL_ZIP = [
+    private const USPSR_MILITARY_MAIL_ZIP = [
         '09002', '09003', '09004', '09005', '09006', '09008', '09009', '09010', '09011', '09012',
         '09013', '09014', '09015', '09016', '09017', '09018', '09020', '09021', '09034', '09044',
         '09046', '09049', '09053', '09060', '09067', '09068', '09069', '09079', '09094', '09095',
@@ -292,7 +292,7 @@ class uspsr extends base
             //
             } else {
                 if (isset($template)) {
-                    $this->icon = $template->get_template_dir('shipping_usps.gif', DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/shipping_usps.gif';
+                    $this->icon = $template->get_template_dir('shipping_uspsr.gif', DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/shipping_uspsr.gif';
                 }
                 $this->storefrontInitialization();
             }
@@ -434,7 +434,7 @@ class uspsr extends base
         // request quotes
         $this->notify('NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes);
 
-        // Create
+        // Create the main quote
         $this->_getQuote();
 
         // Okay let's start processing this.
@@ -623,7 +623,7 @@ class uspsr extends base
 
                                 $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
 
-                            } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Time"
+                            } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
 
                                 // We only need the number of days from the JSON.
                                 $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
@@ -718,6 +718,12 @@ class uspsr extends base
          *
          */
 
+        $message = '';
+        $message .= "\n" . '===============================================' . "\n";
+        $message .= 'Revoking Bearer Token...' . "\n";
+        $this->uspsrDebug($message);
+
+
         $this->revokeBearerToken();
 
         return $this->quotes;
@@ -734,10 +740,15 @@ class uspsr extends base
         }
 
         global $sniffer;
-        $results = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'varchar(255)', true);
-        if ($results !== true) {
-            $sql = "ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''";
-            $db->Execute($sql);
+
+        $is_text = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'text');
+        $is_mediumtext = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'mediumtext');
+        $is_blob = $sniffer->field_type(TABLE_ORDERS, 'shipping_method', 'blob');
+
+        # If the column is the column is a text, mediumtext, or blob: DO NOTHING.
+        # Otherwise, safe to assume it's VARCHAR() or TINYTEXT. (Some modules change the shipping_method to text, change THOSE to be VARCHAR(255))
+        if (($is_text || $is_mediumtext || $is_blob) === FALSE ) {
+            $db->Execute("ALTER TABLE " . TABLE_ORDERS . " MODIFY shipping_method varchar(255) NOT NULL DEFAULT ''");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_CHECK');
@@ -863,7 +874,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Irregular\'], ', now())"
+                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".)', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Irregular\'], ', now())"
         );
 
         /**
@@ -873,7 +884,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed. Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Time\'], ', now())"
+                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed. Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], ', now())"
         );
 
         $db->Execute(
@@ -896,14 +907,14 @@ class uspsr extends base
                 "INSERT INTO " . TABLE_CONFIGURATION . "
                     (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added)
                  VALUES
-                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements must be in inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
+                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
             );
          } else {
             $db->Execute(
                 "INSERT INTO " . TABLE_CONFIGURATION . "
                     (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added)
                  VALUES
-                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '8.625, 8.625, 5.375, 5.375, 1.625, 1.625', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements must be in inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
+                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '8.625, 8.625, 5.375, 5.375, 1.625, 1.625', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
             );
          }
 
@@ -1057,7 +1068,7 @@ class uspsr extends base
 
     protected function quoteLogConfiguration()
     {
-        global $order, $shipping_weight, $currencies;
+        global $order, $currencies;
 
         if ($this->debug_enabled === false) {
             return;
@@ -1083,8 +1094,8 @@ class uspsr extends base
         $ounces = ($this->quote_weight - $pounds) * 16;
 
         $message = '' . "\n\n";
-        $message .= 'USPSRestful Configuration Report' . "\n";
-        $message .= "=========================================================" . "\n";
+        $message .= "USPSRestful Configuration Report\n";
+        $message .= "=========================================================\n";
         $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . "\n\n";
         $message .= 'Quote Request Rate Type: ' . MODULE_SHIPPING_USPSR_PRICING . "\n";
         $message .= 'Quote from main_page: ' . $_GET['main_page'] . "\n";
@@ -1092,6 +1103,7 @@ class uspsr extends base
 
         $message .= 'Site Weights Based in: ' . SHIPPING_WEIGHT_UNITS . ' (' . (SHIPPING_WEIGHT_UNITS == 'lbs' ? 'Pounds' : 'Kilograms') . ')' . "\n";
         $message .= 'Site Measurements Based in: ' . (defined('SHIPPING_DIMENSION_UNITS') ? ucwords(SHIPPING_DIMENSION_UNITS) : "Inches" ) . "\n";
+        $message .= 'Shipping ZIP Code Origin: ' . SHIPPING_ORIGIN_ZIP . "\n\n";
 
         $message .= 'Cart Weight: ' . $_SESSION['cart']->weight . " " . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . $_SESSION['cart']->weight * 0.453592 . " lbs)" : '' ) . "\n";
         $message .= 'Total Quote Weight: ' . $this->quote_weight . ' lbs. , Pounds: ' . $pounds . ', Ounces: ' . $ounces . "\n";
@@ -1197,7 +1209,15 @@ class uspsr extends base
             }
         }
 
-        // If the origin country isn't the United States, you can't use USPS (APO/DPO/FPO counts as United States)
+        // If the Origin Zip Code fails validation... stop.
+        if (!uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP)) {
+            $this->enabled = false;
+            if (IS_ADMIN_FLAG === true) {
+                $this->title .= '<span class="alert">' . ' - An invalid shipment origin ZIP code has been detected. Please enter a valid 5-digit ZIP Code in the Configuration > Shipping/Package > Postal Code field.' . '</span>';
+            }
+        }
+
+        // If the origin country isn't the United States, you can't use USPS (APO/DPO/FPO counts as United States)... stop.
         if (SHIPPING_ORIGIN_COUNTRY !== '223') {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
@@ -1213,7 +1233,7 @@ class uspsr extends base
             }
         }
 
-        // If either the API Key or Secret are blank, stop, you can't use USPS
+        // If either the API Key or Secret are duds, stop, you can't use USPS... you didn't provide proper access credentials.
         if ((strtolower(MODULE_SHIPPING_USPSR_API_KEY) == 'none') || strtolower(MODULE_SHIPPING_USPSR_API_KEY) == 'none') {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
@@ -1278,26 +1298,10 @@ class uspsr extends base
             $service = (int)$service;
         }
 
-        /**
-         * The array of international services. (There's only three as the rest
-         * are hazardous materials)
-         *
-         * @var array
-         * @todo The API does not return First Class Mail International if Insurance is selected.
-         * For right now, disable 930/931 being added until the code can be reworked around
-         * to still at least present the option for First Class Mail International.
-         */
         $services_intl = array_filter(explode(', ', MODULE_SHIPPING_USPSR_INTL_SERVICES));
-        if (in_array(930, $services_intl)) $services_intl = array_diff($services_intl, [930]);
-
-        /**
-         * The above line removes Insurance from being presented to the API since it also knocks out the
-         * First Class Mail International service. To that end if you want to enable Insurance anyway, disable
-         * or delete line 1291 above and uncomment the line below to enable Insurance anyway and to cover the
-         * spread like this script does for Domestic packages.
-         */
-
-        // if (in_array(930, $services_dmst)) $services_dmst[] = 931;
+        if (in_array(930, $services_intl)) {
+            $services_intl[] = 931;
+        }
 
         // Make sure that we only have numbers in the array
         foreach ($services_intl as &$service) {
@@ -1315,6 +1319,7 @@ class uspsr extends base
             // Set focus to the Domestic API
             $focus = "rates-domestic";
 
+            // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
             $mailClasses = [
                 "USPS_GROUND_ADVANTAGE",
                 "PRIORITY_MAIL",
@@ -1324,7 +1329,7 @@ class uspsr extends base
             /**
              * Is this package going to a APO/FPO/DPO?
              */
-            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode']), self::USPSR_MILITARY_MAIL_ZIP);
+            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'), self::USPSR_MILITARY_MAIL_ZIP);
 
             /**
              * Check to see if the products in the cart are ALL eligible for USPS Media Mail.
@@ -1332,11 +1337,11 @@ class uspsr extends base
             if ($this->enable_media_mail) { $mailClasses[] = "MEDIA_MAIL"; }
 
             // Check to see if the order fits for USPS Connect Local
-            if (uspsr_check_connect_local($order->delivery['postcode'])) $mailClasses[] = "USPS_CONNECT_LOCAL";
+            if (uspsr_check_connect_local($order->delivery['postcode'] ?? '00000')) $mailClasses[] = "USPS_CONNECT_LOCAL";
 
             $json_body = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode']),
+                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
                 'weight' => $shipping_weight,
                 'length' => $domm_length,
                 'width' => $domm_width,
@@ -1350,7 +1355,7 @@ class uspsr extends base
             // Let's make a standards request now.
             $standards_query = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode']),
+                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
                 'mailClass' => 'ALL',
                 'weight' => $shipping_weight
             ];
@@ -1360,10 +1365,10 @@ class uspsr extends base
 
             $todays_date_plus = $todays_date->modify("+{$daystoadd} days");
             $standards_query['acceptanceDate'] = $todays_date_plus->format('Y-m-d');
-
+            $street_address = trim($order->delivery['street_address']  ?? '');
 
             // If the address contains "PO BOX" or "BOX" in the address line 1, that makes it a PO BOX.
-            if (preg_match("/^(PO BOX|BOX)/i", trim($order->delivery['street_address']))) {
+            if (preg_match("/^(PO BOX|BOX)/i", $street_address)) {
                 $standards_query['destinationType'] = "PO_BOX";
             } else {
                 $standards_query['destinationType'] = "STREET";
@@ -1512,7 +1517,6 @@ class uspsr extends base
          *
          */
 
-        // If the $array_body is set, build a
 
 
         $usps_calls = [
@@ -1580,7 +1584,6 @@ class uspsr extends base
         return $body;
 
     }
-
     protected function quoteLogCurlBody($request)
     {
         global $order;
@@ -1600,7 +1603,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function quoteLogCurlResponse($request)
     {
         global $order;
@@ -1620,7 +1622,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function quoteLogJSONResponse($response)
     {
         if ($this->debug_enabled === false) {
@@ -1632,7 +1633,6 @@ class uspsr extends base
 
         $this->uspsrDebug($message);
     }
-
     protected function getBearerToken()
     {
         global $request_type;
@@ -1707,7 +1707,6 @@ class uspsr extends base
 
         return $token;
     }
-
     protected function revokeBearerToken()
     {
         global $request_type;
@@ -1795,7 +1794,6 @@ class uspsr extends base
      *
      * @return void
      */
-
     protected function _calcCart()
     {
         global $order, $uninsurable_value;
@@ -2015,7 +2013,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         922 => ['Adult Signature Required', FALSE],
         940 => ['Registered Mail', FALSE],
         915 => ['Collect on Delivery', FALSE],
-        955 => ['Return Receipt', TRUE],
+        955 => ['Return Receipt', FALSE],
         957 => ['Return Receipt Electronic', FALSE],
         921 => ['Signature Confirmation', FALSE],
         911 => ['Certified Mail Restricted Delivery', FALSE],
@@ -2127,10 +2125,11 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Package Service/',
                         '/ISC/',
                         '/Machinable DDU/',
-                        '/Machinable/',
+                        '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
                         '/Non-Soft Pack Tier 1/',
+                        '/\s{2,}/'
                     ],
                     [
                         'Intl',
@@ -2149,9 +2148,10 @@ function zen_cfg_uspsr_showservices($key_value)
                         '',
                         '',
                         '',
+                        ' ',
                         '',
                         '',
-                        ''
+                        ' '
                     ],
                     $methods
                 );
@@ -2173,8 +2173,8 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Package\hService\h-\hRetail/',
                         '/Package Service/',
                         '/ISC/',
-                        '/Machinable DDU/',
-                        '/Machinable/',
+                        '/Machinable DDU\s+/',
+                        '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
                         '/Non-Soft Pack Tier 1/',
