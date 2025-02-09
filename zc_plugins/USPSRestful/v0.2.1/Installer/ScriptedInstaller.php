@@ -65,7 +65,10 @@ class ScriptedInstaller extends ScriptedInstallBase
             ]);
         }
 
-        switch ($oldVersion){
+        // Change the Version of the module to match. (No need to reinstall.)
+        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', ['configuration_value' => '0.2.1']);
+
+        switch ($oldVersion) {
             case "v0.1.0":
 
                 // Update the Configuration descriptions that had spelling errors.

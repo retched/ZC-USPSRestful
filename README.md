@@ -8,51 +8,40 @@ This module provides ZenCart sellers the ability to offer United States Postal S
 
 This module supports ZenCart versions 1.5.8 onward innately. (Support for 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
 
-## Current Version: 0.2.0
+## Current Version
 
-Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
+Last Stable Release: 0.2.0
+: Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
+
+Current Developmental Version: 0.2.1
+: _- In Development -_
 
 ## Version History
 
 - _0.0.0
   Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README.md._
-
 - 0.1.0
   First "release".
-
 - 0.2.0
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
+- 0.2.1
+  _In Development_
 
 ## Additional Links
 
-- [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four APIs: Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
+- [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
 - [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
 
 ## Setup, Install, and Upgrading
 
-### ZenCart 1.5.8 and above
+You can find full instructions to install the module by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing)
 
-This module is available as an encapsulated plugin. You can take the contents of the `zc_plugins` directory and upload it into the same directory in the ROOT of your ZenCart install. Once uploaded, open your ZenCart admin dashboard and visit `Modules > Plugin Manager`. Find the USPSRestful entry and click `Install`. (When prompted, you should install the most recent version.) Next, proceed to the Shipping Module manager (`Modules > Shipping`) and find an entry for "United States Postal Service (RESTful)" (code: `uspsr`) and then click Install. From there, simply provide the details requested, and customize the module to your content. Make sure to provide your API Credentials AND select at least ONE service. (If you prefer a non-encapsulated version, a non-encapsulated version is available from the Releases page on GitHub or by visiting the ZenCart Plugins Directory using the link above and finding the "Encapsulated: No" version in the plugin/module directory.)
-
-### ZenCart 1.5.7 and before
-
-Backward compatibility with earlier ZenCart's is not guaranteed. You're welcome to try to use the module on earlier ZenCart versions but you cannot use the Plugin Manager directly. (Unless you make various changes to your core code.) Instead, you should download the non-encapsulated version of the module and upload its files to the relevant directories in your ZenCart installation. (This plainly means extract the contents of the zip file and upload the contents of the `catalog` directory into the root of your ZenCart install.) To activate the module for use, simply visit the Shipping Module manager (again: `Modules > Shipping`). Customize the module to your content.
-
-### Any version of ZenCart
-
-Be sure that you set your shop's "Origin Zip Code" in the Configuration module of the ZenCart back end.
-
-### Uninstallation
+## Uninstallation
 
 If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button as it appears in the Plugin Manager. (The module will be disabled and removed.) If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you.
 
 If you are running this as an unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that you aren't still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
-
-### Upgrading
-
-- If you are using the encapsulated version: To update the module, copy the entire folder onto itself. Be sure to visit the plugin manager and run the "Upgrade Available" option when prompted to finish the upgrade. Your database settings will be retained.
-- If you're running the non-encapsulated version: backup your module settings **FIRST**, uninstall the module in the Shipping Module configuration, and simply overwrite all files in the appropriate directories. Once the files are settled, re-enable the module and re-enter your configurations.
 
 ## Frequently Asked Questions
 
@@ -80,7 +69,7 @@ USPS Connect rates are only available to retailers who have specifically signed 
 
 ### "The module is not showing at all even though I made my choices"
 
-Make sure that your store is configured to ship out of the United States and that you made sure to enter a Zip Code where your orders are originating from. Additionally, make sure that you have chosen shipping methods to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
+Make sure that your store is configured to ship out of the United States and that you made sure to enter a five digit Zip Code where your orders are originating from. Additionally, make sure that you have chosen shipping methods to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
 
 ### "I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don't see it as an option during checkout, what gives?"
 
@@ -141,6 +130,8 @@ For the update
 
 ## File Listing
 
+These are the file lists that should be included with this module, depending on which version you're running.
+
 ### Encapsulated File Listing
 
 ``` text
@@ -148,16 +139,11 @@ For the update
 - LICENSE
 - README.md (this file)
 - changelog.md
-- \zc_plugins\USPSRestful\v0.1.0\manifest.php
-- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.1.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.1.0\Installer\ScriptedInstaller.php
-- \zc_plugins\USPSRestful\v0.2.0\manifest.php
-- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.2.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.2.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.2.1\manifest.php
+- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.2.1\Installer\ScriptedInstaller.php
 ```
 
 ### Non-encapsulated File Listing
