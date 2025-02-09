@@ -10,20 +10,21 @@ This module supports ZenCart versions 1.5.8 onward innately. (Support for 1.5.7 
 
 ## Version
 
-Last Stable Release: 0.2.0
-: Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
+Last Stable Release: 0.2.0  
+Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
 
-Current Developmental Version: 0.2.1
-: _- In Development -_
+Current Developmental Version: 0.2.1  
+_- In Development -_
 
-Version History
-: 0.0.0
-  _Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README.md._
-: 0.1.0
+### Version History
+
+- 0.0.0  
+  _Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README\.md._
+- 0.1.0  
   First "release".
-: 0.2.0
+- 0.2.0  
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-: 0.2.1
+- 0.2.1  
   _In Development_
 
 ## Additional Links
