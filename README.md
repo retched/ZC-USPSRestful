@@ -18,13 +18,13 @@ Current Developmental Version: 0.2.1
 
 ## Version History
 
-- _0.0.0
-  Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README.md._
-- 0.1.0
+: 0.0.0
+  _Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README.md._
+: 0.1.0
   First "release".
-- 0.2.0
+: 0.2.0
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.2.1
+: 0.2.1
   _In Development_
 
 ## Additional Links
