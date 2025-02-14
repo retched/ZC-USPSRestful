@@ -5,9 +5,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- More descriptive README for setting up the USPS Business Account and account credentials. (Likely as a separate page or to build the Wiki.)
 - Readd the min/max weight per shipping method.
 - Build a better logic to match the rates with the selected methods.
+- Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
+
+## [0.3.0] - 2025-02-12
+
+### Added
+
+- Module now does a brief test to pull a token. If it succeeds, the module remains enabled. But if it fails for any reason whatsoever, the module turns off. (This also generates an error message in the Admin area.)
+- Created language define file for Admin side error messages.
+
+### Changed
+
+- Error messages in the admin backend now use `$messageStack` instead of attaching it to the row of details.
+- Improved README to give directions on how to create an API credentials. (Wiki was also created and articles created there.)
+
+### Removed
+
+- Deleted old versions from repository files. From now on, the old versions will live in the releases section of the GitHub and ZenCart Release. (This makes it easier to version track.)
+- Removed support
 
 ## [0.2.0] - 2025-01-17
 

@@ -13,7 +13,7 @@ This module supports ZenCart versions 1.5.8 onward innately. (Support for 1.5.7 
 Last Stable Release: 0.2.0  
 Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
 
-Current Developmental Version: 0.2.1  
+Current Developmental Version: 0.3.0  
 _- In Development -_
 
 ### Version History
@@ -24,14 +24,14 @@ _- In Development -_
   First "release".
 - 0.2.0  
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.2.1  
-  _In Development_
+- 0.3.0 _(in development)_  
+  Improved debugging messaging in backend and disabling the module when invalid credentials are entered.
 
 ## Additional Links
 
 - [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
-- [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This above thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
+- [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
 
 ## Setup, Install, and Upgrading
 
@@ -53,7 +53,7 @@ The original USPS module works by using the older USPS Web Tools API. For years,
 
 ### I already have a `USERID` and `PASSWORD` under the old system, but I'm getting error messages while I try to retrieve quotes.
 
-The older `USERID` and `PASSWORD` are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [here](https://developers.usps.com/getting-started).
+The older `USERID` and `PASSWORD` are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [here](https://developers.usps.com/getting-started). If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API.
 
 ### Why should I use this versus the one that's out there now?
 
@@ -139,11 +139,12 @@ These are the file lists that should be included with this module, depending on 
 - LICENSE
 - README.md (this file)
 - changelog.md
-- \zc_plugins\USPSRestful\v0.2.1\manifest.php
-- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.2.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.2.1\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.3.0\manifest.php
+- \zc_plugins\USPSRestful\v0.3.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.3.0\Installer\ScriptedInstaller.php
 ```
 
 ### Non-encapsulated File Listing
@@ -153,9 +154,10 @@ These are the file lists that should be included with this module, depending on 
 - LICENSE
 - README.md (this file)
 - changelog.md
-- \catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \catalog\includes\modules\shipping\uspsr.php
-- \catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- admin\includes\languages\english\extra_definitions\lang.uspsr.php (NEW)
+- catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- catalog\includes\modules\shipping\uspsr.php
+- catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 ```
 
 ## Support the author
