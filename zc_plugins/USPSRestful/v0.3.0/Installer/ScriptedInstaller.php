@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.2.0
+ * Version 0.3.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2025-01-17 retched Version 0.2.0 $
+ * @version $Id: ScriptedInstaller.php 2025-02-12 retched Version 0.3.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -66,9 +66,11 @@ class ScriptedInstaller extends ScriptedInstallBase
         }
 
         // Change the Version of the module to match. (No need to reinstall.)
-        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', ['configuration_value' => '0.2.1']);
+        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', ['configuration_value' => '0.3.0']);
 
         switch ($oldVersion) {
+            case "v0.2.1":
+            case "v0.2.0":
             case "v0.1.0":
 
                 // Update the Configuration descriptions that had spelling errors.
@@ -87,7 +89,17 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_value' => 'Estimate Transit Time'
                     ]);
                 }
+                
+                // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
+                    'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
+                ]);
+
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
+                    'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
+                ]);
                 break;
+
         }
 
         // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).

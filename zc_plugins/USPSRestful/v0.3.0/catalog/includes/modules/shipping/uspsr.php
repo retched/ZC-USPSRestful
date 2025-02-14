@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.2.0
+ * Version 0.3.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2025-02-07 retched Version 0.2.1 $
+ * @version $Id: uspsr.php 2025-02-07 retched Version 0.3.0 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -153,7 +153,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = '0.2.1';
+    private const USPSR_CURRENT_VERSION = '0.3.0';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
@@ -261,7 +261,7 @@ class uspsr extends base
         // -----
         // Set debug-related variables for use by the uspsrDebug method.
         //
-        $this->debug_enabled = (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs');
+        $this->debug_enabled = (MODULE_SHIPPING_USPSR_DEBUG_MODE !== 'Off');
         $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . date('Ymd_His') . '.log';
 
         $this->typeCheckboxesSelected = explode(', ', MODULE_SHIPPING_USPSR_TYPES);
@@ -373,7 +373,7 @@ class uspsr extends base
         global $order, $shipping_weight, $shipping_num_boxes, $currencies;
 
         // Make a token for the API
-        $this->bearerToken = $this->getBearerToken();
+        $this->getBearerToken();
 
         // What unit are we working with?
         switch ($this->_standard) {
@@ -674,8 +674,8 @@ class uspsr extends base
 
             } else { // This means nothing was built. Report it back as such.
 
-                // Don't show this error on shopping_cart or shipping_estimator... Only during checkout
-                if ($_GET['main_page'] !== 'shopping_cart' && $_GET['main_page'] !== 'shipping_estimator') {
+                // Only show this during debugging
+                if ($this->debug_enabled === false) {
                     $this->quotes = [
                         'id' => $this->code,
                         'icon' => zen_image($this->icon),
@@ -692,8 +692,8 @@ class uspsr extends base
 
         } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
 
-            // Don't show this error on shopping_cart or shipping_estimator... Only during checkout
-            if ($_GET['main_page'] !== 'shopping_cart' && $_GET['main_page'] !== 'shipping_estimator') {
+            // Only show this during debugging
+            if ($this->debug_enabled === false) {
                 $this->quotes = [
                     'id' => $this->code,
                     'icon' => zen_image($this->icon),
@@ -798,13 +798,13 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function)
              VALUES
-                ('Enter the USPS API Consumer Key', 'MODULE_SHIPPING_USPSR_API_KEY', 'NONE', 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.', 6, 0, now(), 'zen_cfg_password_display')"
+                ('Enter the USPS API Consumer Key', 'MODULE_SHIPPING_USPSR_API_KEY', 'NONE', 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.', 6, 0, now(), 'zen_cfg_password_display')"
         );
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function)
              VALUES
-                ('Enter the USPS API Consumer Secret', 'MODULE_SHIPPING_USPSR_API_SECRET', 'NONE', 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website', 6, 0, now(), 'zen_cfg_password_display')"
+                ('Enter the USPS API Consumer Secret', 'MODULE_SHIPPING_USPSR_API_SECRET', 'NONE', 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.', 6, 0, now(), 'zen_cfg_password_display')"
         );
 
         /**
@@ -1193,6 +1193,11 @@ class uspsr extends base
      */
     protected function checkConfiguration()
     {
+        global $messageStack;
+
+        // Try to get a bearer token
+        $this->getBearerToken();
+
         // Need to have at least one method enabled
         $usps_shipping_methods_cnt = 0;
         foreach ($this->typeCheckboxesSelected as $requested_type) {
@@ -1205,7 +1210,7 @@ class uspsr extends base
         if ($usps_shipping_methods_cnt === 0) {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - Nothing has been selected for Quotes.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_NO_QUOTES, 'error');
             }
         }
 
@@ -1213,7 +1218,7 @@ class uspsr extends base
         if (!uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP)) {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - An invalid shipment origin ZIP code has been detected. Please enter a valid 5-digit ZIP Code in the Configuration > Shipping/Package > Postal Code field.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_BAD_ORIGIN_ZIPCODE, 'error');
             }
         }
 
@@ -1221,23 +1226,23 @@ class uspsr extends base
         if (SHIPPING_ORIGIN_COUNTRY !== '223') {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - USPS can only ship from USA, but your store is configured with another origin! See Admin->Configuration->Shipping/Packaging.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_BAD_ORIGIN_COUNTRY, 'error');
             }
         }
 
         // If either the API Key or Secret are blank, stop, you can't use USPS
-        if (!zen_not_null(MODULE_SHIPPING_USPSR_API_KEY) || !zen_not_null(MODULE_SHIPPING_USPSR_API_KEY)) {
+        if (!zen_not_null(MODULE_SHIPPING_USPSR_API_KEY) || !zen_not_null(MODULE_SHIPPING_USPSR_API_SECRET)) {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - You didn\'t enter the API Key and Secret. Please follow the instructions and log in to the developers dashboard to obtain your Consumer Secret and Consumer Key.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_BAD_CREDENTIALS, 'error');
             }
         }
 
         // If either the API Key or Secret are duds, stop, you can't use USPS... you didn't provide proper access credentials.
-        if ((strtolower(MODULE_SHIPPING_USPSR_API_KEY) == 'none') || strtolower(MODULE_SHIPPING_USPSR_API_KEY) == 'none') {
+        if ((strtolower(MODULE_SHIPPING_USPSR_API_KEY) == 'none') || strtolower(MODULE_SHIPPING_USPSR_API_SECRET) == 'none') {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - You didn\'t enter the API Key and Secret. Please follow the instructions and log in to the developers dashboard to obtain your Consumer Secret and Consumer Key.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_NO_CREDENTIALS, 'error');
             }
         }
 
@@ -1245,8 +1250,20 @@ class uspsr extends base
         if (MODULE_SHIPPING_USPSR_PRICING == 'Contract' && (MODULE_SHIPPING_USPSR_CONTRACT_TYPE == 'None' || !zen_not_null(MODULE_SHIPPING_USPSR_ACCT_NUMBER))) {
             $this->enabled = false;
             if (IS_ADMIN_FLAG === true) {
-                $this->title .= '<span class="alert">' . ' - You chose to have Contract pricing but you entered invalid details. Check your settings.' . '</span>';
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_NO_CONTRACT, 'error');
             }
+        }
+
+        // If the module is NOT able to get a Bearer Token, disable the module. Something is wrong.
+        if ( ((strtolower(MODULE_SHIPPING_USPSR_API_KEY) != 'none') && (strtolower(MODULE_SHIPPING_USPSR_API_KEY)) != 'none' ) && !zen_not_null($this->bearerToken)) {
+            $this->enabled = false;
+            if (IS_ADMIN_FLAG === true) {
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_REJECTED_CREDENTIALS, 'error');
+            }
+
+        } else {
+            // Revoke the test token
+            $this->revokeBearerToken();
         }
 
         return $this->enabled;
@@ -1618,8 +1635,9 @@ class uspsr extends base
         $message .= "\n" . '---------------------------------' . "\n";
         $message .= 'CommErr (should be 0): ' . $this->commErrNo . ' - ' . $this->commError . "\n\n";
 
-        $message .= '==================================' . "\n\n" . 'USPS Country - $order->delivery[country][iso_code_2]: ' . $order->delivery['country']['iso_code_2'] . "\n";
+        $message .= '==================================' . "\n\n" . (isset($order) ? 'USPS Country - $order->delivery[country][iso_code_2]: ' . $order->delivery['country']['iso_code_2'] : '') . "\n";
 
+        
         $this->uspsrDebug($message);
     }
     protected function quoteLogJSONResponse($response)
@@ -1703,9 +1721,9 @@ class uspsr extends base
         // Return JUST the token
         $body = json_decode($body, TRUE);
 
-        $token = $body['access_token'];
+        $this->bearerToken = $body['access_token'];
 
-        return $token;
+        return;
     }
     protected function revokeBearerToken()
     {
@@ -2302,25 +2320,15 @@ function uspsr_pretty_json_print($json)
 
 function uspsr_validate_zipcode($entry)
 {
-    // Remove any non-digit characters
+    // Remove any non-digit characters, US Zip codes are only digits.
     $digits = preg_replace('/\D/', '', $entry);
 
-    // Handle 5 digits
-    if (strlen($digits) === 5) {
-        return $digits;
-    }
-
-    // Handle 6 to 9 digits by returning the first 5
-    if (strlen($digits) >= 6 && strlen($digits) <= 9) {
+    // Handle 5 digits or 9 digits by returning the first five.
+    if ( (strlen($digits) === 5) || (strlen($digits) === 9) ) {
         return substr($digits, 0, 5);
     }
 
-    // Handle more than 9 digits by returning the first 5
-    if (strlen($digits) > 9) {
-        return substr($digits, 0, 5);
-    }
-
-    // Return false if it doesn't meet any of the criteria
+    // Return false if it doesn't have 5 or 9 digits. That generally means it's an invalid zip.
     return false;
 }
 
