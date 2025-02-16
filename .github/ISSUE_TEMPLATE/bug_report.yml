@@ -15,8 +15,8 @@ body:
       options:
         - 0.1.0
         - 0.2.0 (Current Version)
-        - N/A (pulled straight from main branch)
-      default: 1
+        - 0.0.0 (pulled straight from main branch)
+      default: 2
     validations:
       required: true
   - type: dropdown
@@ -55,8 +55,15 @@ body:
     validations:
       required: true
   - type: textarea
-    id: logs
+    id: zencart-logs
     attributes:
-      label: Relevant Log Output
-      description: Please copy and paste any relevant log output from the ZenCart logs directory. Obfubiscate any directory names if you wish. This will be automatically formatted into code, so no need for backticks.
+      label: Relevant ZenCart Log Output
+      description: Please copy and paste any relevant log output from ZenCart here. This would be the contents of any myDEBUG file that appeared in your logs directory from ZenCart.
       render: shell
+  - type: textarea
+    id: uspsr-logs
+    attributes:
+      label: Relevant USPS Log Output
+      description: Please copy and paste any relevant log output from the USPSr module here. This would be the contents of any log file generated from the module itself. These are normally named SHIP_uspsr_Debug_.
+      render: shell
+  

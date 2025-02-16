@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.3.0
+ * Version 0.0.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: ScriptedInstaller.php 2025-02-12 retched Version 0.3.0 $
+ * @version $Id: ScriptedInstaller.php 2025-02-12 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -89,7 +89,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_value' => 'Estimate Transit Time'
                     ]);
                 }
-                
+
                 // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
                     'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
@@ -97,6 +97,11 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
                     'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
+                ]);
+
+                // Reset the module's selected shipping methods entirely.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                    'configuration_value' => '0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00',
                 ]);
                 break;
 
@@ -127,6 +132,8 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_TAX_BASIS',
             'MODULE_SHIPPING_USPSR_ZONE',
             'MODULE_SHIPPING_USPSR_PROCESSING_CLASS',
+            'MODULE_SHIPPING_USPSR_PACKAGING_CLASS',
+            'MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS',
             'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT',
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
@@ -136,11 +143,11 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_DMST_SERVICES',
             'MODULE_SHIPPING_USPSR_INTL_SERVICES',
             'MODULE_SHIPPING_USPSR_PRICING',
+            'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL',
             'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
             'MODULE_SHIPPING_USPSR_ACCT_NUMBER',
             'MODULE_SHIPPING_USPSR_DEBUG_MODE',
             'MODULE_SHIPPING_USPSR_SORT_ORDER',
-
         ]);
 
         // Additionally, we should force the module off by removing uspsr.php from the configuration value of MODULE_SHIPPING_INSTALLED
