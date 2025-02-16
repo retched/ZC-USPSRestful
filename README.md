@@ -6,20 +6,20 @@
 
 This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module supports ZenCart versions 1.5.8 onward innately. (Support for 1.5.7 and backward is not necessarily guaranteed but is plausible. Read the Installation steps below for more details.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)
+This module supports ZenCart versions 1.5.8 onward innately. Work is being done to allow the module to work with ZenCart 1.5.7. (Read the first FAQ below)
 
 ## Version
 
 Last Stable Release: 0.2.0  
 Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
 
-Current Developmental Version: 0.3.0  
-_- In Development -_
+Next Version Number: 0.3.0  
+
 
 ### Version History
 
 - 0.0.0  
-  _Nothing. This was a placeholder for the module to obtain the plugin ID for the encapsulated version. This version should not be downloaded as it only contains a simplified README\.md._
+  _Development version. This version contains an incomplete thought and should not be used in production unless you are absolutely sure what you are doing.._
 - 0.1.0  
   First "release".
 - 0.2.0  
@@ -46,6 +46,12 @@ If you are running this as an unencapsulated module, visit `Modules > Shipping` 
 ## Frequently Asked Questions
 
 This won't answer all the questions you may have, but it may answer some that I thought of.
+
+### Does this module support ZenCart 1.5.7 and before?
+
+Short answer, no.
+
+Long answer: Not immediately. When this module was written it had targeted ZenCart 1.5.8 as that was the most recent version out there. Shortly after the USPS formally announced the planned deprecation of WebTools, [several users](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)/page2&p=1406047#post1406047) found this module and assumed it would work out of the box for earlier versions of ZenCart. (This was in part due to the module being flagged as compatible with 1.5.7 which was a mistake on my part.) The module can be made to work with ZenCart 1.5.7 and before but it will a LOT of work. (Effectively there are two parts: change the array based language files back to the older `define` style from 1.5.7 and change/remove the null coalescing operator `??` from various points in the code.) Work will start shortly on making the module compatible with 1.5.7 shortly. When that version is release, a special release will be tagged here on GitHub and uploaded to ZenCart's Modules directory.
 
 ### What is the difference between this version and the original USPS module?
 
