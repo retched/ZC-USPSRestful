@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.3.0
+ * Version 0.0.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 2025-02-07 retched Version 0.3.0 $
+ * @version $Id: uspsr.php 2025-02-07 retched Version 0.0.0 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -153,7 +153,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = '0.3.0';
+    private const USPSR_CURRENT_VERSION = '0.0.0';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
@@ -262,7 +262,7 @@ class uspsr extends base
         // Set debug-related variables for use by the uspsrDebug method.
         //
         $this->debug_enabled = (MODULE_SHIPPING_USPSR_DEBUG_MODE !== 'Off');
-        $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . date('Ymd_His') . '.log';
+        $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
 
         $this->typeCheckboxesSelected = explode(', ', MODULE_SHIPPING_USPSR_TYPES);
         $this->update_status();
@@ -391,32 +391,37 @@ class uspsr extends base
         }
 
         /**
-         * Determine machinable or not
+         * Determine if package is machinable or not - Media Mail Only
+         * API will either return both the machinable rate and non-machinable rate or one or the other.
          *
-         * By definition, weight must be less than 35lbs and greater than 6 ounces or it is not machinable.
+         * The store owner will choose a preference. If the preference can be met, show that rate. If it can't be met, but there is only
+         * one rate available... show THAT rate.
+         *
+         * By definition, Media Mail Machinable parcels must weight less than 25lbs with no minimum. Additionally, a package to be machineable
+         * cannot be more than 22 inches long, 18 inches wide, 15 inches high. The USPS considers the longest measurement given to the length, the
+         * 2nd longest measurement is considered it's width, and the third longest it's height. (Actually it considers "length is the measurement of
+         * the longest dimension and girth is the distance around the thickest part".)
+         *
          * If all else fails, follow the module setting.
+         *
+         * For all other services, this is handled by the API.
          */
 
+        // Rebuild the dimmensions array
+        $dimmensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
+        $dimmensions = [$dimmensions[0], $dimmensions[2], $dimmensions[4]]; // Media Mail is only a US only service, so we'll only use those three.
+        array_walk($dimmensions, function(&$value) { $value = trim($value);}); // Quickly remove white space
+        rsort($dimmensions);
+
         switch (true) {
-            // force machinable for $0.49 remove the false && from the first case
-            case (false && ($this->is_us_shipment === true && ($this->quote_weight <= 0.0625))):
-                // override admin choice, too light. Once ounce is machinable.
-                $this->machinable = 'Machinable';
+            case ($this->quote_weight > 25):
+                // override admin choice, too heavy, 25 lbs is the limit.
+                $this->machinable = 'Nonstandard';
                 break;
 
-            case ($this->is_us_shipment === true && ($this->quote_weight < 0.0625)):
-                // override admin choice, too light, default regulation
-                $this->machinable = 'Irregular';
-                break;
-
-            case (!$this->is_us_shipment === true && ($this->quote_weight < 0.21875)):
-                // override admin choice, too light, More than one ounce but less than 3.5
-                $this->machinable = 'Irregular';
-                break;
-
-            case ($this->quote_weight > 35):
-                // override admin choice, too heavy, 35 lbs is the limit.
-                $this->machinable = 'Irregular';
+                // override admin choice, package cannot be more than 22 inches at it's longest side, 18 inches wide, 15 inches tall
+            case ($dimmensions[0] > 22 || $dimmensions[1] > 18 || $dimmensions[2] > 15):
+                $this->machinable = 'Nonstandard';
                 break;
 
             default:
@@ -441,10 +446,75 @@ class uspsr extends base
         // Take the result of the CURL call and make it into an array.
         $uspsQuote = json_decode($this->uspsQuote, TRUE);
 
+        // Count how many times "Priority Mail" appears as a ProductName
+        $priorityMailCount = 0;
+        foreach ($uspsQuote['rateOptions'] as $rateOption) {
+            foreach ($rateOption['rates'] as $rate) {
+                // Only count those with the productName of Priority Mail and DO NOT count "OPEN_AND_DISTRIBUTE" (These are the weird)
+                if ($rate['productName'] == 'Priority Mail' && $rate['processingCategory'] !== 'OPEN_AND_DISTRIBUTE') {
+                    $priorityMailCount++;
+                }
+            }
+        }
+
+        // Count how many times "Priority Mail Express" appears as a ProductName
+        $priorityMailExpressCount = 0;
+        foreach ($uspsQuote['rateOptions'] as $rateOption) {
+            foreach ($rateOption['rates'] as $rate) {
+                if ($rate['productName'] == 'Priority Mail Express') {
+                    $priorityMailExpressCount++;
+                }
+            }
+        }
+
+        // Count how many times "USPS Ground Advantage" appears as a ProductName
+        $groundAdvantageCount = 0;
+        foreach ($uspsQuote['rateOptions'] as $rateOption) {
+            foreach ($rateOption['rates'] as $rate) {
+                if ($rate['productName'] == 'USPS Ground Advantage') {
+                    $groundAdvantageCount++;
+                }
+            }
+        }
+
+        /**
+         * Bugged API Check - Media Mail
+         *
+         * Currently the API is BUGGED on USPS' side. There should be a Nonstandard Basic and a Machinable Basic
+         * rate but right now, as of 2/15/25, the USPS API is only returning Nonstandard twice with "COMMERCIAL" quotes.
+         * (Retail rates work normally, however and yield a Machinable Single-Piece and Nonstandard Single-Piece quote.)
+         *
+         * It is a known reported bug at the USPS but there is nothing that I can do to alleviate that.
+         *
+         * Until USPS fixes it, Commercial quotes will use the "Nonstandard" rate either way and Retail quotes will
+         * toggle based on the appropriate setting.
+         *
+         * To "futureproof" this, as the fix can come at any minute: if there is more than one Nonstandard rate,
+         * regardless of the Machinability setting, the module will use Nonstandard rate.
+         */
+        $nonStandardMediaMailCount = 0;
+        foreach ($uspsQuote['rateOptions'] as $rateOption) {
+            foreach ($rateOption['rates'] as $rate) {
+                if (($rate['mailClass'] == 'MEDIA_MAIL') && (strpos($rate['description'], "Nonstandard Basic") !== FALSE)) {
+                    $nonStandardMediaMailCount++;
+                }
+            }
+        }
+
+        $methodCountString=<<<EOF
+Priority Mail Count (in response): $priorityMailCount
+Priority Mail Express Count (in response): $priorityMailExpressCount
+Ground Adventage Count (in response): $groundAdvantageCount
+Bugged Media Mail Check, Nonstandard Basic rate appears:  $nonStandardMediaMailCount
+
+EOF;
+
+        $this->uspsrDebug($methodCountString);
+
+
         // Let's clean up the quote to remove any extra spaces from the parts as necessary.
         // Looking at you, USPS Connect Local
         $uspsQuote = $this->cleanJSON($uspsQuote);
-
 
         $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $usps_shipping_weight, $shipping_num_boxes, $uspsQuote);
 
@@ -517,6 +587,13 @@ class uspsr extends base
 
             // I am 99% sure there is probably a more efficient way to do this...
             foreach ($uspsQuote['rateOptions'] as $rate) {
+
+                // Do not use any "OPEN_AND_DISTRIBUTE"
+                if ($rate['rates'][0]['processingCategory'] === 'OPEN_AND_DISTRIBUTE') continue;
+
+                // Excluding "FLATS" from US as this causes duplicates with regards to flat rates.
+                if (($rate['rates'][0]['processingCategory'] === 'FLATS') && ($this->usps_countries == 'US')) continue;
+
                 // Does the description match an option from the $selected_method?
 
                 $m = 0; // Index for making the quote id's with
@@ -533,55 +610,223 @@ class uspsr extends base
                     // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
                     if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
 
-                    // We found a match, add it to the potential quotes.
-                    if (($method['method'] == $rate['rates'][0]['description'])) {
+                    $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
+
+                        /**
+                         * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
+                         * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
+                         * not the flat rate ones.)
+                         *
+                         * So we need to filter accordingly.
+                         *
+                         * If there is more than one of the afflicted class, check for a Dimmensional quote and the Packaging Setting.
+                         *
+                         * If there is only ONE of each method, then that means it's safe to just throw it on the list of offered methods.
+                         */
+
+                        /**
+                         * For Priority Mail Cubic and Ground Advantage Cubic, there are two kinds of pricing available them (either a
+                         * Soft or Non-Soft packaging rate. We need to split and search for which of these two it is.)
+                         */
+
+                    if ($method['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
+                        if (MODULE_SHIPPING_USPSR_PRICING === 'Retail') {
+                            // If this is retail, we need to match it against the appropriate rate.
+                            if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Media Mail",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                            }
+
+                        } elseif (MODULE_SHIPPING_USPSR_PRICING === 'Commercial') {
+                            // If this is commercial, we need to make sure we're only dealing with ONE nonstandard match up first.
+
+                            if ($nonStandardMediaMailCount === 1) { // We only have one, proceed as normal.
+                                if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "Media Mail",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                }
+                            } elseif ($nonStandardMediaMailCount > 1 ) { // We have a higher count, this is bad. Ignore all and ONLY add 1.
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Media Mail",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                                $nonStandardMediaMailCount = FALSE; // Changing this to FALSE so that it throttles the search.
+
+                            } else { // This has to 0 or FALSE, so skip.
+                                continue;
+                            }
+                        }
+
+                    } elseif (($rate_name === "Priority Mail Cubic") && ($method['method'] == "Priority Mail Cubic")) {
+                        // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
+                        if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS == 'Soft') ) {
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => "Priorty Mail Cubic",
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+                        }
+
+                    } elseif (($rate_name === "USPS Ground Advantage Cubic") && ($method['method'] == "USPS Ground Advantage Cubic")) {
+                        // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
+                        if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS == 'Soft') ) {
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => "Ground Advantage Cubic",
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+                        }
+
+                    } elseif (($rate_name === "Priority Mail") && ($method['method'] == "Priority Mail")) {
+                        // If there are more than one Priority Mail, it's likely we have a Dimmensional Quote.
+                        if ($priorityMailCount === 1) {
+                            // Only one Priority Mail quote, so add it
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => "Priority Mail",
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+
+                        } else { // $priorityMailCount > 1
+
+                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                            // Check for which one is which and then add that to the quote.
+                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Nonrectangular') ) {
+
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Priority Mail",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                            } else { // This likely means we have a regular
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Priority Mail",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                            }
+                        }
+
+                    } elseif (($rate_name === "USPS Ground Advantage") && ($method['method'] == "USPS Ground Advantage") ) {
+
+                        // If there are more than one USPS Ground Advantage, it's likely we have a Dimmensional Quote.
+                        if ($groundAdvantageCount === 1) {
+                            // Only one Ground Advantage quote, so add it
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => "Ground Advantage",
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+                        } else { // $groundAdvantageCount > 1
+
+                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                            // Check for which one is which and then add that to the quote.
+                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Nonrectangular') ) {
+
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "USPS Ground Advantage",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                            }
+                        }
+
+                    } elseif (($rate_name === "Priority Mail Express") && ($method['method'] == "Priority Mail Express")) {
+
+                        // If there are more than one USPS Priority Mail Express, it's likely we have a Dimmensional Quote.
+                        if ($priorityMailExpressCount === 1) {
+                            // Only one Priority Mail Express quote, so add it
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => "Priority Mail Express",
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+                        } else { // $priorityMailCount > 1
+
+                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                            // Check for which one is which and then add that to the quote.
+                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_PACKAGING_CLASS == 'Nonrectangular') ) {
+
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Priority Mail Express",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
+
+                                $match = TRUE;
+                            }
+                        }
+                    } elseif (($method['method'] == $rate_name)) { // Match up the name of the quotes to the selected options.
 
                         /**
                          * Each member of $build_quotes is made up of the follow core pieces
                          *
-                         * 'id' : ZenCart Req -
+                         * 'id'         : Visible - This is the ZenCart internal ID#
+                         * 'title'      : Visible - This is what is displayed to the customer
+                         * 'cost'       : Visible - This is the total cost. (Will also include any special services)
+                         * 'mailClass'  : HIDDEN - This is for use to build the time quotes.
                          */
                         $quotes = [
                             'id' => 'usps' . $m,
-                            'title' => uspsr_filter_gibberish($rate['rates'][0]['description']),
+                            'title' => uspsr_filter_gibberish($rate_name),
                             'cost' => $price,
                             'mailClass' => $rate['rates'][0]['mailClass']
                         ];
 
                         $match = TRUE;
 
-                    } elseif ($method['method'] == "Media Mail") {
-                        // If the item is "Media Mail"... let's narrow it down.
-                        if ($this->machinable == 'Machinable' && ($rate['rates'][0]['description'] == 'Media Mail Machinable Basic' || $rate['rates'][0]['description'] == 'Media Mail Machinable Single-piece')) {
-
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => uspsr_filter_gibberish($rate['rates'][0]['description']),
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-
-
-                        } elseif (MODULE_SHIPPING_USPSR_PROCESSING_CLASS == 'Irregular' && ($rate['rates'][0]['description'] == 'Media Mail Irregular Basic' || $rate['rates'][0]['description'] == 'Media Mail Irregular Single-piece')) {
-
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => uspsr_filter_gibberish($rate['rates'][0]['description']),
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-
-                        }
+                    } else {
+                        // We didn't match... so... uhh?
+                        continue;
                     }
                     // Insurance is directly pulled from the quote and added, setting this to allow "extra" insurance by an observer.
                     // Maybe make it an extra field on the admin config? $extra_insurance in this case does NOT need the currency symbol, leave it off.
                     // Additionally, there is no need to make the extra insurance, just add it in to the cost.
 
-                    $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $method['method'], $method_to_add, $quotes['title'], $quotes['cost']);
+                    // Observer class to specifically block a module from being offered.
+                    // The name in param1 must match the internal name from the API. Check the JSON from the debug to see. (Where a productName is offered, use that. Otherwise, use the EXACT description.)
+                    $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $rate_name, $method_to_add, $quotes['title'], $quotes['cost']);
 
                     $message = '';
                     if ($match && $method_to_add && !empty($quotes)) {
@@ -868,13 +1113,27 @@ class uspsr extends base
 
 
         /**
-         * Machineability Options
+         * Machinability Options
          */
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".)', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Irregular\'], ', now())"
+                ('Typical Package Processing Class - Media Mail', 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'Machinable', 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.', 6, 0, 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ', now())"
+        );
+
+        $db->Execute(
+            "INSERT INTO " . TABLE_CONFIGURATION . "
+                (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+             VALUES
+                ('Typical Package Processing Class', 'MODULE_SHIPPING_USPSR_PACKAGING_CLASS', 'Rectangular', 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or extra big packages.</em>', 6, 0, 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ', now())"
+        );
+
+        $db->Execute(
+            "INSERT INTO " . TABLE_CONFIGURATION . "
+                (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+             VALUES
+                ('Packaging Class - Cubic Pricing', 'MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS', 'Non-Soft', 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.', 6, 0, 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], ', now())"
         );
 
         /**
@@ -884,7 +1143,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed. Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], ', now())"
+                ('Display Transit Time', 'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', 'No', 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.', 6, 0, 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], ', now())"
         );
 
         $db->Execute(
@@ -907,14 +1166,14 @@ class uspsr extends base
                 "INSERT INTO " . TABLE_CONFIGURATION . "
                     (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added)
                  VALUES
-                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements will be converted to inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
+                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While per-item dimensions are not supported by this module at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br><br><em>These measurements will be converted to inches as part of the quoting process as your cart was set to centimeters when it was installed. If you change your cart setting, you will need to uninstall and reinstall this module.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
             );
          } else {
             $db->Execute(
                 "INSERT INTO " . TABLE_CONFIGURATION . "
                     (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added)
                  VALUES
-                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '8.625, 8.625, 5.375, 5.375, 1.625, 1.625', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While dimensions are not supported at this time, the Minimums are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
+                    ('Typical Package Dimmensions (Domestic and International)',  'MODULE_SHIPPING_USPSR_DIMMENSIONS',  '8.625, 8.625, 5.375, 5.375, 1.625, 1.625', 'The Minimum Length, Width and Height are used to determine shipping methods available for International Shipping.<br><br>While per-item dimensions are not supported at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>', 6, 0, 'zen_cfg_uspsr_showdimmensions', 'zen_cfg_uspsr_dimmensions(', now())"
             );
          }
 
@@ -926,7 +1185,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added)
              VALUES
-                ('Shipping Methods (Domestic and International)',  'MODULE_SHIPPING_USPSR_TYPES', '0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00', '<b>Checkbox:</b> Select the services to be offered<br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services applicable).<br><br>USPS returns methods based on cart weights.', 6, 0, 'zen_cfg_uspsr_showservices', 'zen_cfg_uspsr_services([\'USPS Ground Advantage Machinable Single-piece\', \'USPS Ground Advantage Machinable Cubic Non-Soft Pack Tier 1\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail Machinable Single-piece\', \'Priority Mail Machinable Cubic Non-Soft Pack Tier 1\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Machinable Small Flat Rate Box\', \'Priority Mail Machinable Medium Flat Rate Box\', \'Priority Mail Machinable Large Flat Rate Box\', \'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express Machinable Single-piece\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International Machinable ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ', now())"
+                ('Shipping Methods (Domestic and International)',  'MODULE_SHIPPING_USPSR_TYPES', '0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00', '<b>Checkbox:</b> Select the services to be offered<br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights.', 6, 0, 'zen_cfg_uspsr_showservices', 'zen_cfg_uspsr_services([\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ', now())"
         );
 
 
@@ -934,7 +1193,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function)
              VALUES
-                ('Categories to Exclude for Media Mail', 'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE', '', 'Enter the Category ID of the categories (separated by commas, white space is OK) that fail Media Mail Standards.<br><br>During checkout, if a product matches a category listed here, it will cause that entire order to be disqualified from Media Mail.<br>', 6, 0, now(), 'uspsr_get_categories')"
+                ('Categories to Excluded from Media Mail', 'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE', '', 'Enter the Category ID of the categories (separated by commas, white spaces surrounding the comma are OK) that fail Media Mail standards.<br><br>During checkout, if a product matches a category listed here, it will cause that entire order to be disqualified from Media Mail.<br>', 6, 0, now(), 'uspsr_get_categories')"
         );
 
         $db->Execute(
@@ -951,14 +1210,14 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added)
             VALUES
-                ('Shipping Add-ons (Domestic)', 'MODULE_SHIPPING_USPSR_DMST_SERVICES', '', 'Pick which add-ons you wish to add on to the shipping cost quote. CAUTION: Not all options apply to all services. (The USPS API will do the math as necessary.)<br>', 6, 0, 'zen_cfg_uspsr_extraservices(\'domestic\', ', 'zen_cfg_uspsr_extraservices_display', now())"
+                ('Shipping Add-ons (Domestic)', 'MODULE_SHIPPING_USPSR_DMST_SERVICES', '', 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>', 6, 0, 'zen_cfg_uspsr_extraservices(\'domestic\', ', 'zen_cfg_uspsr_extraservices_display', now())"
         );
 
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added)
             VALUES
-                ('Shipping Add-ons (International)', 'MODULE_SHIPPING_USPSR_INTL_SERVICES', '', 'Pick which add-ons you wish to add on to the shipping cost quote. CAUTION: Not all options apply to all services. (The USPS API will do the math as necessary.)<br>', 6, 0, 'zen_cfg_uspsr_extraservices(\'international\', ', 'zen_cfg_uspsr_extraservices_display', now())"
+                ('Shipping Add-ons (International)', 'MODULE_SHIPPING_USPSR_INTL_SERVICES', '', 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>', 6, 0, 'zen_cfg_uspsr_extraservices(\'international\', ', 'zen_cfg_uspsr_extraservices_display', now())"
         );
 
         /**
@@ -968,21 +1227,28 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Which pricing level to use?', 'MODULE_SHIPPING_USPSR_PRICING', 'Retail', 'What pricing level do you want to display to the customer during the quote?<br><br><em>Retail</em> - This is the price as if you went to the counter at the post office and bought the postage for your package.<br><em>Commercial</em> - This is the price if you\'re buying label online via an authorized USPS reseller or through Click-N-Ship on a Business account.<br><em>Contract</em> - If you have a negotiated service agreement with the USPS, select Contract. Then be sure to specify what kind of contract and the number of the contract you have in the options below.', 6, 0, 'zen_cfg_select_option([\'Retail\', \'Commercial\', \'Contract\'], ', now())"
+                ('Which pricing level to use?', 'MODULE_SHIPPING_USPSR_PRICING', 'Retail', 'What pricing level do you want to display to the customer?<br><br><em>Retail</em> - This is the price as if you went to the counter at the post office to buy the postage for your package.<br><br><em>Commercial</em> - This is the price you would pay if you\'re buying the label online via an authorized USPS reseller or through USPS Click-N-Ship on a Business account.<br><br><em>Contract</em> - If you have a negotiated service agreement or some other kind of contract with the USPS, select Contract. Then be sure to specify what kind of contract and the contract number you have in the appropriate options below.', 6, 0, 'zen_cfg_select_option([\'Retail\', \'Commercial\', \'Contract\'], ', now())"
         );
 
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('NSA Contract Type', 'MODULE_SHIPPING_USPSR_CONTRACT_TYPE', 'None', 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.', 6, 0, 'zen_cfg_select_option([\'None\', \'EPS\', \'Permit\', \'Meter\'], ', now())"
+                ('Send cart total as part of quote?', 'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', 'Yes', 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive accurate price details from the USPS and you may end up paying more for the actual postage.', 6, 0, 'zen_cfg_select_option([\'Yes\', \'No\'], ', now())"
         );
 
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('USPS Account Number', 'MODULE_SHIPPING_USPSR_ACCT_NUMBER', '', 'What is the associated EPS Account Number, Meter Number, or NSA Contract Number you have with the United States Postal Service. (Leave blank if none.)', 6, 0, '', now())"
+                ('NSA Contract Type', 'MODULE_SHIPPING_USPSR_CONTRACT_TYPE', 'None', 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.', 6, 0, 'zen_cfg_select_option([\'None\', \'EPS\', \'Permit\', \'Meter\'], ', now())"
+        );
+
+        $db->Execute(
+            "INSERT INTO " . TABLE_CONFIGURATION . "
+                (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+             VALUES
+                ('USPS Account Number', 'MODULE_SHIPPING_USPSR_ACCT_NUMBER', '', 'What is the associated EPS Account Number or Meter Number you have with the United States Postal Service. (Leave blank if none.)', 6, 0, '', now())"
         );
 
         /**
@@ -992,7 +1258,7 @@ class uspsr extends base
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Debug Mode', 'MODULE_SHIPPING_USPSR_DEBUG_MODE', 'Off', 'Would you like to enable debug mode?  If set to <em>Logs</em>, a file will be written to the store\'s /logs directory on each USPS request.', 6, 0, 'zen_cfg_select_option([\'Off\', \'Logs\'], ', now())"
+                ('Debug Mode', 'MODULE_SHIPPING_USPSR_DEBUG_MODE', 'Off', 'Would you like to enable debug mode?  If set to <em>Logs</em>, a file will be written to the store\'s /logs directory on each USPS request.<br><br><em>CAUTION:</CAUTION> Each long file is at least 300KB big.', 6, 0, 'zen_cfg_select_option([\'Off\', \'Logs\'], ', now())"
         );
 
         /**
@@ -1029,6 +1295,8 @@ class uspsr extends base
             'MODULE_SHIPPING_USPSR_TAX_BASIS',
             'MODULE_SHIPPING_USPSR_ZONE',
             'MODULE_SHIPPING_USPSR_PROCESSING_CLASS',
+            'MODULE_SHIPPING_USPSR_PACKAGING_CLASS',
+            'MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS',
             'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT',
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
@@ -1038,6 +1306,7 @@ class uspsr extends base
             'MODULE_SHIPPING_USPSR_DMST_SERVICES',
             'MODULE_SHIPPING_USPSR_INTL_SERVICES',
             'MODULE_SHIPPING_USPSR_PRICING',
+            'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL',
             'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
             'MODULE_SHIPPING_USPSR_ACCT_NUMBER',
             'MODULE_SHIPPING_USPSR_DEBUG_MODE',
@@ -1125,9 +1394,9 @@ class uspsr extends base
         $message .= 'Order is eligible for Media Mail ? ' . ($this->enable_media_mail ? 'YES' : 'NO') . "\n";
 
         $message .= 'Order SubTotal: ' . $currencies->format($order->info['subtotal']) . "\n";
-        $message .= 'Order Total: ' . $currencies->format($order->info['total']) . "\n";
+        $message .= 'Order Total: ' . $currencies->format($order->info['total']) . (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? '' : " (Cart total is being capped at " . $currencies->format(5) . ")") . "\n";
         $message .= 'Uninsurable Portion: ' . $currencies->format($this->uninsured_value) . "\n";
-        $message .= 'Insurable Value: ' . $currencies->format($this->shipment_value) . "\n";
+        $message .= 'Insurable Value: ' . (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $currencies->format($this->shipment_value) : $currencies->format(5) ) . "\n";
 
         $this->uspsrDebug($message);
     }
@@ -1137,6 +1406,11 @@ class uspsr extends base
         global $order, $db;
         if (IS_ADMIN_FLAG === true) {
             return;
+        }
+
+        // If the order doesn't have a zip code, typically because you're visiting the shopping cart estimator, STOP
+        if (!zen_not_null($order->delivery['postcode'] ?? NULL)) {
+            $this->enabled = false;
         }
 
         // disable only when entire cart is free shipping
@@ -1366,7 +1640,7 @@ class uspsr extends base
                 'mailClasses' => $mailClasses,
                 'priceType' => strtoupper(MODULE_SHIPPING_USPSR_PRICING),
                 'extraServices' => $services_dmst,
-                'itemValue' => $this->shipment_value,
+                'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
             ];
 
             // Let's make a standards request now.
@@ -1408,7 +1682,7 @@ class uspsr extends base
                 'height' => $intl_height,
                 "priceType" => strtoupper(MODULE_SHIPPING_USPSR_PRICING),
                 "mailClass" => "ALL", // Do not change this. There is no "mailClasses" on the International API, so we have to pull all of them.
-                'itemValue' => $this->shipment_value,
+                'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
                 "extraServices" => $services_intl,
             ];
 
@@ -1637,7 +1911,7 @@ class uspsr extends base
 
         $message .= '==================================' . "\n\n" . (isset($order) ? 'USPS Country - $order->delivery[country][iso_code_2]: ' . $order->delivery['country']['iso_code_2'] : '') . "\n";
 
-        
+
         $this->uspsrDebug($message);
     }
     protected function quoteLogJSONResponse($response)
@@ -1721,7 +1995,7 @@ class uspsr extends base
         // Return JUST the token
         $body = json_decode($body, TRUE);
 
-        $this->bearerToken = $body['access_token'];
+        $this->bearerToken = $body['access_token'] ?? NULL;
 
         return;
     }
@@ -1969,8 +2243,7 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
                         '/Package\hService\h-\hRetail/',
                         '/Package Service/',
                         '/ISC/',
-                        '/Machinable DDU/',
-                        '/Machinable/',
+                        '/Machinable( DDU)?/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
                         '/Non-Soft Pack Tier 1/',
@@ -1989,7 +2262,6 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
                         'Exp Guar',
                         'Pkgs - Retail',
                         'Pkgs - Comm',
-                        '',
                         '',
                         '',
                         '',
@@ -2338,11 +2610,14 @@ function uspsr_filter_gibberish($entry)
     $entry = preg_replace(
         [
             '/ISC/',
-            '/Machinable DDU/',
-            '/Machinable/',
+            '/Machinable( DDU)?/',
             '/(Basic|Single-Piece)/i',
             '/USPS\s+/',
             '/Non-Soft Pack Tier 1/',
+            '/Oversized/',
+            '/Nonstandard/',
+            '/(Non)?rectangular/i',
+            '/Dimmensional/'
         ],
         ''
         ,
