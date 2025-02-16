@@ -6,7 +6,7 @@
 
 This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module supports ZenCart versions 1.5.8 onward innately. Work is being done to allow the module to work with ZenCart 1.5.7. (Read the first FAQ below)
+This module supports ZenCart versions 1.5.8 onward innately. Work is being done to allow the module to work with ZenCart 1.5.7. ([Read the first FAQ](#does-this-module-support-zencart-157-and-before) below)
 
 ## Version
 
