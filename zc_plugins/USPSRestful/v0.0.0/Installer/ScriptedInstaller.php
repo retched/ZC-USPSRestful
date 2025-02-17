@@ -45,6 +45,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
     protected function executeUpgrade($oldVersion)
     {
+        global $messageStack;
         // $version contains the old version being upgrade from.
 
         /**
@@ -53,6 +54,118 @@ class ScriptedInstaller extends ScriptedInstallBase
          * change the dialog to indicate as such.
          *
          */
+
+        switch ($oldVersion) {
+            case "v0.3.0":
+            case "v0.2.0":
+            case "v0.1.0":
+
+                // Changing this to be a more descriptive description.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
+                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
+                ]);
+
+                // If the Constant is set to "Estimate Time, we should update the value too.
+                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
+                        'configuration_value' => 'Estimate Transit Time',
+                        'configuration_description' => 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.',
+                    ]);
+                }
+
+                // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
+                    'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
+                ]);
+
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
+                    'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
+                ]);
+
+                // Reset the module's selected shipping methods entirely.
+                if(defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                        'configuration_value' => '0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00',
+                        'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                        'configuration_title' => 'Shipping Methods (Domestic and International) (kgs)',
+                    ]);
+                } else {
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                        'configuration_value' => '0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
+                        'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                        'configuration_title' => 'Shipping Methods (Domestic and International) (lbs)',
+                    ]);
+                }
+                
+                $messageStack->add_session('<strong>USPSr Warning:</strong> Due to changes in configuration, if USPSr was enabled and already installed, you must now go to <a href="' . zen_href_link(FILENAME_DEFAULT, 'cmd=modules&set=shipping&module=uspsr') . '">Modules > Shipping > USPSr</a> and reselect your desired USPS Shipping Methods.', 'warning');
+
+                // Rename MODULE_SHIPPING_USPSR_PROCESSING_CLASS to MODULE_SHIPPING_USPSR_MEDIA_CLASS
+                $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = 'MODULE_SHIPPING_USPSR_MEDIA_CLASS' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS' ");
+
+                // The PROCESSING_CLASS, now MEDIA_CLASS, changed quite a bit.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS',
+                    [
+                        'configuration_title' => 'Packaging Class - Media Mail',
+                        'configuration_description' => 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece designed and sized to be processed by automated postal equipment. Typically this is rigid mail, that fits a certain shape and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.',
+                        'set_function' => 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ',
+                    ]
+                );
+
+                // Language error in the description of Exclusions from Media Mail
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
+                    [
+                        'configuration_title' => 'Categories to Excluded from Media Mail',
+                    ]
+                );
+
+                // The description Domestic and International Services changed
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES',
+                    [
+                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                    ]
+                );
+
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES',
+                    [
+                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                    ]
+                );
+
+                // Language changed for USPSR
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
+                    [
+                        'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
+                    ]
+                );
+
+                // NEW SETTINGS, Dispatch Cart Total, Dimensional Class Pricing, Cubic Class Pricing
+                $this->executeInstallerSql(
+                    "INSERT INTO " . TABLE_CONFIGURATION . "
+                        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+                     VALUES
+                        ('Send cart total as part of quote?', 'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', 'Yes', 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.', 6, 0, 'zen_cfg_select_option([\'Yes\', \'No\'], ', now())"
+                );
+
+                $this->executeInstallerSql(
+                    "INSERT INTO " . TABLE_CONFIGURATION . "
+                        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+                     VALUES
+                        ('Packaging Class - Dimensional Pricing', 'MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS', 'Rectangular', 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>', 6, 0, 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ', now())"
+                );
+
+                $this->executeInstallerSql(
+                    "INSERT INTO " . TABLE_CONFIGURATION . "
+                        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
+                     VALUES
+                        ('Packaging Class - Cubic Pricing', 'MODULE_SHIPPING_USPSR_CUBIC_CLASS', 'Non-Soft', 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>', 6, 0, 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], ', now())"
+                );
+                break;
+
+            case "v0.0.0":
+                $messageStack->addSession("<strong>USPSr Installation error:</strong> You are using the developmental version (v0.0.0) from the GitHub. To upgrade, you must COMPLETELY uninstall this version before installing the new version.", 'error');
+                return false;
+                break;
+        }
 
         // If the shipping weight units are CMs, changed the description to notify the storeowner that the measurements will be changed to inches.
         if(defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
@@ -67,45 +180,6 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         // Change the Version of the module to match. (No need to reinstall.)
         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', ['configuration_value' => '0.3.0']);
-
-        switch ($oldVersion) {
-            case "v0.2.1":
-            case "v0.2.0":
-            case "v0.1.0":
-
-                // Update the Configuration descriptions that had spelling errors.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_PROCESSING_CLASS', [
-                    'configuration_description' => 'Are your packages typically machinable?<br><br>\"Machinable\" means a mail piece that is designed and sized to be processed by automated postal equipment. Typically this is mail that is rigid, fits a certain shape, and is within a certain weight (roughly at least 6 ounces but no more than 35 pounds). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Irregular\". (If your customer order\'s total weight falls outside of this limit, regardless of the setting, the module will set the package to \"Irregular\".)'
-                ]);
-
-                // Changing this to be a more descriptive description.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
-                ]);
-
-                // If the Constant is set to "Estimate Time, we should update the value too.
-                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                        'configuration_value' => 'Estimate Transit Time'
-                    ]);
-                }
-
-                // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
-                    'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
-                ]);
-
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
-                    'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
-                ]);
-
-                // Reset the module's selected shipping methods entirely.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
-                    'configuration_value' => '0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00',
-                ]);
-                break;
-
-        }
 
         // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).
         $this->executeInstallerSql("UPDATE " . TABLE_PLUGIN_CONTROL . " SET description = 'This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS\' REST API using OAuth.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)' WHERE unique_key = 'USPSRestful' ");
@@ -131,9 +205,9 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_TAX_CLASS',
             'MODULE_SHIPPING_USPSR_TAX_BASIS',
             'MODULE_SHIPPING_USPSR_ZONE',
-            'MODULE_SHIPPING_USPSR_PROCESSING_CLASS',
-            'MODULE_SHIPPING_USPSR_PACKAGING_CLASS',
-            'MODULE_SHIPPING_USPSR_CUBIC_PACKING_CLASS',
+            'MODULE_SHIPPING_USPSR_MEDIA_CLASS',
+            'MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS',
+            'MODULE_SHIPPING_USPSR_CUBIC_CLASS',
             'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT',
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
@@ -143,9 +217,9 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_DMST_SERVICES',
             'MODULE_SHIPPING_USPSR_INTL_SERVICES',
             'MODULE_SHIPPING_USPSR_PRICING',
-            'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL',
             'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
             'MODULE_SHIPPING_USPSR_ACCT_NUMBER',
+            'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL',
             'MODULE_SHIPPING_USPSR_DEBUG_MODE',
             'MODULE_SHIPPING_USPSR_SORT_ORDER',
         ]);
