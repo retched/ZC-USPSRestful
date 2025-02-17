@@ -1297,7 +1297,7 @@ EOF;
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Debug Mode', 'MODULE_SHIPPING_USPSR_DEBUG_MODE', 'Off', 'Would you like to enable debug mode?  If set to <em>Logs</em>, a file will be written to the store\'s /logs directory on each USPS request.<br><br><em>CAUTION:</CAUTION> Each long file is at least 300KB big.', 6, 0, 'zen_cfg_select_option([\'Off\', \'Logs\'], ', now())"
+                ('Debug Mode', 'MODULE_SHIPPING_USPSR_DEBUG_MODE', 'Off', 'Would you like to enable debug mode?  If set to <em>Logs</em>, a file will be written to the store\'s /logs directory on each USPS request.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.', 6, 0, 'zen_cfg_select_option([\'Off\', \'Logs\'], ', now())"
         );
 
         /**
