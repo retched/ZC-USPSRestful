@@ -1287,7 +1287,7 @@ EOF;
             "INSERT INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added)
              VALUES
-                ('Send cart total as part of quote?', 'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', 'Yes', 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.', 6, 0, 'zen_cfg_select_option([\'Yes\', \'No\'], ', now())"
+                ('Send cart total as part of quote?', 'MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', 'Yes', 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive accurate price details from the USPS and you may end up paying more for the actual postage.', 6, 0, 'zen_cfg_select_option([\'Yes\', \'No\'], ', now())"
         );
 
         /**
