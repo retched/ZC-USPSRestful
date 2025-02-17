@@ -10,10 +10,11 @@ This module supports ZenCart versions 1.5.8 onward innately. Work is being done 
 
 ## Version
 
-Last Stable Release: 0.2.0  
-_Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)_
+- Last Stable Release: 0.2.0  
+_Released January 17, 2025 for ZenCart 2.1.0._  
+Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0
 
-Next Version Number: 1.0.0 
+Next Version Number: 1.0.0
 
 ### Version History
 
@@ -23,7 +24,7 @@ Next Version Number: 1.0.0
   First "release".
 - 0.2.0  
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.3.0 _(in development)_  
+- 1.0.0 _(in development)_  
   A LOT of changes. Including readding the min/max weight boxes from USPS, bugfixing the display of rates and quotes, adding error messages in the backend, bugfixed bad API returns, cleaned up repository as a whole.
 
 ## Additional Links
