@@ -86,9 +86,9 @@ There are two sets of handling fields. One that can be used on the order as a wh
 
 The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each "box", or both). If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)
 
-The original module had a set of Min/Max which restrained which methods were available to use based on the weight. For example, if you entered a maximum of six pounds for the Priority Mail method, the method would only be offered if the total weight is under six pounds. (The USPS limits still apply to the order, no matter what. 
+The original module had a set of Min/Max which restrained which methods were available to use based on the weight. For example, if you entered a maximum of six pounds for the Priority Mail method, the method would only be offered if the total weight is under six pounds. (The USPS limits still apply to the order, no matter what.
 
-For example, if you entered 80 pounds as the limit for Priority Mail, the method wouldn't be offered as USPS Priority Mail's limit is 70 pounds.) 
+For example, if you entered 80 pounds as the limit for Priority Mail, the method wouldn't be offered as USPS Priority Mail's limit is 70 pounds.)
 
 For right now, those fields are not present in this version of this module but may be present in a future update.
 
@@ -144,12 +144,12 @@ These are the file lists that should be included with this module, depending on 
 - LICENSE
 - README.md (this file)
 - changelog.md
-- \zc_plugins\USPSRestful\v0.3.0\manifest.php
-- \zc_plugins\USPSRestful\v0.3.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.3.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.3.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.0.0\manifest.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
 ```
 
 ### Non-encapsulated File Listing
