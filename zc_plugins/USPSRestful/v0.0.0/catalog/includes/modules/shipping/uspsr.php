@@ -143,7 +143,6 @@ class uspsr extends base
      * @var array
      */
     protected $quotes = [];
-    protected $standards = [];
     protected $uspsQuote; //
     protected $uspsStandards;
     /**
@@ -303,6 +302,8 @@ class uspsr extends base
 
     protected function storefrontInitialization()
     {
+        global $order;
+
         /**
          * Quick return if the shipping-module's configuration will not allow
          * it to gather valid USPS quotes.  The shipping-module is disabled
@@ -324,6 +325,12 @@ class uspsr extends base
         if ($contents_ok === false) {
             $this->enabled = false;
             return;
+        }
+
+        // If the order doesn't have a zip code or have a valid zip code (5 or 9 digit), and it is a US order: STOP
+        // (typically because you're visiting the shopping cart estimator)
+        if (zen_not_null($order->delivery['postcode'] ?? NULL) && (uspsr_validate_zipcode($order->delivery['postcode']) === FALSE) && $this->is_us_shipment) {
+            $this->enabled = false;
         }
 
         /**
@@ -611,8 +618,6 @@ EOF;
                 // If there is a method with "Nonstandard" and "Flat Rate Envelope" in its name... SKIP IT.
                 if (strpos($rate['rates'][0]['description'], "Nonstandard") !== FALSE && strpos($rate['rates'][0]['description'], "Flat Rate Envelope")) continue;
 
-                // Does the description match an option from the $selected_method?
-
                 $m = 0; // Index for making the quote id's with
                 foreach($selected_methods as $method)
                 {
@@ -630,23 +635,24 @@ EOF;
 
                     $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
 
-                        /**
-                         * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
-                         * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
-                         * not the flat rate ones.)
-                         *
-                         * So we need to filter accordingly.
-                         *
-                         * If there is more than one of the afflicted class, check for a Dimmensional quote and the Packaging Setting.
-                         *
-                         * If there is only ONE of each method, then that means it's safe to just throw it on the list of offered methods.
-                         */
+                    /**
+                     * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
+                     * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
+                     * not the flat rate ones.)
+                     *
+                     * So we need to filter accordingly.
+                     *
+                     * If there is more than one of the afflicted class, check for a Dimmensional quote and the Packaging Setting.
+                     *
+                     * If there is only ONE of each method, then that means it's safe to just throw it on the list of offered methods.
+                     */
 
-                        /**
-                         * For Priority Mail Cubic and Ground Advantage Cubic, there are two kinds of pricing available them (either a
-                         * Soft or Non-Soft packaging rate. We need to split and search for which of these two it is.)
-                         */
+                    /**
+                     * For Priority Mail Cubic and Ground Advantage Cubic, there are two kinds of pricing available them (either a
+                     * Soft or Non-Soft packaging rate. We need to split and search for which of these two it is.)
+                     */
 
+                    // Does the description match an option from the $selected_method?
                     if ($method['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
                         if (MODULE_SHIPPING_USPSR_PRICING === 'Retail') {
                             // If this is retail, we need to match it against the appropriate rate.
@@ -1450,11 +1456,6 @@ EOF;
             return;
         }
 
-        // If the order doesn't have a zip code, typically because you're visiting the shopping cart estimator, STOP
-        if (!zen_not_null($order->delivery['postcode'] ?? NULL)) {
-            $this->enabled = false;
-        }
-
         // disable only when entire cart is free shipping
         if (!zen_get_shipping_enabled($this->code)) {
             $this->enabled = false;
@@ -1661,7 +1662,7 @@ EOF;
             /**
              * Is this package going to a APO/FPO/DPO?
              */
-            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'), self::USPSR_MILITARY_MAIL_ZIP);
+            $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode']), self::USPSR_MILITARY_MAIL_ZIP);
 
             /**
              * Check to see if the products in the cart are ALL eligible for USPS Media Mail.
@@ -1669,11 +1670,11 @@ EOF;
             if ($this->enable_media_mail) { $mailClasses[] = "MEDIA_MAIL"; }
 
             // Check to see if the order fits for USPS Connect Local
-            if (uspsr_check_connect_local($order->delivery['postcode'] ?? '00000')) $mailClasses[] = "USPS_CONNECT_LOCAL";
+            if (uspsr_check_connect_local($order->delivery['postcode'])) $mailClasses[] = "USPS_CONNECT_LOCAL";
 
             $json_body = [
-                'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
+                'originZIPCode' => SHIPPING_ORIGIN_ZIP,
+                'destinationZIPCode' => $order->delivery['postcode'],
                 'weight' => $shipping_weight,
                 'length' => $domm_length,
                 'width' => $domm_width,
@@ -1686,8 +1687,8 @@ EOF;
 
             // Let's make a standards request now.
             $standards_query = [
-                'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
-                'destinationZIPCode' => uspsr_validate_zipcode($order->delivery['postcode'] ?? '00000'),
+                'originZIPCode' => SHIPPING_ORIGIN_ZIP,
+                'destinationZIPCode' => $order->delivery['postcode'],
                 'mailClass' => 'ALL',
                 'weight' => $shipping_weight
             ];
@@ -1714,7 +1715,7 @@ EOF;
             $focus = "rates-intl";
 
             $json_body = [
-                "originZIPCode" => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
+                "originZIPCode" => SHIPPING_ORIGIN_ZIP,
                 "foreignPostalCode" => $order->delivery['postcode'],
                 "destinationCountryCode" => $order->delivery['country']['iso_code_2'],
                 "weight" => $shipping_weight,

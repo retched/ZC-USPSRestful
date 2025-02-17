@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- Side project to convert module into ZenCart 1.5.7 and prior, PHP7.X friendly code. (Target would be 1.5.7 and PHP 7.4.)
+- NEXT: Side project to convert module into ZenCart 1.5.7 and prior, PHP7.X friendly code. (Target would be 1.5.7 and PHP 7.4.)
 - Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
@@ -13,8 +13,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Breaking
 
-- Due to a change in the configuration for the shipping methods, the selection of current shipping methods will be reset with this version. You must now reselect your shipping methods to use under USPS. (I try to avoid these kind of breaking changes. However, in this case, with the way how the selection of the modules are done and the changes to the table holding them, it's unavoidable.)
-- Going forward: if you are using encapsulated version `v0.0.0`, aka the version pulled straight from the GitHub repository "`main`" branch, the upgrader will fail. You must do a clean install by uninstalling the module from Plugin Manager from your backend and then installing the new version. The development version of `v0.0.0` is to be considered an incomplete thought and should NOT be used in active productions. Non-encapsulated versions will still have to do the same until an upgrader is put in place.
+- Due to a change in the configuration for the shipping methods, the selection of current shipping methods will be reset with this version. You must now reselect your shipping methods to use under USPS. (I tried to avoid these kind of breaking changes but with the way how the selection of the modules are done and the changes to the table holding them, it's unavoidable.)
+- Going forward: if you are using encapsulated version `v0.0.0`, aka the version pulled straight from the GitHub repository "`main`" branch, the upgrader will fail. You must do a clean install by uninstalling the module from Plugin Manager from your backend and then installing the new version. The development version of `v0.0.0` is to be considered an incomplete thought and should NOT be used in active productions. Non-encapsulated versions will still have to do the same until an upgrader is put in place in the module.
 
 ### Added
 
@@ -34,7 +34,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Added a catch all to prevent a bugged API response for Media Mail. In short, the values for Nonstandard Basic was being duplicated. USPS is aware of this but there's is no telling of when a fix will come. In the interim, the module will filter out the other response and proceed with just one. This does mean that your Machinable packages will be treated as Nonstandard. (In most cases, the price should still be the same.)
 - Filtered off the PMOD (Priority Mail Open and Distribute) responses as well as duplicated domestic Flat Rates.
 - Improved filtering from Media Mail, Ground Advantage Cubic, Priority Mail, and Priority Mail Express services. (Fixes [issue #13](https://github.com/retched/ZC-USPSRestful/issues/13) from the Github.)
-- More "industry" terms filtered out. (Changed USPS Ground Advantage to just read Ground Advantage instead)
+- More "industry" terms filtered out. (Open and Distribute methods are filtered out.)
+- Changed USPS Ground Advantage to just read Ground Advantage instead.
+- Fixed validation of zipcodes: module now tries to see if the order has a US destination. If so, disable the module if someone enters something that isn't a 5 or 9 digit zip code.
 
 ### Changed
 
