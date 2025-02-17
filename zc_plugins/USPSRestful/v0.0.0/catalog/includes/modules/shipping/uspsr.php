@@ -530,7 +530,7 @@ EOF;
         {
             if (!is_numeric($this->typeCheckboxesSelected[$i]) && zen_not_null($this->typeCheckboxesSelected[$i])) {
                 // Fool proofing the entry of the two values.
-                $limits = [$this->typeCheckboxesSelected[$i+1], $this->typeCheckboxesSelected[$i+2]];
+                $limits = [(double)$this->typeCheckboxesSelected[$i+1], (double)$this->typeCheckboxesSelected[$i+2]];
 
                 // Does this need to be converted into pounds?
                 if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS == 'kgs') {
