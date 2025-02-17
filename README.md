@@ -11,9 +11,9 @@ This module supports ZenCart versions 1.5.8 onward innately. Work is being done 
 ## Version
 
 Last Stable Release: 0.2.0  
-:  Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)
+_Released January 17, 2025 for ZenCart 2.1.0. (Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0)_
 
-Next Version Number: 0.3.0  
+Next Version Number: 1.0.0 
 
 ### Version History
 

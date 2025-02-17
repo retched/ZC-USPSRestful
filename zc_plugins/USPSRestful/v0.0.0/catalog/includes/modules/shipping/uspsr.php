@@ -329,7 +329,8 @@ class uspsr extends base
 
         // If the order doesn't have a zip code or have a valid zip code (5 or 9 digit), and it is a US order: STOP
         // (typically because you're visiting the shopping cart estimator)
-        if (zen_not_null($order->delivery['postcode'] ?? NULL) && (uspsr_validate_zipcode($order->delivery['postcode']) === FALSE) && $this->is_us_shipment) {
+        $delivery_postcode = (array_key_exists('postcode', $order->delivery) ? $order->delivery['postcode'] : NULL);
+        if (zen_not_null($delivery_postcode) && (uspsr_validate_zipcode($order->delivery['postcode']) === FALSE) && $this->is_us_shipment) {
             $this->enabled = false;
         }
 
@@ -1698,7 +1699,8 @@ EOF;
 
             $todays_date_plus = $todays_date->modify("+{$daystoadd} days");
             $standards_query['acceptanceDate'] = $todays_date_plus->format('Y-m-d');
-            $street_address = trim($order->delivery['street_address']  ?? '');
+
+            $street_address = (array_key_exists('street_address', $order->delivery) ? trim($order->delivery['street_address']) : '' );
 
             // If the address contains "PO BOX" or "BOX" in the address line 1, that makes it a PO BOX.
             if (preg_match("/^(PO BOX|BOX)/i", $street_address)) {
@@ -2037,7 +2039,8 @@ EOF;
         // Return JUST the token
         $body = json_decode($body, TRUE);
 
-        $this->bearerToken = $body['access_token'] ?? NULL;
+
+        $this->bearerToken = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL );
 
         return;
     }
