@@ -6,24 +6,24 @@
 
 This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module will work with most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.
+This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.
 
 ## Module Version
 
-- Last Stable Release: 0.2.0  
-_Released January 17, 2025 for ZenCart 2.1.0._  
-- Next Version Number: 1.0.0
+- Last Stable Release: 1.0.0  
+_Released February 18, 2025 for ZenCart 2.1.0._  
+- Next Version Number: ???
 
 ### Version/Release History
 
-- 1.0.0 _(in development)_  
-  A LOT of changes. Including readding the min/max weight boxes from USPS, bugfixing the display of rates and quotes, adding error messages in the backend, bugfixed bad API returns, cleaned up repository as a whole. Changes to allow the module to work with PHP8 and PHP7 based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
-- 0.2.0  
-  Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.1.0  
-  First "release".
-- 0.0.0  
-  _Development version. This version contains an incomplete thought and should not be used in production unless you are absolutely sure what you are doing. The version from the [ZenCart was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the Repository is not recommended._
+- 1.0.0  
+ A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
+- 0.2.0  
+ Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
+- 0.1.0  
+ First "release".
+- 0.0.0  
+  _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the [ZenCart was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the Repository is not recommended._
 
 ## Additional Links
 
@@ -39,7 +39,7 @@ You can find full instructions to install the module by reading the [related wik
 
 If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button as it appears in the Plugin Manager. (The module will be disabled and removed.) If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you.
 
-If you are running this as an unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that your ZenCart instllation isn't still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
+If you are running this as an unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that your ZenCart installation isn't still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
 
 ## Frequently Asked Questions
 
@@ -59,7 +59,7 @@ The older `USERID` and `PASSWORD` are not valid for the new system. You will nee
 
 ### Why should I use this versus the one that's out there now?
 
-The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will, seldomly, allow access to the API by way of manually granting access but they will read you the "riot act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled and at that point, everyone will have to use the RESTful version of the API going forward. This is just a head start to that process.
+The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access but they will read you the "riot act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward. This is just a head start to that process.
 
 ### What is this OAuth Token? Do I need to get one?
 
@@ -71,7 +71,7 @@ USPS Connect rates are only available to retailers who have specifically signed 
 
 ### "The module is not showing at all even though I made my choices"
 
-Make sure that your store is configured to ship out of the United States and that you made sure to enter a five digit Zip Code where your orders are originating from. Additionally, make sure that you have chosen shipping methods to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
+Make sure that your store is configured to ship out of the United States and that you made sure to enter a five-digit Zip Code where your orders are originating from. Additionally, make sure that you have chosen shipping methods to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
 
 ### "I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don't see it as an option during checkout, what gives?"
 
@@ -96,15 +96,15 @@ Those symbols don't appear within the new USPS API calls as they do on the origi
 SORT OF. You don't have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.
 
 - Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing. Namely "Shipping Weight Units" and "Shipping Dimension Units". 
-- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around line 48 and 55, you will see two defines that can be edited. Simply follow the instructions there. Be sure to leave the single quotation marks and to match the values as listed.
+- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 48 and 55, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed.
 
-If you have these two set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
+If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
 
 ## Known Limitations/Issues
 
 - As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix although if asked or suggested, I could theoretically put them back in the appropriate places.
 - Trying to visit `cmd=configuration&gID=6` while this module is active, will cause that admin configurator to break. This is likely because the display functions use custom functions that are cooked directly into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when you're ready, reenable it.
-- Not all of the Observers/Notifier triggers made it here from the original USPS module. I kind of eye-balled this and tried to place the original triggers and observers where I best guessed they fit in. But I'm not going to lie, I'm not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (Missing about six of them as of this release, but I'll pass through and re-add them as I can.)
+- Not all of the Observers/Notifier triggers made it here from the original USPS module. I eye-balled this and tried to place the original triggers and observers where I best guessed they fit in. But I'm not going to lie, I'm not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (I'm missing about six of them as of this release, but I'll pass through and re-add them as I can.)
 
 ## Credits
 
