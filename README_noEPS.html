@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<style>
+pre {
+    width: 50%;
+    background: #CCC;
+    padding: 10px;
+}
+p code {
+    background-color: #CCC;
+    padding: 3px 7px;
+}
+</style>
+<meta charset="utf-8">
+<title>USPSRestful - Readme</title>
+</head>
+
+<body>
+<h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
+<p><strong>NOTE:</strong> <em>This is the unencapsulated version of the module. If you are running ZenCart 2.1.0, you should consider running the encapsulated version of the module. The upgrading process is much simpler as well as providing the same benefits to the storefront.</em></p>
+<p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=0&pattern=Signal&pulls=1&stargazers=1&theme=Auto" alt="ZC-USPSRestful"></p>
+<p><img src="https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black" alt="Coded with PHP">  <img src="https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=851185" alt="License via GPL 3.0"> <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&labelColor=white" alt="Last Commit">  <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&labelColor=black&labelColor=white" alt="Latest Release"></p>
+<p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
+<p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
+<h2 id="module-version">Module Version</h2>
+<ul>
+  <li>Last Stable Release: 1.0.0<br>
+    <em>Released February 18, 2025 for ZenCart 2.1.0.</em> </li>
+  <li>Next Version Number: ???</li>
+</ul>
+<h3 id="versionrelease-history">Version/Release History</h3>
+<ul>
+  <li>1.0.0<br>
+    A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)</li>
+  <li>0.2.0<br>
+    Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.</li>
+  <li>0.1.0<br>
+    First &quot;release&quot;.</li>
+  <li>0.0.0<br>
+    <em>Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the <a href="https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin">ZenCart Module Directory was only a placeholder</a>. Pulling from the Repository is not recommended.</em></li>
+</ul>
+<h2 id="additional-links">Additional Links</h2>
+<ul>
+  <li><a href="https://developers.usps.com/apis">USPS API Documentation</a> - This API takes advantage of four APIs: <em>Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0.</em></li>
+  <li><a href="https://www.zen-cart.com/downloads.php?do=file&id=2395">ZenCart Plugins Directory Listing</a> (or use the Releases function on the GitHub repository)</li>
+  <li><a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a>.</li>
+</ul>
+<h2 id="setup-install-and-upgrading">Setup, Install, and Upgrading</h2>
+<p>You can find full instructions to install the module by reading the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#overview">related wiki page</a></p>
+<h2 id="uninstallation">Uninstallation</h2>
+<p>If you installed this module through the Plugin Manager, you should then be able to click the <code>Un-Install</code> button as it appears in the Plugin Manager. (The module will be disabled and removed.) If you do not plan on using the module again, you should delete the module&#39;s folder from the <code>zc_plugins</code> folder or click the &quot;Clean Up&quot; button to handle it for you.</p>
+<p>If you are running this as an unencapsulated module, visit <code>Modules &gt; Shipping</code> and disable the USPSr module <strong>FIRST</strong> before removing the module and its files. (This way you can make sure that your ZenCart installation isn&#39;t still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do <strong>NOT</strong> delete the logo file found in <code>/includes/templates/template_default/images/icons/shipping_usps.gif</code> or you can overwrite it.)</p>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<p>This won&#39;t answer all the questions you may have, but it may answer some that I thought of.</p>
+<h3 id="does-this-module-support-zencart-157-and-before">Does this module support ZenCart 1.5.7 and before?</h3>
+<p><strong>YES.</strong> You cannot use the encapsulated version, though. You should use and install the non-encapsulated version of the module. (An upgrader will be built in future versions.) You can make ZenCart 1.5.7, 1.5.8, and 2.0.0 work with storefront modules by using the <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">code and changes from this Gist</a> provided by ZenCart forum user lat9.</p>
+<h3 id="what-is-the-difference-between-this-version-and-the-original-usps-module">What is the difference between this version and the original USPS module?</h3>
+<p>The original USPS module works by using the older USPS Web Tools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS&#39; various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API and in 2025 USPS announced they will be fully out of service in 2026. The Web Tools API is being replaced with the new USPS API that takes advantage of OAuth tokens which this codebase uses.</p>
+<h3 id="i-already-have-a-userid-and-password-under-the-old-system-but-im-getting-error-messages-while-i-try-to-retrieve-quotes">I already have a <code>USERID</code> and <code>PASSWORD</code> under the old system, but I&#39;m getting error messages while I try to retrieve quotes.</h3>
+<p>The older <code>USERID</code> and <code>PASSWORD</code> are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don&#39;t already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">here</a>. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API.</p>
+<h3 id="why-should-i-use-this-versus-the-one-thats-out-there-now">Why should I use this versus the one that&#39;s out there now?</h3>
+<p>The USPS created an &quot;in-before-the-lock&quot; situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access but they will read you the &quot;riot act&quot; with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward. This is just a head start to that process.</p>
+<h3 id="what-is-this-oauth-token-do-i-need-to-get-one">What is this OAuth Token? Do I need to get one?</h3>
+<p>An OAuth token is a unique string of characters that allows a third-party application (like this one) to access a user&#39;s data without exposing their password. Effectively making it a temporary (generated) password of sorts. You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of the costs of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it&#39;s done with the API call.</p>
+<h3 id="im-not-seeing-the-usps-connect-rate-even-though-i-selected-it-whats-going-on">I&#39;m not seeing the USPS Connect rate even though I selected it, what&#39;s going on?</h3>
+<p>USPS Connect rates are only available to retailers who have specifically signed up for it at <a href="https://www.uspsconnect.com">https://www.uspsconnect.com</a> and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the &quot;Commercial&quot; rates (formerly called &quot;Online&quot; in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you&#39;re dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)</p>
+<h3 id="the-module-is-not-showing-at-all-even-though-i-made-my-choices">&quot;The module is not showing at all even though I made my choices&quot;</h3>
+<p>Make sure that your store is configured to ship out of the United States and that you made sure to enter a five-digit Zip Code where your orders are originating from. Additionally, make sure that you have chosen shipping methods to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)</p>
+<h3 id="i-clicked-the-box-to-offer-usps-large-flat-rate-boxes-apofpodpo-but-i-dont-see-it-as-an-option-during-checkout-what-gives">&quot;I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don&#39;t see it as an option during checkout, what gives?&quot;</h3>
+<p>That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package&#39;s destination zip code is not one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the <a href="https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB">USPS Postal Store online</a> and request them. (Remember these boxes can ONLY be used for APO/DPO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away. It&#39;s likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.</p>
+<h3 id="what-is-the-handling-field-for">What is the handling field for?</h3>
+<p>There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per-method basis.</p>
+<p>The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each &quot;box&quot;, or both). If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)</p>
+<h3 id="does-this-module-use-the-length-width-and-height-boxes-of-zc-200">Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?</h3>
+<p>Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the &quot;average&quot; package thresholds of this module. A future update will see these included.</p>
+<h3 id="what-happened-to-the-®-and-™-symbols-that-were-on-the-original-module">What happened to the ® and ™ symbols that were on the original module?</h3>
+<p>Those symbols don&#39;t appear within the new USPS API calls as they do on the original one. I can modify the script to place them but they might be more trouble than anything.</p>
+<h3 id="my-stores-measurements-are-in-centimeters-and-kilograms-do-i-have-to-convert-everything">My store&#39;s measurements are in centimeters and kilograms, do I have to convert everything?</h3>
+<p>SORT OF. You don&#39;t have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.</p>
+<ul>
+  <li>Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing. Namely &quot;Shipping Weight Units&quot; and &quot;Shipping Dimension Units&quot;. </li>
+  <li>Running ZenCart 1.5.8 or older? You must make a file edit to <code>/includes/modules/shipping/usps.php</code>. Around lines 48 and 55, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed.</li>
+</ul>
+<p>If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.</p>
+<h2 id="known-limitationsissues">Known Limitations/Issues</h2>
+<ul>
+  <li>As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn&#39;t something I care to fix although if asked or suggested, I could theoretically put them back in the appropriate places.</li>
+  <li>Trying to visit <code>cmd=configuration&amp;gID=6</code> while this module is active, will cause that admin configurator to break. This is likely because the display functions use custom functions that are cooked directly into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when you&#39;re ready, reenable it.</li>
+  <li>Not all of the Observers/Notifier triggers made it here from the original USPS module. I eye-balled this and tried to place the original triggers and observers where I best guessed they fit in. But I&#39;m not going to lie, I&#39;m not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (I&#39;m missing about six of them as of this release, but I&#39;ll pass through and re-add them as I can.)</li>
+</ul>
+<h2 id="credits">Credits</h2>
+<p>For the original module</p>
+<ul>
+  <li>Ajeh, the original poster of the ZC 1.5 module</li>
+  <li>lat9</li>
+  <li>The ZenCart Team</li>
+</ul>
+<p>For the update</p>
+<ul>
+  <li>retched (me)</li>
+</ul>
+<h2 id="file-listing">File Listing</h2>
+<p>These are the file lists that should be included with this module, depending on which version you&#39;re running.</p>
+<h3 id="non-encapsulated-file-listing">Non-encapsulated File Listing</h3>
+<pre><code class="language-txt">- CONTRIBUTING.md
+- LICENSE
+- README.md (this file)
+- changelog.md
+- catalog\admin\includes\languages\english\extra_definitions\uspsr.php
+- catalog\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- catalog\includes\languages\english\modules\shipping\uspsr.php
+- catalog\includes\modules\shipping\uspsr.php
+- catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+</code></pre>
+<h2 id="support-the-author">Support the author</h2>
+<!-- Should this repository be forked, please remove this section -->
+
+<p><a href="https://cash.app/$retched"><img src="https://img.shields.io/badge/cashapp-green?style=flat&logo=cashapp&logoColor=white&logoSize=auto&labelColor=black&color=purple&link=https%3A%2F%2Fcash.app%2Fretched" alt="Support via CashApp"></a> <a href="https://paypal.me/retched"><img src="https://img.shields.io/badge/paypal-blue?style=flat&logo=paypal&logoColor=white&logoSize=auto&labelColor=black&color=purple" alt="Support via PayPal"></a>  <a href="https://www.patreon.com/retched"><img src="https://img.shields.io/badge/patreon-white?style=flat&logo=patreon&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fwww.patreon.com%2Fretched" alt="Support via Patreon"></a>  <a href="https://buymeacoffee.com/retched"><img src="https://img.shields.io/badge/buymeacoffee-white?style=flat&logo=buymeacoffee&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fbuymeacoffee.com%2Fretched" alt="Support via BuyMeACoffee"></a>  <a href="https://kofi.com/retched"><img src="https://img.shields.io/badge/kofi-white?style=flat&logo=buymeacoffee&logoColor=white&labelColor=black&color=purple&link=https%3A%2F%2Fkofi.com%2Fretched" alt="Support via Kofi"></a>  </p>
+<h2 id="license">License</h2>
+<pre><code class="language-text">USPS Shipping (RESTful) for Zen Cart
+A shipping module for ZenCart, an e-commerce platform
+Copyright (C) 2025 Paul Williams (retched / retched@hotmail.com)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
+</code></pre>
+</body>
+</html>

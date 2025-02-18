@@ -1,5 +1,7 @@
 # USPS Shipping (RESTful) for Zen Cart
 
+**NOTE:** _This is the unencapsulated version of the module. If you are running ZenCart 2.1.0, you should consider running the encapsulated version of the module. The upgrading process is much simpler as well as providing the same benefits to the storefront._
+
 ![ZC-USPSRestful](https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=0&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
 
 ![Coded with PHP](https://img.shields.io/badge/php-purple?style=flat&logo=php&logoColor=white&labelColor=black)  ![License via GPL 3.0](https://img.shields.io/badge/license-GPL-black?style=flat&logoColor=black&label=license&labelColor=black&color=851185) ![Last Commit](https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&labelColor=white)  ![Latest Release](https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&labelColor=black&labelColor=white)
@@ -10,20 +12,20 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.0.0  
-_Released February 18, 2025 for ZenCart 2.1.0._  
+- Last Stable Release: 1.0.0  
+_Released February 18, 2025 for ZenCart 2.1.0._  
 - Next Version Number: ???
 
 ### Version/Release History
 
-- 1.0.0  
+- 1.0.0  
  A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
-- 0.2.0  
+- 0.2.0  
  Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.1.0  
+- 0.1.0  
  First "release".
-- 0.0.0  
-  _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database [was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the Repository is not recommended._
+- 0.0.0  
+  _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the [ZenCart Module Directory was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the Repository is not recommended._
 
 ## Additional Links
 
@@ -33,7 +35,7 @@ _Released February 18, 2025 for ZenCart 2.1.0._  
 
 ## Setup, Install, and Upgrading
 
-You can find full instructions to install the module by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing)
+You can find full instructions to install the module by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#overview)
 
 ## Uninstallation
 
@@ -122,21 +124,6 @@ For the update
 
 These are the file lists that should be included with this module, depending on which version you're running.
 
-### Encapsulated File Listing
-
-``` text
-- CONTRIBUTING.md
-- LICENSE
-- README.md (this file)
-- changelog.md
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
-```
-
 ### Non-encapsulated File Listing
 
 ``` txt
@@ -144,8 +131,8 @@ These are the file lists that should be included with this module, depending on 
 - LICENSE
 - README.md (this file)
 - changelog.md
-- catalog\admin\includes\languages\english\extra_definitions\uspsr.php (NEW)
-- catalog\admin\includes\languages\english\extra_definitions\lang.uspsr.php (NEW)
+- catalog\admin\includes\languages\english\extra_definitions\uspsr.php
+- catalog\admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - catalog\includes\languages\english\modules\shipping\lang.uspsr.php
 - catalog\includes\languages\english\modules\shipping\uspsr.php
 - catalog\includes\modules\shipping\uspsr.php
