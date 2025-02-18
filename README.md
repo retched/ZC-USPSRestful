@@ -6,26 +6,24 @@
 
 This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module supports ZenCart versions 1.5.8 onward innately. Work is being done to allow the module to work with ZenCart 1.5.7. ([Read the first FAQ](#does-this-module-support-zencart-157-and-before) below)
+This module will work with most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.
 
-## Version
+## Module Version
 
 - Last Stable Release: 0.2.0  
 _Released January 17, 2025 for ZenCart 2.1.0._  
-Has been tested with ZenCart 2.0.0 and ZenCart 2.1.0
+- Next Version Number: 1.0.0
 
-Next Version Number: 1.0.0
+### Version/Release History
 
-### Version History
-
-- 0.0.0  
-  _Development version. This version contains an incomplete thought and should not be used in production unless you are absolutely sure what you are doing.._
-- 0.1.0  
-  First "release".
+- 1.0.0 _(in development)_  
+  A LOT of changes. Including readding the min/max weight boxes from USPS, bugfixing the display of rates and quotes, adding error messages in the backend, bugfixed bad API returns, cleaned up repository as a whole. Changes to allow the module to work with PHP8 and PHP7 based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
 - 0.2.0  
   Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 1.0.0 _(in development)_  
-  A LOT of changes. Including readding the min/max weight boxes from USPS, bugfixing the display of rates and quotes, adding error messages in the backend, bugfixed bad API returns, cleaned up repository as a whole.
+- 0.1.0  
+  First "release".
+- 0.0.0  
+  _Development version. This version contains an incomplete thought and should not be used in production unless you are absolutely sure what you are doing. The version from the [ZenCart was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the Repository is not recommended._
 
 ## Additional Links
 
@@ -41,7 +39,7 @@ You can find full instructions to install the module by reading the [related wik
 
 If you installed this module through the Plugin Manager, you should then be able to click the `Un-Install` button as it appears in the Plugin Manager. (The module will be disabled and removed.) If you do not plan on using the module again, you should delete the module's folder from the `zc_plugins` folder or click the "Clean Up" button to handle it for you.
 
-If you are running this as an unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that you aren't still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
+If you are running this as an unencapsulated module, visit `Modules > Shipping` and disable the USPSr module **FIRST** before removing the module and its files. (This way you can make sure that your ZenCart instllation isn't still trying to load it and generating errors in ZenCart.) Use the file list below as a checklist to make sure you uninstall. (If you plan on going back to WebTools API, make sure that you do **NOT** delete the logo file found in `/includes/templates/template_default/images/icons/shipping_usps.gif` or you can overwrite it.)
 
 ## Frequently Asked Questions
 
@@ -49,13 +47,11 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### Does this module support ZenCart 1.5.7 and before?
 
-Short answer, no.
-
-Long answer: Not immediately. When this module was written, it targeted ZenCart 1.5.8 and onward. Shortly after its initial release, the USPS formally announced the planned deprecation of WebTools, [several users](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)/page2&p=1406047#post1406047) found this module and assumed it would work out of the box for earlier versions of ZenCart. (This was due to the module being flagged as compatible with 1.5.7, an overestimation when I first made the module.) The module can work with ZenCart versions 1.5.7 and before but will require a slight code rewrite. (Two key changes need to happen: change the array-based language files back to the older `define` style from 1.5.7 and change/remove the null coalescing operator `??` from various points in the code plus any PHP8 code styles that exist.) A version of the module for ZenCart 1.5.7 and prior will be worked on and put out as a separate branch when ready. There is no guarantee that I will be able to keep putting out 1.5.7-compatible code in the future, but I'll endeavor to try to do so as long as I can.
+**YES.** You cannot use the encapsulated version, though. You should use and install the non-encapsulated version of the module. (An upgrader will be built in future versions.) You can make ZenCart 1.5.7, 1.5.8, and 2.0.0 work with storefront modules by using the [code and changes from this Gist](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) provided by ZenCart forum user lat9.
 
 ### What is the difference between this version and the original USPS module?
 
-The original USPS module works by using the older USPS Web Tools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API and they will be out of service fully in 2026. The Web Tools API is being replaced with the new USPS API that takes advantage of OAuth tokens which this codebase uses.
+The original USPS module works by using the older USPS Web Tools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API and in 2025 USPS announced they will be fully out of service in 2026. The Web Tools API is being replaced with the new USPS API that takes advantage of OAuth tokens which this codebase uses.
 
 ### I already have a `USERID` and `PASSWORD` under the old system, but I'm getting error messages while I try to retrieve quotes.
 
@@ -63,15 +59,15 @@ The older `USERID` and `PASSWORD` are not valid for the new system. You will nee
 
 ### Why should I use this versus the one that's out there now?
 
-The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will, seldomly, allow access to the API by way of manually granting access but they will read you the "Riot Act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in roughly 2026 (possibly sooner), the older APIs will be completely disabled and at that point, everyone will have to use the RESTful version of the API going forward. This is just a head start to that process.
+The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will, seldomly, allow access to the API by way of manually granting access but they will read you the "riot act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled and at that point, everyone will have to use the RESTful version of the API going forward. This is just a head start to that process.
 
 ### What is this OAuth Token? Do I need to get one?
 
-An OAuth token is a unique string of characters that allows a third-party application (like this one) to access a user's data without exposing their password. Effectively making it a temporary (generated) password of sorts. You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of the cost of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it's done with the API call.
+An OAuth token is a unique string of characters that allows a third-party application (like this one) to access a user's data without exposing their password. Effectively making it a temporary (generated) password of sorts. You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of the costs of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it's done with the API call.
 
 ### I'm not seeing the USPS Connect rate even though I selected it, what's going on?
 
-USPS Connect rates are only available to retailers who have specifically signed up for it at https://www.uspsconnect.com and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the "Commercial" rates (formerly called "Online" in the other module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here to be activated.)
+USPS Connect rates are only available to retailers who have specifically signed up for it at https://www.uspsconnect.com and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the "Commercial" rates (formerly called "Online" in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)
 
 ### "The module is not showing at all even though I made my choices"
 
@@ -79,23 +75,17 @@ Make sure that your store is configured to ship out of the United States and tha
 
 ### "I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don't see it as an option during checkout, what gives?"
 
-That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package's destination zip code is not one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the [USPS Postal Store online](https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB) and request them. (Remember these boxes can ONLY be used for APO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away. It's likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.
+That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package's destination zip code is not one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the [USPS Postal Store online](https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB) and request them. (Remember these boxes can ONLY be used for APO/DPO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away. It's likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.
 
-### What is the handling field for? Where are the min/max fields of the original USPS module?
+### What is the handling field for?
 
 There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per-method basis.
 
 The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each "box", or both). If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)
 
-The original module had a set of Min/Max which restrained which methods were available to use based on the weight. For example, if you entered a maximum of six pounds for the Priority Mail method, the method would only be offered if the total weight is under six pounds. (The USPS limits still apply to the order, no matter what.
-
-For example, if you entered 80 pounds as the limit for Priority Mail, the method wouldn't be offered as USPS Priority Mail's limit is 70 pounds.)
-
-For right now, those fields are not present in this version of this module but may be present in a future update.
-
 ### Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?
 
-Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the "estimated" package thresholds of this module. A future update will see these included.
+Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the "average" package thresholds of this module. A future update will see these included.
 
 ### What happened to the ® and ™ symbols that were on the original module?
 
@@ -103,18 +93,12 @@ Those symbols don't appear within the new USPS API calls as they do on the origi
 
 ### My store's measurements are in centimeters and kilograms, do I have to convert everything?
 
-**DEPENDS**. This script will look for the setting of `SHIPPING_WEIGHT_UNITS` and `SHIPPING_DIMENSION_UNITS` in the admin back area.
+SORT OF. You don't have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.
 
-If these settings are present:
+- Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing. Namely "Shipping Weight Units" and "Shipping Dimension Units". 
+- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around line 48 and 55, you will see two defines that can be edited. Simply follow the instructions there. Be sure to leave the single quotation marks and to match the values as listed.
 
-- On installation of the module, the script will convert the "default" box measurements to the measurement of the cart. If you choose to measure in centimeters, the script will multiply all measurements by 2.54 and will set those as the default size. During checkout, any number input there will be divided by 2.54 to reverse from centimeters to inches. That number will be sent along with the order details to make up the quote. If it's in inches, no conversion will be done.
-- During checkout with a cart configured with kilograms as the cart's weight, the total weight of the cart will be divided by (approximately) 2.205 to obtain the total number of pounds and will dispatch that as part of the quoting process.
-
-The USPS API needs the size and weight values to be sent in imperial units.
-
-If these settings are NOT present or are not a part of the typical ZC installation:
-
-- Yes. You will have to convert everything MANUALLY, on your own, to be pounds. This means that if you set up your store to ship out using kilograms and centimeters, by way of brute force or other means, you will have to set everything back up as pounds and inches as this script will not be able to pick it up. (This script will dispatch a quote request to the USPS assuming everything is in pounds and inches already.)
+If you have these two set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
 
 ## Known Limitations/Issues
 
@@ -160,8 +144,10 @@ These are the file lists that should be included with this module, depending on 
 - LICENSE
 - README.md (this file)
 - changelog.md
-- admin\includes\languages\english\extra_definitions\lang.uspsr.php (NEW)
+- catalog\admin\includes\languages\english\extra_definitions\uspsr.php (NEW)
+- catalog\admin\includes\languages\english\extra_definitions\lang.uspsr.php (NEW)
 - catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- catalog\includes\languages\english\modules\shipping\uspsr.php
 - catalog\includes\modules\shipping\uspsr.php
 - catalog\includes\templates\template_default\images\icons\shipping_usps.gif
 ```
@@ -176,7 +162,7 @@ These are the file lists that should be included with this module, depending on 
 ``` text
 USPS Shipping (RESTful) for Zen Cart
 A shipping module for ZenCart, an e-commerce platform
-Copyright (C) 2024 Paul Williams (retched / retched@hotmail.com)
+Copyright (C) 2025 Paul Williams (retched / retched@hotmail.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

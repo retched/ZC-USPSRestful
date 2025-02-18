@@ -5,8 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- NEXT: Side project to convert module into ZenCart 1.5.7 and prior, PHP7.X friendly code. (Target would be 1.5.7 and PHP 7.4.)
-- Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
+- NEXT: Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
 ## [UNRELEASED]
@@ -28,6 +27,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Expanded the packaging classes into three questions: one pertaining to Media Mail (Machinable/Nonstandard) and Ground Advantage Cubic and Priority Mail Cubic (Rectangular/Nonrectangular and Soft/Non-Soft).
 - Expanded definitions and explanations of various configuration settings.
 - Added min/max fields from original USPS module to shipping method selection. These fields allow you place weight-based clamps on each individual method. For example: If you entered 1 and 5 in the appropriate boxes (order does not matter, the software will sort it out for you) for USPS Ground Advantage, the module will only offer your customers the USPS Ground Advantage rate if the total package weight (that is items and tare) is within those two settings. **NOTE:** This does not mean you can offer services that are outside of the USPS limits. (Example: Entering 80 as a maximum does not mean you can offer Ground Advantage to your customers as 70 is the maximum serviceable weight for USPS Ground Advantage.)
+- For parity with ZenCart installations older than 2.0.0, there is a file edit that the storeowner should use to define the measurement standard of the site. This is to make sure that everything is dispatched to the USPS in imperial units. If you are using 2.0.0 or newer, do not edit the file at all.
 
 ### Fixed
 
