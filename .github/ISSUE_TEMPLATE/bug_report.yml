@@ -15,6 +15,7 @@ body:
       options:
         - 0.1.0
         - 0.2.0 (Current Version)
+        - 1.0.0
         - 0.0.0 (pulled straight from main branch)
       default: 2
     validations:
@@ -23,13 +24,14 @@ body:
     id: zencart-version
     attributes:
       label: ZenCart Version
-      description: What version of our ZenCart are you running? If you're running an Older or non-published version, please selected "Older" and describe above.
+      description: What version of ZenCart are you running? If you're running an older or non-published version, please selected "Older" and describe in the "What happened?" section below.
       multiple: false
       options:
         - 2.1.x
         - 2.0.x
         - 1.5.x
         - Older
+        - Alpha (ZenCart's development build)
       default: 0
     validations:
       required: true
@@ -61,9 +63,8 @@ body:
       description: Please copy and paste any relevant log output from ZenCart here. This would be the contents of any myDEBUG file that appeared in your logs directory from ZenCart.
       render: shell
   - type: textarea
-    id: uspsr-logs
+    id: uspsr-json-logs
     attributes:
       label: Relevant USPS Log Output
       description: Please copy and paste any relevant log output from the USPSr module here. This would be the contents of any log file generated from the module itself. These are normally named SHIP_uspsr_Debug_.
       render: shell
-  

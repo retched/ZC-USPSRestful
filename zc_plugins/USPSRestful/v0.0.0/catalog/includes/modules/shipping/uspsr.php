@@ -2628,10 +2628,17 @@ function uspsr_pretty_json_print($json)
     $in_quotes = false;
     $in_escape = false;
     $ends_line_level = NULL;
-    $json_length = strlen( $json );
+    
+    $encoded_json = json_decode($json, TRUE); // Read the JSON into an array
+    
+    unset($encoded_json['client_secret']);
+    
+    $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT);
 
+    $json_length = strlen( $sanitized_json );
+    
     for( $i = 0; $i < $json_length; $i++ ) {
-        $char = $json[$i];
+        $char = $sanitized_json[$i];
         $new_line_level = NULL;
         $post = "";
         if( $ends_line_level !== NULL ) {

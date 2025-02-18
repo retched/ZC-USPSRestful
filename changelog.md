@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Breaking
 
-- Due to a change in the configuration for the shipping methods, the selection of current shipping methods will be reset with this version. You must now reselect your shipping methods to use under USPS. (I tried to avoid these kind of breaking changes but with the way how the selection of the modules are done and the changes to the table holding them, it's unavoidable.)
+- Due to a change in the configuration for the shipping methods, the selection of current shipping methods will be reset with this version. You must now reselect your shipping methods to use under USPS. (I tried to avoid these kind of breaking changes but with the way how the selection of the modules are done and the changes to the table holding them, it's unavoidable. This will normally happen if I have to change the way how the USPS identify their services.)
 - Going forward: if you are using encapsulated version `v0.0.0`, aka the version pulled straight from the GitHub repository "`main`" branch, the upgrader will fail. You must do a clean install by uninstalling the module from Plugin Manager from your backend and then installing the new version. The development version of `v0.0.0` is to be considered an incomplete thought and should NOT be used in active productions. Non-encapsulated versions will still have to do the same until an upgrader is put in place in the module.
 
 ### Added
@@ -46,6 +46,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - The internal handling of some of the shipping methods has changed. (Namely USPS Ground Advantage, Priority Mail, Media, and Priority Mail Express. Each of these has a weird naming scheme in the API that was either causing rates to not appear or appear more than once in a non-descriptive way. Also see [issue #13](https://github.com/retched/ZC-USPSRestful/issues/13) and various comments on the repository.)
 - Changed machinability flag to only apply with Media Mail. The USPS API will automatically determine if a package would be machinable or nonstandard, the term irregular has been retired for other services. How ever for Media Mail, the seller will need to provide a bit of details.
 - Renamed `MODULE_SHIPPING_USPSR_PROCESSING_CLASS` to `MODULE_SHIPPING_USPSR_MEDIA_CLASS`. This is an internal only change. Makes it easier to identify in the code.
+- Sanitized the debug logs by hiding the "client secret" from the JSON file that is saved in the log. (It's still dispatched but seeing the secret is not necessary.)
 
 ### Removed
 
