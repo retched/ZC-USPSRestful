@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - NEXT: Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
-## [UNRELEASED]
+## [1.0.0] - 2025-02-18
 
 ### Breaking
 
