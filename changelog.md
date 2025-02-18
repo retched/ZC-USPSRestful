@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
+- Full compatibility with ZenCart 1.5.7 AND PHP7. (Technically speaking, the code base was compatible with PHP 7.3 and onward, but 7.1 still required Heredocs to end at the first column of the line. There was an extra indent involved.)
 - Added a catch all to prevent a bugged API response for Media Mail. In short, the values for Nonstandard Basic was being duplicated. USPS is aware of this but there's is no telling of when a fix will come. In the interim, the module will filter out the other response and proceed with just one. This does mean that your Machinable packages will be treated as Nonstandard. (In most cases, the price should still be the same.)
 - Filtered off the PMOD (Priority Mail Open and Distribute) responses as well as duplicated domestic Flat Rates.
 - Improved filtering from Media Mail, Ground Advantage Cubic, Priority Mail, and Priority Mail Express services. (Fixes [issue #13](https://github.com/retched/ZC-USPSRestful/issues/13) from the Github.)
@@ -82,3 +83,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [0.1.0] - 2024-12-21
 
 - Initial Release
+
+## [0.0.0] - 2024-12-21
+
+- Placeholder Release (should not be downloaded from ZenCart database)

@@ -2227,7 +2227,7 @@ function zen_cfg_uspsr_dimmensions($key_value, $key='') {
             <div class="three-column-cell align-center">$intl_height</div>
         </div>
     </div>
-    EOF;
+EOF;
 
     return $table;
 }
