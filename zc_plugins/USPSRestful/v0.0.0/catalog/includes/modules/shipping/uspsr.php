@@ -82,7 +82,7 @@ class uspsr extends base
      * @var integer
      */
     public $tax_class;
-
+    
     /**
      * When the shipping cost is taxed, identifies the basis for the tax
      * computation: either Billing, Shipping or Store.
@@ -90,14 +90,19 @@ class uspsr extends base
      * @var string
      */
     public $tax_basis;
-
+    
     /**
      * Sort order of display.
      *
      * @var int
      */
     public $sort_order = 0;
-
+    
+    /**
+     * List of quotes to be presented to ZenCart
+     * @var array
+     */
+    public $quotes = [];
     /**
      * Flag to see if Debug mode is enabled, print error_logs where necessary.
      *
@@ -142,7 +147,6 @@ class uspsr extends base
      *
      * @var array
      */
-    protected $quotes = [];
     protected $uspsQuote; //
     protected $uspsStandards;
     /**
