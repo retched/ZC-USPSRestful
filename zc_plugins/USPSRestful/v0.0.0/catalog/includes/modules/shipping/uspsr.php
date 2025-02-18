@@ -4,14 +4,14 @@
  * Version 0.0.0
  *
  * @package shippingMethod
- * @copyright Portions Copyright 2004-2024 Zen Cart Team
+ * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
  * @version $Id: uspsr.php 2025-02-07 retched Version 0.0.0 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
-    Copyright (C) 2024  Paul Williams (retched / retched@hotmail.com)
+    Copyright (C) 2025  Paul Williams (retched / retched@hotmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,6 +31,30 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // Start of USPSRestful
+
+/**
+ * If you're using a version of ZenCart older than 2.0.0, you should probably change 
+ * these to match your cart BEFORE you install the module in the backend.
+ * 
+ * The settings are natural to 2.0.0 onward and should not be set here but rather in the backend.
+ */
+if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '2.0.0', "<")) {
+
+    /**
+     * The length measurement standard of the ZenCart installation
+     * 
+     * Valid values: "inches" or "centimeters"
+     */
+    define('SHIPPING_DIMENSION_UNITS', 'inches');
+
+    /**
+     * The weight measurement standard of the ZenCart installation
+     * 
+     * Valid values: "lbs" (for pounds) or "kgs" (for kilograms). (DO NOT USE A PERIOD)
+     */
+    define('SHIPPING_WEIGHT_UNITS', 'lbs');
+}
+
 class uspsr extends base
 {
     /**
@@ -82,7 +106,7 @@ class uspsr extends base
      * @var integer
      */
     public $tax_class;
-
+    
     /**
      * When the shipping cost is taxed, identifies the basis for the tax
      * computation: either Billing, Shipping or Store.
@@ -90,14 +114,19 @@ class uspsr extends base
      * @var string
      */
     public $tax_basis;
-
+    
     /**
      * Sort order of display.
      *
      * @var int
      */
     public $sort_order = 0;
-
+    
+    /**
+     * List of quotes to be presented to ZenCart
+     * @var array
+     */
+    public $quotes = [];
     /**
      * Flag to see if Debug mode is enabled, print error_logs where necessary.
      *
@@ -142,7 +171,6 @@ class uspsr extends base
      *
      * @var array
      */
-    protected $quotes = [];
     protected $uspsQuote; //
     protected $uspsStandards;
     /**
@@ -2227,7 +2255,7 @@ function zen_cfg_uspsr_dimmensions($key_value, $key='') {
             <div class="three-column-cell align-center">$intl_height</div>
         </div>
     </div>
-    EOF;
+EOF;
 
     return $table;
 }

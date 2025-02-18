@@ -4,14 +4,14 @@
  * Version 0.0.0
  *
  * @package shippingMethod
- * @copyright Portions Copyright 2004-2024 Zen Cart Team
+ * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
  * @version $Id: ScriptedInstaller.php 2025-02-12 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
-    Copyright (C) 2024  Paul Williams (retched / retched@hotmail.com)
+    Copyright (C) 2025  Paul Williams (retched / retched@hotmail.com)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
