@@ -1,0 +1,17 @@
+name: Feature Request
+description: Use this form if you have a general idea or feature that you would like to see added
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your suggestions! Use this form if you would like to suggest a change to the module. This form should be used if you aren't a coder but you have the general idea of something that should be added.
+  - type: textarea
+    id: idea-explained
+    attributes:
+      label: Describe your idea in as much detail as possible.
+      description: Use this field to describe in as much details as possible your idea for a feature or enhancement. Check to make sure that your idea hasn't already been introduced as a suggestion and put away.. 
+      placeholder: What would you like to see?
+    validations:
+      required: true

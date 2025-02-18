@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Expanded definitions and explanations of various configuration settings.
 - Added min/max fields from original USPS module to shipping method selection. These fields allow you place weight-based clamps on each individual method. For example: If you entered 1 and 5 in the appropriate boxes (order does not matter, the software will sort it out for you) for USPS Ground Advantage, the module will only offer your customers the USPS Ground Advantage rate if the total package weight (that is items and tare) is within those two settings. **NOTE:** This does not mean you can offer services that are outside of the USPS limits. (Example: Entering 80 as a maximum does not mean you can offer Ground Advantage to your customers as 70 is the maximum serviceable weight for USPS Ground Advantage.)
 - For parity with ZenCart installations older than 2.0.0, there is a file edit that the storeowner should use to define the measurement standard of the site. This is to make sure that everything is dispatched to the USPS in imperial units. If you are using 2.0.0 or newer, do not edit the file at all.
+- (REPO HEALTH) Added a new Feature Request YAML form plus created a Pull Request template.
 
 ### Fixed
 
