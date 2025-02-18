@@ -31,6 +31,30 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // Start of USPSRestful
+
+/**
+ * If you're using a version of ZenCart older than 2.0.0, you should probably change 
+ * these to match your cart BEFORE you install the module in the backend.
+ * 
+ * The settings are natural to 2.0.0 onward and should not be set here but rather in the backend.
+ */
+if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '2.0.0', "<")) {
+
+    /**
+     * The length measurement standard of the ZenCart installation
+     * 
+     * Valid values: "inches" or "centimeters"
+     */
+    define('SHIPPING_DIMENSION_UNITS', 'inches');
+
+    /**
+     * The weight measurement standard of the ZenCart installation
+     * 
+     * Valid values: "lbs" (for pounds) or "kgs" (for kilograms). (DO NOT USE A PERIOD)
+     */
+    define('SHIPPING_WEIGHT_UNITS', 'lbs');
+}
+
 class uspsr extends base
 {
     /**
