@@ -11,11 +11,11 @@ body:
     id: uspsr-version
     attributes:
       label: USPSr Version
-      description: What version of our software are you running?
+      description: What version of the module are you running?
       options:
         - 0.1.0
-        - 0.2.0 (Current Version)
-        - 1.0.0
+        - 0.2.0
+        - 1.0.0 (Current Version)
         - 0.0.0 (pulled straight from main branch)
       default: 2
     validations:
@@ -30,8 +30,7 @@ body:
         - 2.1.x
         - 2.0.x
         - 1.5.x
-        - Older
-        - Alpha (ZenCart's development build)
+        - Older/Other
       default: 0
     validations:
       required: true
@@ -39,7 +38,7 @@ body:
     id: php-version
     attributes:
       label: PHP Version
-      description: As a reminder, this script was written with PHP8 in mind. Older versions, especially older than PHP7, is not guaranteed.
+      description: As a reminder, this script was written with PHP 8 in mind. Older versions, especially older than PHP 7, is not guaranteed.
       multiple: false
       options:
         - PHP 8.x
