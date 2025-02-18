@@ -66,7 +66,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                 ]);
 
                 // If the Constant is set to "Estimate Time, we should update the value too.
-                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
+                if (defined('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT') && MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
                         'configuration_value' => 'Estimate Transit Time',
                         'configuration_description' => 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.',
@@ -96,7 +96,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_title' => 'Shipping Methods (Domestic and International) (lbs)',
                     ]);
                 }
-                
+
                 $messageStack->add_session('<strong>USPSr Warning:</strong> Due to changes in configuration, if USPSr was enabled and already installed, you must now go to <a href="' . zen_href_link(FILENAME_DEFAULT, 'cmd=modules&set=shipping&module=uspsr') . '">Modules > Shipping > USPSr</a> and reselect your desired USPS Shipping Methods.', 'warning');
 
                 // Rename MODULE_SHIPPING_USPSR_PROCESSING_CLASS to MODULE_SHIPPING_USPSR_MEDIA_CLASS
