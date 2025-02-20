@@ -36,5 +36,5 @@ define('MODULE_SHIPPING_USPSR_ERROR_NO_CONTRACT' , MODULE_SHIPPING_USPSR_ERROR .
 define('MODULE_SHIPPING_USPSR_ERROR_REJECTED_CREDENTIALS' , MODULE_SHIPPING_USPSR_ERROR . 'Unable to obtain bearer token. Check to make sure that you entered valid API Credentials and that those credentials have permission to access the API. Check your settings.');
 define('MODULE_SHIPPING_USPSR_ERROR_NO_UPGRADE' , MODULE_SHIPPING_USPSR_ERROR . "You are using the repository version (0.0.0) of USPSr, you <strong>CANNOT</strong> upgrade this version directly. You must uninstall and reinstall the module to apply any upgrade.");
 
-define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "Success! The USPSr module has been updated to version <pre>%s</pre> .");
+define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "Success! The USPSr module has been updated to version <code>%s</code> .");
 define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE . 'There is a new version of the USPSr module available! To download it, visit the listing on the <a href="https://www.zen-cart.com/downloads.php?do=file&id=2395" target="_blank">ZenCart Plugins and Modules database</a>.');
