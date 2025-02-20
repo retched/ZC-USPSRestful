@@ -546,13 +546,12 @@ class uspsr extends base
             }
 
             // Duplicate International Priority Mail
-            $methodCountString=<<<EOF
-Priority Mail Count (in response): $priorityMailCount
-Priority Mail Express Count (in response): $priorityMailExpressCount
-Ground Adventage Count (in response): $groundAdvantageCount
-Bugged Media Mail Check, Nonstandard Basic rate appears:  $nonStandardMediaMailCount
+            $methodCountString = '';
 
-EOF;
+            $methodCountString .= "Priority Mail Count (in response): $priorityMailCount" . "\n";
+            $methodCountString .= "Priority Mail Express Count (in response): $priorityMailExpressCount" . "\n";
+            $methodCountString .= "Ground Adventage Count (in response): $groundAdvantageCount" . "\n";
+            $methodCountString .= "Bugged Media Mail Check, Nonstandard Basic rate appears:  $nonStandardMediaMailCount" . "\n";
 
             $this->uspsrDebug($methodCountString);
 
@@ -998,25 +997,9 @@ EOF;
                 }
 
 
-            } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
-
-                // Only show this during debugging
-                if ($this->debug_enabled === false) {
-                    $this->quotes = [
-                        'id' => $this->code,
-                        'icon' => zen_image($this->icon),
-                        'methods' => [],
-                        'module' => $this->title,
-                        'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $uspsQuote['error']['message'] . "</pre>"
-                    ];
-                } else {
-                    $this->enabled = false;
-                }
-
-                $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
-
             }
 
+            $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
 
             /**
              * Before ending and returning the completed list, let's invalidate this token.
@@ -1035,8 +1018,25 @@ EOF;
             $this->revokeBearerToken();
 
             return $this->quotes;
-        } else {
-            return FALSE;
+
+        } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
+
+            // Only show this during debugging
+            if ($this->debug_enabled === true) {
+
+                $this->quotes = [
+                    'id' => $this->code,
+                    'icon' => zen_image($this->icon),
+                    'methods' => [],
+                    'module' => $this->title,
+                    'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $uspsQuote['error']['message'] . "</pre>"
+                ];
+
+                $this->enabled = false;
+            }
+
+            $this->revokeBearerToken();
+            return $this->quotes;
         }
     }
 
@@ -2136,8 +2136,6 @@ EOF;
          *
          */
 
-
-
         $usps_calls = [
             'rates-domestic' => 'https://apis.usps.com/prices/v3/total-rates/search',
             'rates-intl' => 'https://apis.usps.com/international-prices/v3/total-rates/search',
@@ -2896,12 +2894,11 @@ function zen_cfg_uspsr_showdimmensions($key_value)
         }
     }
 
-    $output_str =<<<EOF
-<em>Domestic Measurements (LWH):</em> {$key_values[0]} × {$key_values[2]} × {$key_values[4]}<br>
-<em>International Measurements (LWH):</em> {$key_values[1]} × {$key_values[3]} × {$key_values[5]}
-EOF;
+    $output_str = '';
+    $output_str .= "<em>Domestic Measurements (LWH):</em> " . $key_values[0] . " × " . $key_values[2] . " × " . $key_values[4] . "<br>\n";
+    $output_str .= "<em>International Measurements (LWH):</em> " . $key_values[1] . " × " . $key_values[3] . " × " . "$key_values[5]";
 
-return $output_str;
+    return $output_str;
 }
 
 function uspsr_pretty_json_print($json)
