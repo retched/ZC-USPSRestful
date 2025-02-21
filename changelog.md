@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
 - Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messsages still bled through even though there was a series of flags and checks to make sure not to bother with launch the quote. If there is 
 
+
 ## [1.0.0] - 2025-02-18
 
 ### Breaking

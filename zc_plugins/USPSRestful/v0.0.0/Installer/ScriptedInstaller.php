@@ -148,6 +148,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                     'configuration_group_id' => 6,
                     'sort_order' => 0,
                     'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ',
+
                 ]);
 
                 $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
@@ -167,6 +168,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                     'sort_order' => 0,
                     'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
                 ]);
+
 
 
                 // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).

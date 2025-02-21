@@ -38,3 +38,4 @@ define('MODULE_SHIPPING_USPSR_ERROR_NO_UPGRADE' , MODULE_SHIPPING_USPSR_ERROR . 
 
 define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "Success! The USPSr module has been updated to version <code>%s</code> .");
 define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE . 'There is a new version of the USPSr module available! To download it, visit the listing on the <a href="https://www.zen-cart.com/downloads.php?do=file&id=2395" target="_blank">ZenCart Plugins and Modules database</a>.');
+

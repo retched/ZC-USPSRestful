@@ -490,7 +490,6 @@ class uspsr extends base
 
         if (isset($uspsQuote['rateOptions'])) {
 
-
             // Count how many times "Priority Mail" appears as a ProductName
             $priorityMailCount = 0;
             $priorityMailExpressCount = 0;
@@ -506,7 +505,7 @@ class uspsr extends base
                     if ($rate['productName'] == 'Priority Mail Express') {
                         $priorityMailExpressCount++;
                     }
-
+                  
                     if ($rate['productName'] == 'USPS Ground Advantage') {
                         $groundAdvantageCount++;
                     }
@@ -659,7 +658,7 @@ class uspsr extends base
                         if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
 
                         $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
-
+                      
                         /**
                          * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
                          * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
@@ -773,7 +772,7 @@ class uspsr extends base
                                         'cost' => $price,
                                         'mailClass' => $rate['rates'][0]['mailClass']
                                     ];
-
+                                  
                                     $match = TRUE;
                                 } else { // This likely means we have a regular
                                     $quotes = [
@@ -904,6 +903,7 @@ class uspsr extends base
                     }
                 }
                 if (zen_not_null($quote_message)) $this->uspsrDebug($quote_message);
+
 
                 // Go through each one of the the $build_quotes and tack on the transit time as needed.
                 // @todo Can this be moved back into the main loop?
@@ -1314,6 +1314,7 @@ class uspsr extends base
             'sort_order' => 0,
             'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
         ]);
+
 
         /**
          * Transit time display
@@ -1731,7 +1732,7 @@ class uspsr extends base
                     ]);
                     break;
 
-                case "v0.3.0": // This version didn't officially get released but was the old format of the repository
+              case "v0.3.0": // This version didn't officially get released but was the old format of the repository
                 case "v0.2.0":
                 case "v0.1.0":
                     // Changing this to be a more descriptive description.
@@ -1850,6 +1851,7 @@ class uspsr extends base
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                 'configuration_value' => self::USPSR_CURRENT_VERSION,
                 'set_function' => "zen_cfg_read_only("
+
             ]);
 
             $messageStack->add_session(sprintf(MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS, self::USPSR_CURRENT_VERSION), 'success');
