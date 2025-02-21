@@ -1158,7 +1158,7 @@ class uspsr extends base
             'sort_order' => 0,
             'date_added' => 'now()'
         ]);
-
+      
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_INTL', [
             'configuration_title' => 'Overall Handling Fee - International',
             'configuration_value' => '0',
@@ -1744,11 +1744,13 @@ class uspsr extends base
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
                         'configuration_title' => 'Packaging Class - Dimensional Pricing',
                         'configuration_value' => 'Rectangular',
+
                         'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
                         'configuration_group_id' => 6,
                         'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ',
                     ]);
+
 
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
                         'configuration_title' => 'Packaging Class - Cubic Pricing',
@@ -1778,7 +1780,7 @@ class uspsr extends base
 
         /**
          * Is there an upgrade available?
-         *
+         * 
          * Make a call into the ZenCart Module DB and compare the returned result versus the number
          */
         $check_for_new_version = plugin_version_check_for_updates("2395", MODULE_SHIPPING_USPSR_VERSION);
