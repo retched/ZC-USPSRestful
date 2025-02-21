@@ -1723,7 +1723,7 @@ class uspsr extends base
 
                     // Add Squash alike methods together
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                        'configuration_title' => 'Squash alike methods together',
+                        'configuration_title' => 'Squash Alike Methods Together',
                         'configuration_value' => '',
                         'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
                         'configuration_group_id' => 6,
