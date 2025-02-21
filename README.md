@@ -45,6 +45,8 @@ Both versions (encapsulated and non-encapsualted) are now shared in the same rel
 
 You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository.
 
+Upgrading the non-encapsulated version? **Overwrite ALL files of the old version.** (If you're using the encapsulated version, it is safe to upload the new version which exists in a separate folder.)
+
 ## Uninstallation
 
 - **Non-encapsulated**  
