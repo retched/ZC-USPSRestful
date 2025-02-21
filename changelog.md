@@ -19,6 +19,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then check that.)
 - Removed the unit of measure from the shipping methods table.
 
+## Changed
+
+- Debug mode now has two separate modes: Display Errors, Generate Logs. If errors are found, they are hidden from the customer view. You can now enable those errors being show. Additionally, you can generate logs for all requests. (TODO: On any error, generate a log.)
+
 ## Fixed
 
 - There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
@@ -43,7 +47,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Created a debug counter for Ground Advantage Cubic, Priority Mail Cubic, and Priority Mail Express Cubic. This helps for deciding on whether to filter the rate for these services further or to just use what is received.
 - Expanded the packaging classes into three questions: one pertaining to Media Mail (Machinable/Nonstandard) and Ground Advantage Cubic and Priority Mail Cubic (Rectangular/Nonrectangular and Soft/Non-Soft).
 - Expanded definitions and explanations of various configuration settings.
-- Added min/max fields from original USPS module to shipping method selection. These fields allow you place weight-based clamps on each individual method. For example: If you entered 1 and 5 in the appropriate boxes (order does not matter, the software will sort it out for you) for USPS Ground Advantage, the module will only offer your customers the USPS Ground Advantage rate if the total package weight (that is items and tare) is within those two settings. **NOTE:** This does not mean you can offer services that are outside of the USPS limits. (Example: Entering 80 as a maximum does not mean you can offer Ground Advantage to your customers as 70 is the maximum serviceable weight for USPS Ground Advantage.)
+- Added min/max fields from original USPS module to shipping method selection. These fields allow you place weight-based clamps on each individual method. For example: If you entered 1 and 5 in the appropriate boxes (order does not matter, the software will sort it out for you) for USPS Ground Advantage, the module will only offer your customers the USPS Ground Advantage rate if the total package weight (that is items and tare) is within those two settings.  
+  **NOTE:** This does not mean you can offer services that are outside of the USPS limits. (Example: Entering 80 (lbs) as a maximum does not mean you can offer Ground Advantage to your customers as 70 lbs is the maximum serviceable weight for USPS Ground Advantage.)  
+  **NOTE:** The number entered here should be in the unit of measurement of the cart. If your site measures in pounds, then the amount you enter here should be in pounds. If your site measures in kilograms, then the amount you enter here should be in kilograms.
 - For parity with ZenCart installations older than 2.0.0, there is a file edit that the storeowner should use to define the measurement standard of the site. This is to make sure that everything is dispatched to the USPS in imperial units. If you are using 2.0.0 or newer, do not edit the file at all.
 - (REPO HEALTH) Added a new Feature Request YAML form plus created a Pull Request template.
 
