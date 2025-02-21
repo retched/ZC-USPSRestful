@@ -71,6 +71,15 @@ class ScriptedInstaller extends ScriptedInstallBase
                     'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
                 ]);
 
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                    'configuration_title' => 'Debug Mode',
+                    'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
+                    'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                    'configuration_group_id' => 6,
+                    'sort_order' => 0,
+                    'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                    'date_added' => 'now()'
+                ]);
                 break;
 
             case "v0.3.0":

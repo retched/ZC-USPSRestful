@@ -287,7 +287,7 @@ class uspsr extends base
         // -----
         // Set debug-related variables for use by the uspsrDebug method.
         //
-        $this->debug_enabled = (MODULE_SHIPPING_USPSR_DEBUG_MODE !== 'Off');
+        $this->debug_enabled = (MODULE_SHIPPING_USPSR_DEBUG_MODE !== '--none--');
         $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
 
         $this->typeCheckboxesSelected = explode(', ', MODULE_SHIPPING_USPSR_TYPES);
@@ -1040,7 +1040,7 @@ class uspsr extends base
                 } else { // This means nothing was built. Report it back as such.
 
                     // Only show this during debugging
-                    if ($this->debug_enabled === false) {
+                    if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
                         $this->quotes = [
                             'id' => $this->code,
                             'icon' => zen_image($this->icon),
@@ -1079,7 +1079,7 @@ class uspsr extends base
         } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
 
             // Only show this during debugging
-            if ($this->debug_enabled === true) {
+            if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
 
                 $this->quotes = [
                     'id' => $this->code,
@@ -1308,7 +1308,7 @@ class uspsr extends base
 
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
             'configuration_title' => 'Squash Alike Methods Together',
-            'configuration_value' => '',
+            'configuration_value' => '--none--',
             'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
             'configuration_group_id' => 6,
             'sort_order' => 0,
@@ -1493,13 +1493,14 @@ class uspsr extends base
         /**
          * Debug Logging Options
          */
+
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
             'configuration_title' => 'Debug Mode',
-            'configuration_value' => 'Off',
-            'configuration_description' => 'Would you like to enable debug mode?  If set to <em>Logs</em>, a file will be written to the store\'s /logs directory on each USPS request.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+            'configuration_value' => '--none--',
+            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
             'configuration_group_id' => 6,
             'sort_order' => 0,
-            'set_function' => 'zen_cfg_select_option([\'Off\', \'Logs\'], ',
+            'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
             'date_added' => 'now()'
         ]);
 
@@ -1575,7 +1576,7 @@ class uspsr extends base
      */
     protected function uspsrDebug($message)
     {
-        if ($this->debug_enabled === true) {
+        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
             error_log(date('Y-m-d H:i:s') . ': ' . $message . PHP_EOL, 3, $this->debug_filename);
         }
     }
@@ -1584,7 +1585,7 @@ class uspsr extends base
     {
         global $order, $currencies;
 
-        if ($this->debug_enabled === false) {
+        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
             return;
         }
 
@@ -1730,9 +1731,19 @@ class uspsr extends base
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                         'set_function' => 'zen_cfg_read_only('
                     ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                        'configuration_title' => 'Debug Mode',
+                        'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
+                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                        'date_added' => 'now()'
+                    ]);
                     break;
 
-              case "v0.3.0": // This version didn't officially get released but was the old format of the repository
+                case "v0.3.0": // This version didn't officially get released but was the old format of the repository
                 case "v0.2.0":
                 case "v0.1.0":
                     // Changing this to be a more descriptive description.
@@ -2287,7 +2298,7 @@ class uspsr extends base
     {
         global $order;
 
-        if ($this->debug_enabled === false) {
+        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
             return;
         }
 
@@ -2306,7 +2317,7 @@ class uspsr extends base
     {
         global $order;
 
-        if ($this->debug_enabled === false) {
+        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
             return;
         }
 
@@ -2324,7 +2335,7 @@ class uspsr extends base
     }
     protected function quoteLogJSONResponse($response)
     {
-        if ($this->debug_enabled === false) {
+        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
             return;
         }
 
@@ -2828,7 +2839,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
             $output .= $services[$service] . ($service !== $end ? ", " : "" );
         }
     }
-    if (!zen_not_null($output)) $output = '<em>- None -</em>';
+    if (!zen_not_null($output)) $output = '--none--';
 
     return $output;
 }
@@ -2955,7 +2966,7 @@ function zen_cfg_uspsr_showservices($key_value)
         $output_intl .= trim($method) . ($method == end($methods_intl) ? '' : ', ');
     }
 
-    $output = "<b>Domestic Methods:</b><br> " . (zen_not_null($output_domestic) ? $output_domestic : '<em>- None -</em>') . "<br><br>\n" . "<b>International Methods</b>: <br>" . (zen_not_null($output_intl) ? $output_intl : '<em>- None -</em>');
+    $output = "<b>Domestic Methods:</b><br> " . (zen_not_null($output_domestic) ? $output_domestic : '--none--') . "<br><br>\n" . "<b>International Methods</b>: <br>" . (zen_not_null($output_intl) ? $output_intl : '--none--');
 
     return $output . "\n";
 }
@@ -2963,7 +2974,7 @@ function zen_cfg_uspsr_showservices($key_value)
 function zen_cfg_uspsr_showdimmensions($key_value)
 {
     $key_values = explode(', ', $key_value);
-    $key_values = array_filter($key_values, function($value) { if(zen_not_null($value)) {return "<em>- NONE -</em>";} });
+    $key_values = array_filter($key_values, function($value) { if(zen_not_null($value)) {return "--none--";} });
 
     // Domestic Measures are 0 x 2 x 4
     // International Measures are 1 x 3 x 5
@@ -3097,7 +3108,7 @@ function uspsr_get_categories($key_value)
     }
 
     if (!zen_not_null($output_str)) {
-        $output_str = "<em>- None -</em>";
+        $output_str = "--none--";
     }
 
     return $output_str;
@@ -3138,7 +3149,7 @@ function uspsr_get_connect_zipcodes($data)
         return $output;
 
     } else {
-        return "- None -";
+        return "--none--";
     }
 }
 
