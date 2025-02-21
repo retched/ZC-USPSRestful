@@ -365,8 +365,11 @@ class uspsr extends base
         $delivery_postcode = (array_key_exists('postcode', $order->delivery) && !empty($order->delivery['postcode']) ? $order->delivery['postcode'] : NULL);
 
         // Is this going to the US and has a zipcode?
-        if ( ($this->is_us_shipment && zen_not_null($delivery_postcode)) ) {
-            $this->enabled = false;
+        if ($this->is_us_shipment && !zen_not_null($delivery_postcode)) { // If this is a US bound package and no zip code
+            $this->enabled = false; // Disable the module
+            return;
+        } else { // Otherewise it's a not US Bound package OR it's a US bound package and HAS a zipcode.
+            $this->enabled = true;
             return;
         }
 
