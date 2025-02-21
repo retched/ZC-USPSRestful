@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: ScriptedInstaller.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: ScriptedInstaller.php 2025-02-20 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -58,8 +58,21 @@ class ScriptedInstaller extends ScriptedInstallBase
         switch ($oldVersion) {
             case "v1.0.0":
                 // Changes to the database from v1.0.0 should be put here.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
+                    'set_function' => 'zen_cfg_read_only('
+                ]);
+
+                $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                    'configuration_title' => 'Squash Alike Methods Together',
+                    'configuration_value' => '',
+                    'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options in it, otherwise it will be ignored.',
+                    'configuration_group_id' => 6,
+                    'sort_order' => 0,
+                    'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                ]);
+
                 break;
-            
+
             case "v0.3.0":
             case "v0.2.0":
             case "v0.1.0":
@@ -134,12 +147,12 @@ class ScriptedInstaller extends ScriptedInstallBase
                     'configuration_description' => 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.',
                     'configuration_group_id' => 6,
                     'sort_order' => 0,
-                    'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ', 
+                    'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ',
                 ]);
 
                 $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
                     'configuration_title' => 'Packaging Class - Dimensional Pricing',
-                    'configuration_value' => 'Rectangular', 
+                    'configuration_value' => 'Rectangular',
                     'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
                     'configuration_group_id' => 6,
                     'sort_order' => 0,
@@ -149,13 +162,13 @@ class ScriptedInstaller extends ScriptedInstallBase
                 $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
                     'configuration_title' => 'Packaging Class - Cubic Pricing',
                     'configuration_value' => 'Non-Soft',
-                    'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>', 
-                    'configuration_group_id' => 6, 
-                    'sort_order' => 0, 
+                    'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>',
+                    'configuration_group_id' => 6,
+                    'sort_order' => 0,
                     'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
                 ]);
 
-                
+
                 // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).
                 $this->executeInstallerSql("UPDATE " . TABLE_PLUGIN_CONTROL . " SET description = 'This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS\' REST API using OAuth.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)' WHERE unique_key = 'USPSRestful' ");
                 break;
@@ -165,7 +178,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                 $messageStack->addSession("<strong>USPSr Installation error:</strong> You are using the developmental version (v0.0.0) from the GitHub. To upgrade, you must COMPLETELY uninstall this version before installing the new version.", 'error');
                 return false;
         }
-        
+
         // Update the version setting to match the new version. (This happens regardless of version, so this should sit outside version check.)
         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
             'configuration_value' => $this->version,
