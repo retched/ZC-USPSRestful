@@ -58,27 +58,33 @@ class ScriptedInstaller extends ScriptedInstallBase
         switch ($oldVersion) {
             case "v1.0.0":
                 // Changes to the database from v1.0.0 should be put here.
+                // Add Squash alike methods together
+                $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                    'configuration_title' => 'Squash alike methods together',
+                    'configuration_value' => '',
+                    'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                    'configuration_group_id' => 6,
+                    'sort_order' => 0,
+                    'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                ]);
+
+                // Change the Change the USPSr Version display to a read-only
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                     'set_function' => 'zen_cfg_read_only('
                 ]);
 
-                $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                    'configuration_title' => 'Squash Alike Methods Together',
-                    'configuration_value' => '',
-                    'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options in it, otherwise it will be ignored.',
-                    'configuration_group_id' => 6,
-                    'sort_order' => 0,
-                    'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
-                ]);
-
+                // Change the Debug Mode to be a split selection between showing logs or showing errors
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
                     'configuration_title' => 'Debug Mode',
                     'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
                     'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
-                    'configuration_group_id' => 6,
-                    'sort_order' => 0,
                     'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
                     'date_added' => 'now()'
+                ]);
+
+                // Created a function to either show the value or to show none
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                    'use_function' => 'zen_cfg_uspsr_account_display',
                 ]);
                 break;
 

@@ -1476,6 +1476,7 @@ class uspsr extends base
             'configuration_value' => '',
             'configuration_description' => 'What is the associated EPS Account Number or Meter Number you have with the United States Postal Service. (Leave blank if none.)',
             'configuration_group_id' => 6,
+            'use_function' => 'zen_cfg_uspsr_account_display',
             'sort_order' => 0,
             'date_added' => 'now()'
         ]);
@@ -1719,8 +1720,10 @@ class uspsr extends base
             switch (MODULE_SHIPPING_USPSR_VERSION) {
                 case "v1.0.0":
                     // Any changes to the database from v1.0.0 should go here
+
+                    // Add Squash alike methods together
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                        'configuration_title' => 'Squash Alike Methods Together',
+                        'configuration_title' => 'Squash alike methods together',
                         'configuration_value' => '',
                         'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
                         'configuration_group_id' => 6,
@@ -1728,18 +1731,23 @@ class uspsr extends base
                         'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
                     ]);
 
+                    // Change the Change the USPSr Version display to a read-only
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                         'set_function' => 'zen_cfg_read_only('
                     ]);
 
+                    // Change the Debug Mode to be a split selection between showing logs or showing errors
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
                         'configuration_title' => 'Debug Mode',
                         'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
                         'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
                         'date_added' => 'now()'
+                    ]);
+
+                    // Created a function to either show the value or to show none
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                        'use_function' => 'zen_cfg_uspsr_account_display',
                     ]);
                     break;
 
@@ -2797,6 +2805,16 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
 
 
     return $output_str;
+}
+
+function zen_cfg_uspsr_account_display($key_value)
+{
+    // The key_value is either 
+
+    if (zen_not_null($key_value)) {
+        return trim($key_value);
+    } else { return "--none--"; }
+
 }
 
 function zen_cfg_uspsr_extraservices_display($key_value)
