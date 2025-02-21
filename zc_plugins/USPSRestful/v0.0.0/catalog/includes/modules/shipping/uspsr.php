@@ -33,9 +33,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 // Start of USPSRestful
 
 /**
- * If you're using a version of ZenCart older than 2.0.0, you should probably change 
+ * If you're using a version of ZenCart older than 2.0.0, you should probably change
  * these to match your cart BEFORE you install the module in the backend.
- * 
+ *
  * The settings are natural to 2.0.0 onward and should not be set here but rather in the backend.
  */
 if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '2.0.0', "<"))
@@ -105,7 +105,7 @@ class uspsr extends base
      * @var integer
      */
     public $tax_class;
-    
+
     /**
      * When the shipping cost is taxed, identifies the basis for the tax
      * computation: either Billing, Shipping or Store.
@@ -113,14 +113,14 @@ class uspsr extends base
      * @var string
      */
     public $tax_basis;
-    
+
     /**
      * Sort order of display.
      *
      * @var int
      */
     public $sort_order = 0;
-    
+
     /**
      * List of quotes to be presented to ZenCart
      * @var array
@@ -354,18 +354,21 @@ class uspsr extends base
             return;
         }
 
-        // If the order doesn't have a zip code or have a valid zip code (5 or 9 digit), and it is a US order: STOP
-        // (typically because you're visiting the shopping cart estimator)
-        $delivery_postcode = (array_key_exists('postcode', $order->delivery) ? $order->delivery['postcode'] : NULL);
-        if (zen_not_null($delivery_postcode) && (uspsr_validate_zipcode($order->delivery['postcode']) === FALSE) && $this->is_us_shipment) {
-            $this->enabled = false;
-        }
-
         /**
          * use USPS translations for US shops (USPS treats certain regions as
          * "US States" instead of as different "countries", so we translate here)
          */
         $this->usps_countries = $this->usps_translation();
+
+        // If the order doesn't have a zip code or have a valid zip code (5 or 9 digit), and it is a US order: STOP
+        // (typically because you're visiting the shopping cart estimator)
+        $delivery_postcode = (array_key_exists('postcode', $order->delivery) ? $order->delivery['postcode'] : NULL);
+
+        // Is this going to the US and has a zipcode?
+        if ( !($this->is_us_shipment && zen_not_null($delivery_postcode)) ) {
+            $this->enabled = false;
+            return;
+        }
 
     }
 
@@ -481,225 +484,210 @@ class uspsr extends base
         // Take the result of the CURL call and make it into an array.
         $uspsQuote = json_decode($this->uspsQuote, TRUE);
 
-        // Count how many times "Priority Mail" appears as a ProductName
-        $priorityMailCount = 0;
-        foreach ($uspsQuote['rateOptions'] as $rateOption) {
-            foreach ($rateOption['rates'] as $rate) {
-                // Only count those with the productName of Priority Mail and DO NOT count "OPEN_AND_DISTRIBUTE" (These are the weird)
-                if ($rate['productName'] == 'Priority Mail' && $rate['processingCategory'] !== 'OPEN_AND_DISTRIBUTE') {
-                    $priorityMailCount++;
-                }
-            }
-        }
-
-        // Count how many times "Priority Mail Express" appears as a ProductName
-        $priorityMailExpressCount = 0;
-        foreach ($uspsQuote['rateOptions'] as $rateOption) {
-            foreach ($rateOption['rates'] as $rate) {
-                if ($rate['productName'] == 'Priority Mail Express') {
-                    $priorityMailExpressCount++;
-                }
-            }
-        }
-
-        // Count how many times "USPS Ground Advantage" appears as a ProductName
-        $groundAdvantageCount = 0;
-        foreach ($uspsQuote['rateOptions'] as $rateOption) {
-            foreach ($rateOption['rates'] as $rate) {
-                if ($rate['productName'] == 'USPS Ground Advantage') {
-                    $groundAdvantageCount++;
-                }
-            }
-        }
-
-        /**
-         * Bugged API Check - Media Mail
-         *
-         * Currently the API is BUGGED on USPS' side. There should be a Nonstandard Basic and a Machinable Basic
-         * rate but right now, as of 2/15/25, the USPS API is only returning Nonstandard twice with "COMMERCIAL" quotes.
-         * (Retail rates work normally, however and yield a Machinable Single-Piece and Nonstandard Single-Piece quote.)
-         *
-         * It is a known reported bug at the USPS but there is nothing that I can do to alleviate that.
-         *
-         * Until USPS fixes it, Commercial quotes will use the "Nonstandard" rate either way and Retail quotes will
-         * toggle based on the appropriate setting.
-         *
-         * To "futureproof" this, as the fix can come at any minute: if there is more than one Nonstandard rate,
-         * regardless of the Machinability setting, the module will use Nonstandard rate.
-         */
-        $nonStandardMediaMailCount = 0;
-        foreach ($uspsQuote['rateOptions'] as $rateOption) {
-            foreach ($rateOption['rates'] as $rate) {
-                if (($rate['mailClass'] == 'MEDIA_MAIL') && (strpos($rate['description'], "Nonstandard Basic") !== FALSE)) {
-                    $nonStandardMediaMailCount++;
-                }
-            }
-        }
-
-        // Duplicate International Priority Mail 
-        $methodCountString=<<<EOF
-Priority Mail Count (in response): $priorityMailCount
-Priority Mail Express Count (in response): $priorityMailExpressCount
-Ground Adventage Count (in response): $groundAdvantageCount
-Bugged Media Mail Check, Nonstandard Basic rate appears:  $nonStandardMediaMailCount
-
-EOF;
-
-        $this->uspsrDebug($methodCountString);
-
-
         // Let's clean up the quote to remove any extra spaces from the parts as necessary.
         // Looking at you, USPS Connect Local
         $uspsQuote = $this->cleanJSON($uspsQuote);
 
-        $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $usps_shipping_weight, $shipping_num_boxes, $uspsQuote);
-
-
-        if (zen_not_null($this->uspsStandards)) {
-            $uspsStandards = json_decode($this->uspsStandards, TRUE);
-        }
-
-        // Go through each of the $this->typeCheckboxesSelected and build a list.
-        $selected_methods = [];
-        $build_quotes = [];
-        for ($i = 0; $i <= count($this->typeCheckboxesSelected) - 1; $i++)
-        {
-            if (!is_numeric($this->typeCheckboxesSelected[$i]) && zen_not_null($this->typeCheckboxesSelected[$i])) {
-                // Fool proofing the entry of the two values.
-                $limits = [(double)$this->typeCheckboxesSelected[$i+1], (double)$this->typeCheckboxesSelected[$i+2]];
-
-                // Does this need to be converted into pounds?
-                if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS == 'kgs') {
-                    $limits[0] *= 2.2046226218487758;
-                    $limits[1] *= 2.2046226218487758;
-
-                    // 1 kgs = 2.2046226218487758 lbs.
-                }
-
-                $selected_methods[] = [
-                    'min_weight' => min($limits),
-                    'max_weight' => max($limits),
-                    'method' => $this->typeCheckboxesSelected[$i],
-                    'handling' => $this->typeCheckboxesSelected[$i+3]
-                ];
-
-            }
-        }
-
-
-        $message =  '';
-        $message .= "\n" . '===============================================' . "\n";
-        $message .= 'Reviewing selected method options...' . "\n";
-        $message .= print_r($selected_methods, TRUE);
-        $this->uspsrDebug($message);
-
-        /**
-         * Okay we have a list of all the selected dots from the backend and the handling. (Having both
-         * domestic AND international in the same array won't be a problem)
-         *
-         * Go through the result of the cURL call and pull out each method and assign it to the output array.
-         *
-         * The path to each rate is: rateOptions > X.
-         *
-         * Each X has:
-         *  - a "totalBasePrice" and/or totalPrice (that's where the amount of the method comes from).
-         *    totalPrice is defined only when there's options set, otherwise totalBasePrice is the main value of the method.
-         *  - a "rates" "array" (it only has one sub-value), that "rates" contains an "X"
-         *      - each X contains a description, a "productDefinition".
-         *        We're going to filter the "description" to make the "Pretty Name" later. The "productDefinition" would contain the "service levels".
-         *        (The estimates API is buggy and isn't working for some reason.)
-         *
-         */
-        $message = '';
-        $message .= "\n" . '===============================================' . "\n";
-        $message .= 'Building options...' . "\n";
-        $this->uspsrDebug($message);
-
-
-        // Order Handling Costs
-        if ($order->delivery['country']['id'] === SHIPPING_ORIGIN_COUNTRY || $this->is_us_shipment === true) {
-            // domestic/national
-            $usps_handling_fee = (double)MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC;
-        } else {
-            // international
-            $usps_handling_fee = (double)MODULE_SHIPPING_USPSR_HANDLING_INTL;
-        }
-
-        // -----
-        // Give an observer the opportunity to modify the overall USPS handling fee for the order.
-        //
-        $this->notify('NOTIFY_SHIPPING_USPS_AFTER_HANDLING', [], $order, $shipping_weight, $shipping_num_boxes, $usps_handling_fee);
-
-        // Order/Box Handling Cost Calculation
-        // Okay go through each quote and add in the appropriate amount for the handling.
-
-        // Are we applying the cost per box or the whole order?
-        $handling_ext = $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
-
         if (isset($uspsQuote['rateOptions'])) {
 
-            // I am 99% sure there is probably a more efficient way to do this...
-            foreach ($uspsQuote['rateOptions'] as $rate) {
+            // Count how many times "Priority Mail" appears as a ProductName
+            $priorityMailCount = 0;
+            foreach ($uspsQuote['rateOptions'] as $rateOption) {
+                foreach ($rateOption['rates'] as $rate) {
+                    // Only count those with the productName of Priority Mail and DO NOT count "OPEN_AND_DISTRIBUTE" (These are the weird)
+                    if ($rate['productName'] == 'Priority Mail' && $rate['processingCategory'] !== 'OPEN_AND_DISTRIBUTE') {
+                        $priorityMailCount++;
+                    }
+                }
+            }
 
-                // Do not use any "OPEN_AND_DISTRIBUTE"
-                if ($rate['rates'][0]['processingCategory'] === 'OPEN_AND_DISTRIBUTE') continue;
+            // Count how many times "Priority Mail Express" appears as a ProductName
+            $priorityMailExpressCount = 0;
+            foreach ($uspsQuote['rateOptions'] as $rateOption) {
+                foreach ($rateOption['rates'] as $rate) {
+                    if ($rate['productName'] == 'Priority Mail Express') {
+                        $priorityMailExpressCount++;
+                    }
+                }
+            }
 
-                // If there is a method with "Nonstandard" and "Flat Rate Envelope" in its name... SKIP IT.
-                if (strpos($rate['rates'][0]['description'], "Nonstandard") !== FALSE && strpos($rate['rates'][0]['description'], "Flat Rate Envelope")) continue;
+            // Count how many times "USPS Ground Advantage" appears as a ProductName
+            $groundAdvantageCount = 0;
+            foreach ($uspsQuote['rateOptions'] as $rateOption) {
+                foreach ($rateOption['rates'] as $rate) {
+                    if ($rate['productName'] == 'USPS Ground Advantage') {
+                        $groundAdvantageCount++;
+                    }
+                }
+            }
 
-                $m = 0; // Index for making the quote id's with
-                foreach($selected_methods as $method)
-                {
-                    $match = FALSE;
-                    $quote = []; //Temp holder, if overriden, this gets skipped.
-                    $method_to_add = TRUE;
-                    $made_weight = TRUE;
+            /**
+             * Bugged API Check - Media Mail
+             *
+             * Currently the API is BUGGED on USPS' side. There should be a Nonstandard Basic and a Machinable Basic
+             * rate but right now, as of 2/15/25, the USPS API is only returning Nonstandard twice with "COMMERCIAL" quotes.
+             * (Retail rates work normally, however and yield a Machinable Single-Piece and Nonstandard Single-Piece quote.)
+             *
+             * It is a known reported bug at the USPS but there is nothing that I can do to alleviate that.
+             *
+             * Until USPS fixes it, Commercial quotes will use the "Nonstandard" rate either way and Retail quotes will
+             * toggle based on the appropriate setting.
+             *
+             * To "futureproof" this, as the fix can come at any minute: if there is more than one Nonstandard rate,
+             * regardless of the Machinability setting, the module will use Nonstandard rate.
+             */
+            $nonStandardMediaMailCount = 0;
+            foreach ($uspsQuote['rateOptions'] as $rateOption) {
+                foreach ($rateOption['rates'] as $rate) {
+                    if (($rate['mailClass'] == 'MEDIA_MAIL') && (strpos($rate['description'], "Nonstandard Basic") !== FALSE)) {
+                        $nonStandardMediaMailCount++;
+                    }
+                }
+            }
 
-                    // Plainly, the final quote price is the quote + handling + order handling. Return that.
-                    $price = (isset($rate['totalPrice']) ? (double)$rate['totalPrice'] : (double)$rate['totalBasePrice'] ) + (double)$method['handling'] + (double)$handling_ext;
+            // Duplicate International Priority Mail
+            $methodCountString = '';
 
-                    // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
-                    // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
-                    if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
+            $methodCountString .= "Priority Mail Count (in response): $priorityMailCount" . "\n";
+            $methodCountString .= "Priority Mail Express Count (in response): $priorityMailExpressCount" . "\n";
+            $methodCountString .= "Ground Adventage Count (in response): $groundAdvantageCount" . "\n";
+            $methodCountString .= "Bugged Media Mail Check, Nonstandard Basic rate appears:  $nonStandardMediaMailCount" . "\n";
 
-                    $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
+            $this->uspsrDebug($methodCountString);
 
-                    /**
-                     * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
-                     * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
-                     * not the flat rate ones.)
-                     *
-                     * So we need to filter accordingly.
-                     *
-                     * If there is more than one of the afflicted class, check for a Dimmensional quote and the Packaging Setting.
-                     *
-                     * If there is only ONE of each method, then that means it's safe to just throw it on the list of offered methods.
-                     */
+            $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $usps_shipping_weight, $shipping_num_boxes, $uspsQuote);
 
-                    /**
-                     * For Priority Mail Cubic and Ground Advantage Cubic, there are two kinds of pricing available them (either a
-                     * Soft or Non-Soft packaging rate. We need to split and search for which of these two it is.)
-                     */
 
-                    // Does the description match an option from the $selected_method?
-                    if ($method['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
-                        if (MODULE_SHIPPING_USPSR_PRICING === 'Retail') {
-                            // If this is retail, we need to match it against the appropriate rate.
-                            if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
-                                $quotes = [
-                                    'id' => 'usps' . $m,
-                                    'title' => "Media Mail",
-                                    'cost' => $price,
-                                    'mailClass' => $rate['rates'][0]['mailClass']
-                                ];
+            if (zen_not_null($this->uspsStandards)) {
+                $uspsStandards = json_decode($this->uspsStandards, TRUE);
+            }
 
-                                $match = TRUE;
-                            }
+            // Go through each of the $this->typeCheckboxesSelected and build a list.
+            $selected_methods = [];
+            $build_quotes = [];
+            for ($i = 0; $i <= count($this->typeCheckboxesSelected) - 1; $i++)
+            {
+                if (!is_numeric($this->typeCheckboxesSelected[$i]) && zen_not_null($this->typeCheckboxesSelected[$i])) {
+                    // Fool proofing the entry of the two values.
+                    $limits = [(double)$this->typeCheckboxesSelected[$i+1], (double)$this->typeCheckboxesSelected[$i+2]];
 
-                        } elseif (MODULE_SHIPPING_USPSR_PRICING === 'Commercial') {
-                            // If this is commercial, we need to make sure we're only dealing with ONE nonstandard match up first.
+                    // Does this need to be converted into pounds?
+                    if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS == 'kgs') {
+                        $limits[0] *= 2.2046226218487758;
+                        $limits[1] *= 2.2046226218487758;
 
-                            if ($nonStandardMediaMailCount === 1) { // We only have one, proceed as normal.
+                        // 1 kgs = 2.2046226218487758 lbs.
+                    }
+
+                    $selected_methods[] = [
+                        'min_weight' => min($limits),
+                        'max_weight' => max($limits),
+                        'method' => $this->typeCheckboxesSelected[$i],
+                        'handling' => $this->typeCheckboxesSelected[$i+3]
+                    ];
+
+                }
+            }
+
+
+            $message =  '';
+            $message .= "\n" . '===============================================' . "\n";
+            $message .= 'Reviewing selected method options...' . "\n";
+            $message .= print_r($selected_methods, TRUE);
+            $this->uspsrDebug($message);
+
+            /**
+             * Okay we have a list of all the selected dots from the backend and the handling. (Having both
+             * domestic AND international in the same array won't be a problem)
+             *
+             * Go through the result of the cURL call and pull out each method and assign it to the output array.
+             *
+             * The path to each rate is: rateOptions > X.
+             *
+             * Each X has:
+             *  - a "totalBasePrice" and/or totalPrice (that's where the amount of the method comes from).
+             *    totalPrice is defined only when there's options set, otherwise totalBasePrice is the main value of the method.
+             *  - a "rates" "array" (it only has one sub-value), that "rates" contains an "X"
+             *      - each X contains a description, a "productDefinition".
+             *        We're going to filter the "description" to make the "Pretty Name" later. The "productDefinition" would contain the "service levels".
+             *        (The estimates API is buggy and isn't working for some reason.)
+             *
+             */
+            $message = '';
+            $message .= "\n" . '===============================================' . "\n";
+            $message .= 'Building options...' . "\n";
+            $this->uspsrDebug($message);
+
+
+            // Order Handling Costs
+            if ($order->delivery['country']['id'] === SHIPPING_ORIGIN_COUNTRY || $this->is_us_shipment === true) {
+                // domestic/national
+                $usps_handling_fee = (double)MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC;
+            } else {
+                // international
+                $usps_handling_fee = (double)MODULE_SHIPPING_USPSR_HANDLING_INTL;
+            }
+
+            // -----
+            // Give an observer the opportunity to modify the overall USPS handling fee for the order.
+            //
+            $this->notify('NOTIFY_SHIPPING_USPS_AFTER_HANDLING', [], $order, $shipping_weight, $shipping_num_boxes, $usps_handling_fee);
+
+            // Order/Box Handling Cost Calculation
+            // Okay go through each quote and add in the appropriate amount for the handling.
+
+            // Are we applying the cost per box or the whole order?
+            $handling_ext = $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
+
+            if (isset($uspsQuote['rateOptions'])) {
+
+                // I am 99% sure there is probably a more efficient way to do this...
+                foreach ($uspsQuote['rateOptions'] as $rate) {
+
+                    // Do not use any "OPEN_AND_DISTRIBUTE"
+                    if ($rate['rates'][0]['processingCategory'] === 'OPEN_AND_DISTRIBUTE') continue;
+
+                    // If there is a method with "Nonstandard" and "Flat Rate Envelope" in its name... SKIP IT.
+                    if (strpos($rate['rates'][0]['description'], "Nonstandard") !== FALSE && strpos($rate['rates'][0]['description'], "Flat Rate Envelope")) continue;
+
+                    $m = 0; // Index for making the quote id's with
+                    foreach($selected_methods as $method)
+                    {
+                        $match = FALSE;
+                        $quote = []; //Temp holder, if overriden, this gets skipped.
+                        $method_to_add = TRUE;
+                        $made_weight = TRUE;
+
+                        // Plainly, the final quote price is the quote + handling + order handling. Return that.
+                        $price = (isset($rate['totalPrice']) ? (double)$rate['totalPrice'] : (double)$rate['totalBasePrice'] ) + (double)$method['handling'] + (double)$handling_ext;
+
+                        // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
+                        // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
+                        if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
+
+                        $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
+
+                        /**
+                         * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
+                         * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
+                         * not the flat rate ones.)
+                         *
+                         * So we need to filter accordingly.
+                         *
+                         * If there is more than one of the afflicted class, check for a Dimmensional quote and the Packaging Setting.
+                         *
+                         * If there is only ONE of each method, then that means it's safe to just throw it on the list of offered methods.
+                         */
+
+                        /**
+                         * For Priority Mail Cubic and Ground Advantage Cubic, there are two kinds of pricing available them (either a
+                         * Soft or Non-Soft packaging rate. We need to split and search for which of these two it is.)
+                         */
+
+                        // Does the description match an option from the $selected_method?
+                        if ($method['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
+                            if (MODULE_SHIPPING_USPSR_PRICING === 'Retail') {
+                                // If this is retail, we need to match it against the appropriate rate.
                                 if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
                                     $quotes = [
                                         'id' => 'usps' . $m,
@@ -710,67 +698,67 @@ EOF;
 
                                     $match = TRUE;
                                 }
-                            } elseif ($nonStandardMediaMailCount > 1 ) { // We have a higher count, this is bad. Ignore all and ONLY add 1.
+
+                            } elseif (MODULE_SHIPPING_USPSR_PRICING === 'Commercial') {
+                                // If this is commercial, we need to make sure we're only dealing with ONE nonstandard match up first.
+
+                                if ($nonStandardMediaMailCount === 1) { // We only have one, proceed as normal.
+                                    if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
+                                        $quotes = [
+                                            'id' => 'usps' . $m,
+                                            'title' => "Media Mail",
+                                            'cost' => $price,
+                                            'mailClass' => $rate['rates'][0]['mailClass']
+                                        ];
+
+                                        $match = TRUE;
+                                    }
+                                } elseif ($nonStandardMediaMailCount > 1 ) { // We have a higher count, this is bad. Ignore all and ONLY add 1.
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "Media Mail",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                    $nonStandardMediaMailCount = FALSE; // Changing this to FALSE so that it throttles the search.
+
+                                } else { // This has to 0 or FALSE, so skip.
+                                    continue;
+                                }
+                            }
+
+                        } elseif (($rate_name === "Priority Mail Cubic") && ($method['method'] == "Priority Mail Cubic")) {
+                            // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
+                            if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
                                 $quotes = [
                                     'id' => 'usps' . $m,
-                                    'title' => "Media Mail",
+                                    'title' => "Priorty Mail Cubic",
                                     'cost' => $price,
                                     'mailClass' => $rate['rates'][0]['mailClass']
                                 ];
 
                                 $match = TRUE;
-                                $nonStandardMediaMailCount = FALSE; // Changing this to FALSE so that it throttles the search.
-
-                            } else { // This has to 0 or FALSE, so skip.
-                                continue;
                             }
-                        }
 
-                    } elseif (($rate_name === "Priority Mail Cubic") && ($method['method'] == "Priority Mail Cubic")) {
-                        // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
-                        if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => "Priorty Mail Cubic",
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
+                        } elseif (($rate_name === "USPS Ground Advantage Cubic") && ($method['method'] == "USPS Ground Advantage Cubic")) {
+                            // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
+                            if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
+                                $quotes = [
+                                    'id' => 'usps' . $m,
+                                    'title' => "Ground Advantage Cubic",
+                                    'cost' => $price,
+                                    'mailClass' => $rate['rates'][0]['mailClass']
+                                ];
 
-                            $match = TRUE;
-                        }
+                                $match = TRUE;
+                            }
 
-                    } elseif (($rate_name === "USPS Ground Advantage Cubic") && ($method['method'] == "USPS Ground Advantage Cubic")) {
-                        // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
-                        if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => "Ground Advantage Cubic",
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-                        }
-
-                    } elseif (($rate_name === "Priority Mail") && ($method['method'] === "Priority Mail")) {
-                        // If there are more than one Priority Mail, it's likely we have a Dimmensional Quote.
-                        if ($priorityMailCount === 1) {
-                            // Only one Priority Mail quote, so add it
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => "Priority Mail",
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-
-                        } else { // $priorityMailCount > 1
-
-                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
-                            // Check for which one is which and then add that to the quote.
-                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
-
+                        } elseif (($rate_name === "Priority Mail") && ($method['method'] === "Priority Mail")) {
+                            // If there are more than one Priority Mail, it's likely we have a Dimmensional Quote.
+                            if ($priorityMailCount === 1) {
+                                // Only one Priority Mail quote, so add it
                                 $quotes = [
                                     'id' => 'usps' . $m,
                                     'title' => "Priority Mail",
@@ -779,67 +767,68 @@ EOF;
                                 ];
 
                                 $match = TRUE;
-                            } else { // This likely means we have a regular
+
+                            } else { // $priorityMailCount > 1
+
+                                // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                                // Check for which one is which and then add that to the quote.
+                                if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
+
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "Priority Mail",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                } else { // This likely means we have a regular
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "Priority Mail",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                }
+                            }
+
+                        } elseif (($rate_name === "USPS Ground Advantage") && ($method['method'] == "USPS Ground Advantage") ) {
+
+                            // If there are more than one USPS Ground Advantage, it's likely we have a Dimmensional Quote.
+                            if ($groundAdvantageCount === 1) {
+                                // Only one Ground Advantage quote, so add it
                                 $quotes = [
                                     'id' => 'usps' . $m,
-                                    'title' => "Priority Mail",
+                                    'title' => "Ground Advantage",
                                     'cost' => $price,
                                     'mailClass' => $rate['rates'][0]['mailClass']
                                 ];
 
                                 $match = TRUE;
+                            } else { // $groundAdvantageCount > 1
+
+                                // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                                // Check for which one is which and then add that to the quote.
+                                if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
+
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "USPS Ground Advantage",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                }
                             }
-                        }
 
-                    } elseif (($rate_name === "USPS Ground Advantage") && ($method['method'] == "USPS Ground Advantage") ) {
+                        } elseif (($rate_name === "Priority Mail Express") && ($method['method'] == "Priority Mail Express")) {
 
-                        // If there are more than one USPS Ground Advantage, it's likely we have a Dimmensional Quote.
-                        if ($groundAdvantageCount === 1) {
-                            // Only one Ground Advantage quote, so add it
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => "Ground Advantage",
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-                        } else { // $groundAdvantageCount > 1
-
-                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
-                            // Check for which one is which and then add that to the quote.
-                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
-
-                                $quotes = [
-                                    'id' => 'usps' . $m,
-                                    'title' => "USPS Ground Advantage",
-                                    'cost' => $price,
-                                    'mailClass' => $rate['rates'][0]['mailClass']
-                                ];
-
-                                $match = TRUE;
-                            }
-                        }
-
-                    } elseif (($rate_name === "Priority Mail Express") && ($method['method'] == "Priority Mail Express")) {
-
-                        // If there are more than one USPS Priority Mail Express, it's likely we have a Dimmensional Quote.
-                        if ($priorityMailExpressCount === 1) {
-                            // Only one Priority Mail Express quote, so add it
-                            $quotes = [
-                                'id' => 'usps' . $m,
-                                'title' => "Priority Mail Express",
-                                'cost' => $price,
-                                'mailClass' => $rate['rates'][0]['mailClass']
-                            ];
-
-                            $match = TRUE;
-                        } else { // $priorityMailCount > 1
-
-                            // We have more than one, which means it's likely the Rectangular/Nonrectangular split
-                            // Check for which one is which and then add that to the quote.
-                            if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
-
+                            // If there are more than one USPS Priority Mail Express, it's likely we have a Dimmensional Quote.
+                            if ($priorityMailExpressCount === 1) {
+                                // Only one Priority Mail Express quote, so add it
                                 $quotes = [
                                     'id' => 'usps' . $m,
                                     'title' => "Priority Mail Express",
@@ -848,156 +837,193 @@ EOF;
                                 ];
 
                                 $match = TRUE;
+                            } else { // $priorityMailCount > 1
+
+                                // We have more than one, which means it's likely the Rectangular/Nonrectangular split
+                                // Check for which one is which and then add that to the quote.
+                                if (((strpos($rate['rates'][0]['description'], "Rectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular') || ((strpos($rate['rates'][0]['description'], "Nonrectangular") !== false) && MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular') ) {
+
+                                    $quotes = [
+                                        'id' => 'usps' . $m,
+                                        'title' => "Priority Mail Express",
+                                        'cost' => $price,
+                                        'mailClass' => $rate['rates'][0]['mailClass']
+                                    ];
+
+                                    $match = TRUE;
+                                }
                             }
+                        } elseif (($method['method'] == $rate_name)) { // Match up the name of the quotes to the selected options.
+
+                            /**
+                             * Each member of $build_quotes is made up of the follow core pieces
+                             *
+                             * 'id'         : Visible - This is the ZenCart internal ID#
+                             * 'title'      : Visible - This is what is displayed to the customer
+                             * 'cost'       : Visible - This is the total cost. (Will also include any special services)
+                             * 'mailClass'  : HIDDEN - This is for use to build the time quotes.
+                             */
+                            $quotes = [
+                                'id' => 'usps' . $m,
+                                'title' => uspsr_filter_gibberish($rate_name),
+                                'cost' => $price,
+                                'mailClass' => $rate['rates'][0]['mailClass']
+                            ];
+
+                            $match = TRUE;
+
+                        } else {
+                            // We didn't match... so... uhh?
+                            continue;
                         }
-                    } elseif (($method['method'] == $rate_name)) { // Match up the name of the quotes to the selected options.
 
-                        /**
-                         * Each member of $build_quotes is made up of the follow core pieces
-                         *
-                         * 'id'         : Visible - This is the ZenCart internal ID#
-                         * 'title'      : Visible - This is what is displayed to the customer
-                         * 'cost'       : Visible - This is the total cost. (Will also include any special services)
-                         * 'mailClass'  : HIDDEN - This is for use to build the time quotes.
-                         */
-                        $quotes = [
-                            'id' => 'usps' . $m,
-                            'title' => uspsr_filter_gibberish($rate_name),
-                            'cost' => $price,
-                            'mailClass' => $rate['rates'][0]['mailClass']
-                        ];
+                        // Okay so ... we need to figure out are we even going to add this shipping method. Copy the min_weight and max_weight as needed.
+                        if ( !( ($this->quote_weight >= $method['min_weight']) && ($this->quote_weight <= $method['max_weight']) ) ) $made_weight = FALSE;
 
-                        $match = TRUE;
+                        // Insurance is directly pulled from the quote and added, setting this to allow "extra" insurance by an observer.
+                        // Maybe make it an extra field on the admin config? $extra_insurance in this case does NOT need the currency symbol, leave it off.
+                        // Additionally, there is no need to make the extra insurance, just add it in to the cost.
 
-                    } else {
-                        // We didn't match... so... uhh?
-                        continue;
-                    }
+                        // Observer class to specifically block a module from being offered.
+                        // The name in param1 must match the internal name from the API. Check the JSON from the debug to see. (Where a productName is offered, use that. Otherwise, use the EXACT description.)
+                        $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $rate_name, $method_to_add, $quotes['title'], $quotes['cost']);
 
-                    // Okay so ... we need to figure out are we even going to add this shipping method. Copy the min_weight and max_weight as needed.
-                    if ( !( ($this->quote_weight >= $method['min_weight']) && ($this->quote_weight <= $method['max_weight']) ) ) $made_weight = FALSE;
+                        $message = '';
+                        if ($match && $method_to_add && !empty($quotes) && $made_weight) {
 
-                    // Insurance is directly pulled from the quote and added, setting this to allow "extra" insurance by an observer.
-                    // Maybe make it an extra field on the admin config? $extra_insurance in this case does NOT need the currency symbol, leave it off.
-                    // Additionally, there is no need to make the extra insurance, just add it in to the cost.
+                            // The Observer did not block this.. And we have something add, so add it to the main list.
+                            $build_quotes[] = $quotes;
 
-                    // Observer class to specifically block a module from being offered.
-                    // The name in param1 must match the internal name from the API. Check the JSON from the debug to see. (Where a productName is offered, use that. Otherwise, use the EXACT description.)
-                    $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $rate_name, $method_to_add, $quotes['title'], $quotes['cost']);
+                            $message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
+                            $message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
+                            $message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
 
-                    $message = '';
-                    if ($match && $method_to_add && !empty($quotes) && $made_weight) {
+                        } elseif (!$method_to_add) {
+                            // The observer rejected/blocked this from being added.
 
-                        // The Observer did not block this.. And we have something add, so add it to the main list.
-                        $build_quotes[] = $quotes;
-
-                        $message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                        $message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
-                        $message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
-
-                    } elseif (!$method_to_add) {
-                        // The observer rejected/blocked this from being added.
-
-                        $message .= 'The Observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
-                    } elseif (!$made_weight && $match) {
-                        $message .= "Order failed to make weight for " . $method['method'] . ". (Minimum Weight : " . $method['min_weight'] . " , Maximum Weight: " . $method['max_weight'] . ")\n";
-                    }
-
-                    if (zen_not_null($message)) $this->uspsrDebug($message);
-                    $m++;
-                }
-            }
-
-            // Go through each one of the the $build_quotes and tack on the transit time as needed.
-            // @todo Can this be moved back into the main loop?
-            if (isset($uspsStandards) && is_array($uspsStandards)) {
-                foreach ($uspsStandards as $standard) {
-                    foreach ($build_quotes as &$quote) { // Adding the & since we're modifying the original
-                        if ($quote['mailClass'] === $standard['mailClass']) {
-                            // we have a match...
-
-                            // If this matches, pull the "days" off the JSON and attach it to the title.
-                            if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Delivery") {
-
-                                // The format of 'scheduledDeliveryDateTime' is '2024-12-30T18:00:00'.
-                                // Let's change that around to Y-m-D
-
-                                $est_delivery = new DateTime($standard['delivery']['scheduledDeliveryDateTime']);
-                                $est_delivery = $est_delivery->format(DATE_FORMAT);
-
-                                $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
-
-                            } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
-
-                                // We only need the number of days from the JSON.
-                                $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
-                            } else {
-                                // Don't show anything.
-                            }
+                            $message .= 'The Observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
+                        } elseif (!$made_weight && $match) {
+                            $message .= "Order failed to make weight for " . $method['method'] . ". (Minimum Weight : " . $method['min_weight'] . " , Maximum Weight: " . $method['max_weight'] . ")\n";
                         }
+
+                        if (zen_not_null($message)) $this->uspsrDebug($message);
+                        $m++;
                     }
                 }
-            }
 
-            // Okay we have our list of Build Quotes, so now... we need to sort pursurant to options
-            switch (MODULE_SHIPPING_USPSR_QUOTE_SORT) {
-                case 'Alphabetical':
-                    usort($build_quotes, function ($a, $b) { return $a['title'] <=> $b['title']; });
-                    break;
-                case 'Price-LowToHigh':
-                    usort($build_quotes, function ($a, $b) { return $a['cost'] <=> $b['cost']; });
-                    break;
-                case 'Price-HighToLow':
-                    usort($build_quotes, function ($a, $b) { return $b['cost'] <=> $a['cost']; });
-                    break;
-                case 'Unsorted':
-                    // Do nothing, leave it as is
-                    break;
-            }
+                // Go through each one of the the $build_quotes and tack on the transit time as needed.
+                // @todo Can this be moved back into the main loop?
+                if (isset($uspsStandards) && is_array($uspsStandards)) {
+                    foreach ($uspsStandards as $standard) {
+                        foreach ($build_quotes as &$quote) { // Adding the & since we're modifying the original
+                            if ($quote['mailClass'] === $standard['mailClass']) {
+                                // we have a match...
 
-            $message = "\n";
-            $message .= '===============================================' . "\n";
-            $message .= 'Displayed options' . "\n";
-            $message .= 'Sorting the returned quotes by: ' . MODULE_SHIPPING_USPSR_QUOTE_SORT . "\n";
-            $message .= print_r($build_quotes, TRUE) . "\n";
-            $message .= '===============================================' . "\n";
+                                // If this matches, pull the "days" off the JSON and attach it to the title.
+                                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Delivery") {
 
-            $this->uspsrDebug($message);
+                                    // The format of 'scheduledDeliveryDateTime' is '2024-12-30T18:00:00'.
+                                    // Let's change that around to Y-m-D
 
-            if (count($build_quotes) > 0) {
-                // Close off and make the final array.
-                $this->quotes = [
-                    'id' => $this->code,
-                    'icon' => zen_image($this->icon),
-                    'module' => $this->title,
-                    'methods' => $build_quotes,
-                    'tax' => ($this->tax_class > 0) ? zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']) : null,
+                                    $est_delivery = new DateTime($standard['delivery']['scheduledDeliveryDateTime']);
+                                    $est_delivery = $est_delivery->format(DATE_FORMAT);
 
-                ];
-                // Should there be a warning that the dates are estimations?
+                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
 
-            } else { // This means nothing was built. Report it back as such.
+                                } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
 
-                // Only show this during debugging
-                if ($this->debug_enabled === false) {
+                                    // We only need the number of days from the JSON.
+                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
+                                } else {
+                                    // Don't show anything.
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Okay we have our list of Build Quotes, so now... we need to sort pursurant to options
+                switch (MODULE_SHIPPING_USPSR_QUOTE_SORT) {
+                    case 'Alphabetical':
+                        usort($build_quotes, function ($a, $b) { return $a['title'] <=> $b['title']; });
+                        break;
+                    case 'Price-LowToHigh':
+                        usort($build_quotes, function ($a, $b) { return $a['cost'] <=> $b['cost']; });
+                        break;
+                    case 'Price-HighToLow':
+                        usort($build_quotes, function ($a, $b) { return $b['cost'] <=> $a['cost']; });
+                        break;
+                    case 'Unsorted':
+                        // Do nothing, leave it as is
+                        break;
+                }
+
+                $message = "\n";
+                $message .= '===============================================' . "\n";
+                $message .= 'Displayed options' . "\n";
+                $message .= 'Sorting the returned quotes by: ' . MODULE_SHIPPING_USPSR_QUOTE_SORT . "\n";
+                $message .= print_r($build_quotes, TRUE) . "\n";
+                $message .= '===============================================' . "\n";
+
+                $this->uspsrDebug($message);
+
+                if (count($build_quotes) > 0) {
+                    // Close off and make the final array.
                     $this->quotes = [
                         'id' => $this->code,
                         'icon' => zen_image($this->icon),
-                        'methods' => [],
                         'module' => $this->title,
-                        'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR
+                        'methods' => $build_quotes,
+                        'tax' => ($this->tax_class > 0) ? zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']) : null,
+
                     ];
-                } else {
-                    $this->enabled = false;
+                    // Should there be a warning that the dates are estimations?
+
+                } else { // This means nothing was built. Report it back as such.
+
+                    // Only show this during debugging
+                    if ($this->debug_enabled === false) {
+                        $this->quotes = [
+                            'id' => $this->code,
+                            'icon' => zen_image($this->icon),
+                            'methods' => [],
+                            'module' => $this->title,
+                            'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR
+                        ];
+                    } else {
+                        $this->enabled = false;
+                    }
+
                 }
+
 
             }
 
+            $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
+
+            /**
+             * Before ending and returning the completed list, let's invalidate this token.
+             *
+             * Granted tokens expire after eight hours and will be reissued on each call,
+             * but no use in making an achilles heel out of things.
+             *
+             */
+
+            $message = '';
+            $message .= "\n" . '===============================================' . "\n";
+            $message .= 'Revoking Bearer Token...' . "\n";
+            $this->uspsrDebug($message);
+
+
+            $this->revokeBearerToken();
+
+            return $this->quotes;
 
         } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
 
             // Only show this during debugging
-            if ($this->debug_enabled === false) {
+            if ($this->debug_enabled === true) {
+
                 $this->quotes = [
                     'id' => $this->code,
                     'icon' => zen_image($this->icon),
@@ -1005,33 +1031,13 @@ EOF;
                     'module' => $this->title,
                     'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $uspsQuote['error']['message'] . "</pre>"
                 ];
-            } else {
+
                 $this->enabled = false;
             }
 
-            $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
-
+            $this->revokeBearerToken();
+            return $this->quotes;
         }
-
-
-        /**
-         * Before ending and returning the completed list, let's invalidate this token.
-         *
-         * Granted tokens expire after eight hours and will be reissued on each call,
-         * but no use in making an achilles heel out of things.
-         *
-         */
-
-        $message = '';
-        $message .= "\n" . '===============================================' . "\n";
-        $message .= 'Revoking Bearer Token...' . "\n";
-        $this->uspsrDebug($message);
-
-
-        $this->revokeBearerToken();
-
-        return $this->quotes;
-
     }
 
     public function check()
@@ -1152,7 +1158,7 @@ EOF;
             'sort_order' => 0,
             'date_added' => 'now()'
         ]);
-        
+      
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_INTL', [
             'configuration_title' => 'Overall Handling Fee - International',
             'configuration_value' => '0',
@@ -1631,7 +1637,7 @@ EOF;
 
         /**
          * Test to see if the upgrader should run?
-         * 
+         *
          * If this is encapsulated, the upgrader already ran. (Any missing keys would have been added and any values would be updated. More importantly, the versions would already match.)
          * If this is not encapsulated, the version in the database would fall short. So check that.
          */
@@ -1732,31 +1738,33 @@ EOF;
                         'configuration_description' => 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.',
                         'configuration_group_id' => 6,
                         'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ', 
+                        'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ',
                     ]);
-    
+
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
                         'configuration_title' => 'Packaging Class - Dimensional Pricing',
-                        'configuration_value' => 'Rectangular', 
+                        'configuration_value' => 'Rectangular',
+
                         'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
                         'configuration_group_id' => 6,
                         'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ',
                     ]);
-    
+
+
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
                         'configuration_title' => 'Packaging Class - Cubic Pricing',
                         'configuration_value' => 'Non-Soft',
-                        'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>', 
-                        'configuration_group_id' => 6, 
-                        'sort_order' => 0, 
+                        'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
                     ]);
 
                     break;
                 case "0.0.0":
                 case "v0.0.0": // Developmental version of the repository.
-                    // Do nothing. 
+                    // Do nothing.
                     break;
             }
 
@@ -2129,8 +2137,6 @@ EOF;
          * That will be handled by the $method parameter
          *
          */
-
-
 
         $usps_calls = [
             'rates-domestic' => 'https://apis.usps.com/prices/v3/total-rates/search',
@@ -2890,12 +2896,11 @@ function zen_cfg_uspsr_showdimmensions($key_value)
         }
     }
 
-    $output_str =<<<EOF
-<em>Domestic Measurements (LWH):</em> {$key_values[0]} × {$key_values[2]} × {$key_values[4]}<br>
-<em>International Measurements (LWH):</em> {$key_values[1]} × {$key_values[3]} × {$key_values[5]}
-EOF;
+    $output_str = '';
+    $output_str .= "<em>Domestic Measurements (LWH):</em> " . $key_values[0] . " × " . $key_values[2] . " × " . $key_values[4] . "<br>\n";
+    $output_str .= "<em>International Measurements (LWH):</em> " . $key_values[1] . " × " . $key_values[3] . " × " . "$key_values[5]";
 
-return $output_str;
+    return $output_str;
 }
 
 function uspsr_pretty_json_print($json)
@@ -2905,15 +2910,15 @@ function uspsr_pretty_json_print($json)
     $in_quotes = false;
     $in_escape = false;
     $ends_line_level = NULL;
-    
+
     $encoded_json = json_decode($json, TRUE); // Read the JSON into an array
-    
+
     unset($encoded_json['client_secret']);
-    
+
     $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT);
 
     $json_length = strlen( $sanitized_json );
-    
+
     for( $i = 0; $i < $json_length; $i++ ) {
         $char = $sanitized_json[$i];
         $new_line_level = NULL;
