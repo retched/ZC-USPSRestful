@@ -25,7 +25,7 @@
 ****************************************************************************/
 
 define('MODULE_SHIPPING_USPSR_ERROR' , '<strong>USPSr Error:</strong> '); // Leave the trailing space
-
+define('MODULE_SHIPPING_USPSR_NOTICE', '<strong>USPSr Notice:</strong> '); // Leave the trailing space
 
 define('MODULE_SHIPPING_USPSR_ERROR_NO_QUOTES' , MODULE_SHIPPING_USPSR_ERROR . 'No services selected for USPSr module.');
 define('MODULE_SHIPPING_USPSR_ERROR_BAD_ORIGIN_ZIPCODE' , MODULE_SHIPPING_USPSR_ERROR . 'An invalid shipment origin ZIP code has been detected. Please enter a valid ZIP Code in the <a href="' . zen_href_link(FILENAME_DEFAULT, "cmd=configuration&gID=7&cID=211&action=edit") .'">Configuration > Shipping/Package > Postal Code</a> config setting.');
@@ -34,3 +34,7 @@ define('MODULE_SHIPPING_USPSR_ERROR_BAD_CREDENTIALS' , MODULE_SHIPPING_USPSR_ERR
 define('MODULE_SHIPPING_USPSR_ERROR_NO_CREDENTIALS' , MODULE_SHIPPING_USPSR_ERROR . 'You didn\'t enter an API Key and Secret. Please follow the instructions and log in to the developers dashboard to obtain your Consumer Secret and Consumer Key.');
 define('MODULE_SHIPPING_USPSR_ERROR_NO_CONTRACT' , MODULE_SHIPPING_USPSR_ERROR . 'You chose to have Contract pricing but you entered invalid Account details. Check your settings.');
 define('MODULE_SHIPPING_USPSR_ERROR_REJECTED_CREDENTIALS' , MODULE_SHIPPING_USPSR_ERROR . 'Unable to obtain bearer token. Check to make sure that you entered valid API Credentials and that those credentials have permission to access the API. Check your settings.');
+define('MODULE_SHIPPING_USPSR_ERROR_NO_UPGRADE' , MODULE_SHIPPING_USPSR_ERROR . "You are using the repository version (0.0.0) of USPSr, you <strong>CANNOT</strong> upgrade this version directly. You must uninstall and reinstall the module to apply any upgrade.");
+
+define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "Success! The USPSr module has been updated to version <code>%s</code> .");
+define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE . 'There is a new version of the USPSr module available! To download it, visit the listing on the <a href="https://www.zen-cart.com/downloads.php?do=file&id=2395" target="_blank">ZenCart Plugins and Modules database</a>.');

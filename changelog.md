@@ -5,15 +5,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- NEXT: Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
+- _[IN PROGRESS]_ Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
+
+## [UNRELEASED]
+
+### Added
+
+- Module will now call into the ZenCart Plugin database to see if there is a new version available. If there is, you will see a banner on the top of the page alerting you.
+
+### Removed
+
+- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. 
+- Removed the unit of measure from the shipping methods table.
 
 ## [1.0.0] - 2025-02-18
 
 ### Breaking
 
 - Due to a change in the configuration for the shipping methods, the selection of current shipping methods will be reset with this version. You must now reselect your shipping methods to use under USPS. (I tried to avoid these kind of breaking changes but with the way how the selection of the modules are done and the changes to the table holding them, it's unavoidable. This will normally happen if I have to change the way how the USPS identify their services.)
-- Going forward: if you are using encapsulated version `v0.0.0`, aka the version pulled straight from the GitHub repository "`main`" branch, the upgrader will fail. You must do a clean install by uninstalling the module from Plugin Manager from your backend and then installing the new version. The development version of `v0.0.0` is to be considered an incomplete thought and should NOT be used in active productions. Non-encapsulated versions will still have to do the same until an upgrader is put in place in the module.
+- Going forward: if you are using encapsulated version `v0.0.0` or `0.0.0`, aka the version pulled straight from the GitHub repository "`main`" branch, the upgrader will fail. You must do a clean install by uninstalling the module from Plugin Manager from your backend and then installing the new version. The development version of `v0.0.0` is to be considered an incomplete thought and should NOT be used in active productions. Non-encapsulated versions will still have to do the same until an upgrader is put in place in the module.
 
 ### Added
 
