@@ -492,29 +492,20 @@ class uspsr extends base
 
             // Count how many times "Priority Mail" appears as a ProductName
             $priorityMailCount = 0;
+            $priorityMailExpressCount = 0;
+            $groundAdvantageCount = 0;
+
             foreach ($uspsQuote['rateOptions'] as $rateOption) {
                 foreach ($rateOption['rates'] as $rate) {
                     // Only count those with the productName of Priority Mail and DO NOT count "OPEN_AND_DISTRIBUTE" (These are the weird)
                     if ($rate['productName'] == 'Priority Mail' && $rate['processingCategory'] !== 'OPEN_AND_DISTRIBUTE') {
                         $priorityMailCount++;
                     }
-                }
-            }
 
-            // Count how many times "Priority Mail Express" appears as a ProductName
-            $priorityMailExpressCount = 0;
-            foreach ($uspsQuote['rateOptions'] as $rateOption) {
-                foreach ($rateOption['rates'] as $rate) {
                     if ($rate['productName'] == 'Priority Mail Express') {
                         $priorityMailExpressCount++;
                     }
-                }
-            }
-
-            // Count how many times "USPS Ground Advantage" appears as a ProductName
-            $groundAdvantageCount = 0;
-            foreach ($uspsQuote['rateOptions'] as $rateOption) {
-                foreach ($rateOption['rates'] as $rate) {
+                  
                     if ($rate['productName'] == 'USPS Ground Advantage') {
                         $groundAdvantageCount++;
                     }
@@ -638,6 +629,7 @@ class uspsr extends base
 
             // Are we applying the cost per box or the whole order?
             $handling_ext = $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
+            $quote_message = '';
 
             if (isset($uspsQuote['rateOptions'])) {
 
@@ -666,7 +658,7 @@ class uspsr extends base
                         if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
 
                         $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
-
+                      
                         /**
                          * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
                          * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
@@ -734,7 +726,7 @@ class uspsr extends base
                             if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
                                 $quotes = [
                                     'id' => 'usps' . $m,
-                                    'title' => "Priorty Mail Cubic",
+                                    'title' => "Priority Mail Cubic",
                                     'cost' => $price,
                                     'mailClass' => $rate['rates'][0]['mailClass']
                                 ];
@@ -780,7 +772,7 @@ class uspsr extends base
                                         'cost' => $price,
                                         'mailClass' => $rate['rates'][0]['mailClass']
                                     ];
-
+                                  
                                     $match = TRUE;
                                 } else { // This likely means we have a regular
                                     $quotes = [
@@ -815,7 +807,7 @@ class uspsr extends base
 
                                     $quotes = [
                                         'id' => 'usps' . $m,
-                                        'title' => "USPS Ground Advantage",
+                                        'title' => "Ground Advantage",
                                         'cost' => $price,
                                         'mailClass' => $rate['rates'][0]['mailClass']
                                     ];
@@ -888,28 +880,30 @@ class uspsr extends base
                         // The name in param1 must match the internal name from the API. Check the JSON from the debug to see. (Where a productName is offered, use that. Otherwise, use the EXACT description.)
                         $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $rate_name, $method_to_add, $quotes['title'], $quotes['cost']);
 
-                        $message = '';
+
                         if ($match && $method_to_add && !empty($quotes) && $made_weight) {
 
                             // The Observer did not block this.. And we have something add, so add it to the main list.
                             $build_quotes[] = $quotes;
 
-                            $message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                            $message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
-                            $message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
+                            $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
+                            $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
+                            $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
 
                         } elseif (!$method_to_add) {
                             // The observer rejected/blocked this from being added.
 
-                            $message .= 'The Observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
+                            $quote_message .= 'The Observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
                         } elseif (!$made_weight && $match) {
-                            $message .= "Order failed to make weight for " . $method['method'] . ". (Minimum Weight : " . $method['min_weight'] . " , Maximum Weight: " . $method['max_weight'] . ")\n";
+                            $quote_message .= "Order failed to make weight for " . $method['method'] . ". (Minimum Weight : " . $method['min_weight'] . " , Maximum Weight: " . $method['max_weight'] . ")\n";
                         }
 
-                        if (zen_not_null($message)) $this->uspsrDebug($message);
+
                         $m++;
                     }
                 }
+                if (zen_not_null($quote_message)) $this->uspsrDebug($quote_message);
+
 
                 // Go through each one of the the $build_quotes and tack on the transit time as needed.
                 // @todo Can this be moved back into the main loop?
@@ -940,6 +934,70 @@ class uspsr extends base
                             }
                         }
                     }
+                }
+
+                // We need to reiterate each quote and remove the more expensive one.
+                if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Priority Mail") !== FALSE) {
+                    $priorityOptions = [];
+                    $pattern = '/^Priority Mail(?: Cubic)?/';
+
+                    // Loop through the array to collect priority mail options
+                    foreach ($build_quotes as $key => $option) {
+                        if (preg_match($pattern, $option['title'])) {
+                            $priorityOptions[$option['title']] = [
+                                'key' => $key,
+                                'cost' => $option['cost']
+                            ];
+                        }
+                    }
+
+                    // If both variants exist, remove the more expensive one
+                    if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic'])) {
+                        $removeKey = ($priorityOptions['Priority Mail']['cost'] > $priorityOptions['Priority Mail Cubic']['cost'])
+                            ? $priorityOptions['Priority Mail']['key']
+                            : $priorityOptions['Priority Mail Cubic']['key'];
+
+
+                        // Removal Message for Debug
+                        $removal_message = '';
+                        $removal_message .= "\n" . 'DELETED option : ' . $build_quotes[$removeKey]['title'] . "\n";
+
+                        unset($build_quotes[$removeKey]);
+                        $this->uspsrDebug($removal_message);
+                    }
+
+                    $build_quotes = array_values($build_quotes);
+                }
+
+                if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Ground Advantage") !== FALSE) {
+                    $groundOptions = [];
+                    $pattern = '/^Ground Advantage(?: Cubic)?/';
+
+                    // Loop through the array to collect priority mail options
+                    foreach ($build_quotes as $key => $option) {
+                        if (preg_match($pattern, $option['title'])) {
+                            $groundOptions[$option['title']] = [
+                                'key' => $key,
+                                'cost' => $option['cost']
+                            ];
+                        }
+                    }
+
+                    // If both variants exist, remove the more expensive one
+                    if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic'])) {
+                        $removeKey = ($groundOptions['Ground Advantage']['cost'] > $groundOptions['Ground Advantage Cubic']['cost'])
+                            ? $groundOptions['Ground Advantage']['key']
+                            : $groundOptions['Ground Advantage']['key'];
+
+
+                        $removal_message = '';
+                        $removal_message .= "\n" . 'DELETED option : ' . $build_quotes[$removeKey]['title'] . "\n";
+
+                        unset($build_quotes[$removeKey]);
+                        $this->uspsrDebug($removal_message);
+                    }
+
+                    $build_quotes = array_values($build_quotes);
                 }
 
                 // Okay we have our list of Build Quotes, so now... we need to sort pursurant to options
@@ -1014,7 +1072,6 @@ class uspsr extends base
             $message .= 'Revoking Bearer Token...' . "\n";
             $this->uspsrDebug($message);
 
-
             $this->revokeBearerToken();
 
             return $this->quotes;
@@ -1080,7 +1137,7 @@ class uspsr extends base
             'configuration_description' => 'You have installed:',
             'configuration_group_id' => 6,
             'sort_order' => 0,
-            'set_function'=> 'zen_cfg_select_option([\'' . self::USPSR_CURRENT_VERSION . '\'], ',
+            'set_function'=> 'zen_cfg_read_only( ',
             'date_added' => 'now()',
         ]);
 
@@ -1158,7 +1215,7 @@ class uspsr extends base
             'sort_order' => 0,
             'date_added' => 'now()'
         ]);
-      
+
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_INTL', [
             'configuration_title' => 'Overall Handling Fee - International',
             'configuration_value' => '0',
@@ -1248,6 +1305,16 @@ class uspsr extends base
             'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], ',
             'date_added' => 'now()'
         ]);
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+            'configuration_title' => 'Squash Alike Methods Together',
+            'configuration_value' => '',
+            'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+        ]);
+
 
         /**
          * Transit time display
@@ -1474,6 +1541,7 @@ class uspsr extends base
             'MODULE_SHIPPING_USPSR_MEDIA_CLASS',
             'MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS',
             'MODULE_SHIPPING_USPSR_CUBIC_CLASS',
+            'MODULE_SHIPPING_USPSR_SQUASH_OPTIONS',
             'MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT',
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
@@ -1553,10 +1621,11 @@ class uspsr extends base
 
         $message .= 'Cart Weight: ' . $_SESSION['cart']->weight . " " . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . $_SESSION['cart']->weight * 0.453592 . " lbs)" : '' ) . "\n";
         $message .= 'Total Quote Weight: ' . $this->quote_weight . ' lbs. , Pounds: ' . $pounds . ', Ounces: ' . $ounces . "\n";
-        $message .= 'Maximum: ' . SHIPPING_MAX_WEIGHT . ' Tare Rates: Small/Medium: ' . SHIPPING_BOX_WEIGHT . ' Large: ' . SHIPPING_BOX_PADDING . "\n";
+        $message .= 'Maximum: ' . SHIPPING_MAX_WEIGHT . ' ' . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . (double)SHIPPING_MAX_WEIGHT * 0.453592 . " lbs)" : '' ) . ' , Tare Rates: Small/Medium: ' . SHIPPING_BOX_WEIGHT . ' Large: ' . SHIPPING_BOX_PADDING . "\n";
         $message .= 'Order Handling method: ' . MODULE_SHIPPING_USPSR_HANDLING_METHOD . ', Handling fee Domestic (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC) . ', Handling fee International (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_INTL) . "\n";
 
         $message .= "\n" . 'Services Selected: ' . "\n". strip_tags(zen_cfg_uspsr_showservices(MODULE_SHIPPING_USPSR_TYPES)) . "\n";
+        $message .= "Services being squashed: " . str_replace( "Squash ", "", MODULE_SHIPPING_USPSR_SQUASH_OPTIONS) . "\n\n";
         $message .= "Categories Excluded from Media Mail: " . strip_tags(uspsr_get_categories(MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE)) . "\n";
         $message .= "Zip Codes Allowed for USPS Connect : " . uspsr_get_connect_zipcodes(MODULE_SHIPPING_USPSR_CONNECT_LOCAL_ZIP) . "\n";
 
@@ -1649,9 +1718,21 @@ class uspsr extends base
             switch (MODULE_SHIPPING_USPSR_VERSION) {
                 case "v1.0.0":
                     // Any changes to the database from v1.0.0 should go here
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                        'configuration_title' => 'Squash Alike Methods Together',
+                        'configuration_value' => '',
+                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                    ]);
 
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
+                        'set_function' => 'zen_cfg_read_only('
+                    ]);
                     break;
-                case "v0.3.0": // This version didn't officially get released but was the old format of the repository
+
+              case "v0.3.0": // This version didn't officially get released but was the old format of the repository
                 case "v0.2.0":
                 case "v0.1.0":
                     // Changing this to be a more descriptive description.
@@ -1744,13 +1825,11 @@ class uspsr extends base
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
                         'configuration_title' => 'Packaging Class - Dimensional Pricing',
                         'configuration_value' => 'Rectangular',
-
                         'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
                         'configuration_group_id' => 6,
                         'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ',
                     ]);
-
 
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
                         'configuration_title' => 'Packaging Class - Cubic Pricing',
@@ -1771,7 +1850,8 @@ class uspsr extends base
             // After all this, update the modules version number as necessary.
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                 'configuration_value' => self::USPSR_CURRENT_VERSION,
-                'set_function' => "zen_cfg_select_option([\'" . self::USPSR_CURRENT_VERSION . "\'], "
+                'set_function' => "zen_cfg_read_only("
+
             ]);
 
             $messageStack->add_session(sprintf(MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS, self::USPSR_CURRENT_VERSION), 'success');
@@ -1780,7 +1860,7 @@ class uspsr extends base
 
         /**
          * Is there an upgrade available?
-         * 
+         *
          * Make a call into the ZenCart Module DB and compare the returned result versus the number
          */
         $check_for_new_version = plugin_version_check_for_updates("2395", MODULE_SHIPPING_USPSR_VERSION);

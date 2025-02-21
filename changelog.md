@@ -5,19 +5,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- _[IN PROGRESS]_ Creating an upgrader for the non-encapsulated versions. (The encapsulated version should still use the ZenCart built in one.)
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
 ## [UNRELEASED]
 
 ### Added
 
-- Module will now call into the ZenCart Plugin database to see if there is a new version available. If there is, you will see a banner on the top of the page alerting you.
+- Module will now call into the ZenCart Plugin database to see if there is a new version available. If there is, you will see a banner on the top of the page alerting you. [#19](https://github.com/retched/ZC-USPSRestful/issues/19)
+- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23)
 
 ### Removed
 
-- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. 
+- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then check that.)
 - Removed the unit of measure from the shipping methods table.
+
+## Fixed
+
+- There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
+- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messsages still bled through even though there was a series of flags and checks to make sure not to bother with launch the quote. If there is 
+
 
 ## [1.0.0] - 2025-02-18
 

@@ -4,7 +4,7 @@
  * Version 0.0.0
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @author Paul Williams (retched)
- * @version $Id: lang.uspsr.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: lang.uspsr.php 2025-02-20 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (w/REST API) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -38,3 +38,4 @@ define('MODULE_SHIPPING_USPSR_ERROR_NO_UPGRADE' , MODULE_SHIPPING_USPSR_ERROR . 
 
 define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "Success! The USPSr module has been updated to version <code>%s</code> .");
 define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE . 'There is a new version of the USPSr module available! To download it, visit the listing on the <a href="https://www.zen-cart.com/downloads.php?do=file&id=2395" target="_blank">ZenCart Plugins and Modules database</a>.');
+
