@@ -505,7 +505,7 @@ class uspsr extends base
                     if ($rate['productName'] == 'Priority Mail Express') {
                         $priorityMailExpressCount++;
                     }
-                  
+
                     if ($rate['productName'] == 'USPS Ground Advantage') {
                         $groundAdvantageCount++;
                     }
@@ -658,7 +658,7 @@ class uspsr extends base
                         if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
 
                         $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
-                      
+
                         /**
                          * For each Priority Mail, USPS Ground Advantage and Priority Mail Express, there is a chance you might hit the basic version OR,
                          * if the settings are really jacked up, a dimmensional rectangular/nonrectangular split. (This only applies to the basic rates,
@@ -772,7 +772,7 @@ class uspsr extends base
                                         'cost' => $price,
                                         'mailClass' => $rate['rates'][0]['mailClass']
                                     ];
-                                  
+
                                     $match = TRUE;
                                 } else { // This likely means we have a regular
                                     $quotes = [
@@ -1312,7 +1312,7 @@ class uspsr extends base
             'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
             'configuration_group_id' => 6,
             'sort_order' => 0,
-            'set_function' => 'zen_cfg_select_multioption(([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+            'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
         ]);
 
 
