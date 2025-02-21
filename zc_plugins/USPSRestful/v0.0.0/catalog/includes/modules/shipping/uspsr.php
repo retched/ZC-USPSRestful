@@ -362,10 +362,10 @@ class uspsr extends base
 
         // If the order doesn't have a zip code or have a valid zip code (5 or 9 digit), and it is a US order: STOP
         // (typically because you're visiting the shopping cart estimator)
-        $delivery_postcode = (array_key_exists('postcode', $order->delivery) ? $order->delivery['postcode'] : NULL);
+        $delivery_postcode = (array_key_exists('postcode', $order->delivery) && !empty($order->delivery['postcode']) ? $order->delivery['postcode'] : NULL);
 
         // Is this going to the US and has a zipcode?
-        if ( !($this->is_us_shipment && zen_not_null($delivery_postcode)) ) {
+        if ( ($this->is_us_shipment && zen_not_null($delivery_postcode)) ) {
             $this->enabled = false;
             return;
         }
