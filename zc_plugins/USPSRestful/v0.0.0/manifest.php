@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2004-2024 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: manifest.php 2025-02-20 retched Version 0.0.0 $
+ * @version $Id: manifest.php 0000-00-00 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (w/REST API) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
