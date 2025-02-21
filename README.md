@@ -59,6 +59,8 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### What version of ZenCart does this module support?
 
+That can be answered with this chart:
+
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
 | ZenCart 1.5.5 |         :x:        | :white_check_mark: |
