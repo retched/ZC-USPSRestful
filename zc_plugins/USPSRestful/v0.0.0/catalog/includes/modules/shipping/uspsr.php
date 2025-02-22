@@ -1868,6 +1868,7 @@ class uspsr extends base
                 case "0.0.0":
                 case "v0.0.0": // Developmental version of the repository.
                     // Do nothing.
+                    $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
                     break;
             }
 
