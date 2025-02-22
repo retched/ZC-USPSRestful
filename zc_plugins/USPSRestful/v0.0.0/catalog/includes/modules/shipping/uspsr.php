@@ -1723,16 +1723,18 @@ class uspsr extends base
             switch (MODULE_SHIPPING_USPSR_VERSION) {
                 case "v1.0.0":
                     // Any changes to the database from v1.0.0 should go here
-
-                    // Add Squash alike methods together
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                        'configuration_title' => 'Squash Alike Methods Together',
-                        'configuration_value' => '',
-                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
-                    ]);
+                    // Check to see if the module is active?
+                    if (preg_match("/uspsr.php;?/", MODULE_SHIPPING_INSTALLED)) {
+                        // Add Squash alike methods together
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                            'configuration_title' => 'Squash Alike Methods Together',
+                            'configuration_value' => '--none--',
+                            'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                        ]);
+                    }
 
                     // Change the Change the USPSr Version display to a read-only
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
@@ -2812,7 +2814,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
 
 function zen_cfg_uspsr_account_display($key_value)
 {
-    // The key_value is either 
+    // The key_value is either something or nothing
 
     if (zen_not_null($key_value)) {
         return trim($key_value);
