@@ -15,9 +15,10 @@ body:
       options:
         - 0.1.0
         - 0.2.0
-        - 1.0.0 (Current Version)
+        - 1.0.0
+        - 1.1.0 (Current Version)
         - 0.0.0 (pulled straight from main branch)
-      default: 2
+      default: 3
     validations:
       required: true
   - type: dropdown
