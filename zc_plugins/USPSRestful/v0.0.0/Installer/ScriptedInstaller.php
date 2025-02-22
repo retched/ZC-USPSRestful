@@ -83,16 +83,17 @@ class ScriptedInstaller extends ScriptedInstallBase
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
                 'use_function' => 'zen_cfg_uspsr_account_display',
             ]);
+
+            // Change the Change the USPSr Version display to a read-only
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
+                'set_function' => 'zen_cfg_read_only('
+            ]);
+
         }
 
         switch ($oldVersion) {
             case "v1.0.0":
                 // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
-
-                // Change the Change the USPSr Version display to a read-only
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
-                    'set_function' => 'zen_cfg_read_only('
-                ]);
                 break;
 
             case "v0.3.0":
