@@ -39,7 +39,7 @@ body:
     id: php-version
     attributes:
       label: PHP Version
-      description: As a reminder, this script was written with PHP 8 in mind. Older versions, especially older than PHP 7, is not guaranteed.
+      description: As a reminder, this script was written with PHP 8.x and PHP 7.x in mind. Older versions, especially older than PHP 7.x, are not supported.
       multiple: false
       options:
         - PHP 8.x
