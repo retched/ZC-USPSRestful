@@ -10,13 +10,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.0.0  
-_Released February 18, 2025 for ZenCart 2.1.0._
+- Last Stable Release: 1.1.0  
+_Released February 21, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
-- ???  
+- 1.1.0  
   Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now when you update the module, you no longer need to reset the module as a whole, the module will automatically whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.
 - 1.0.0  
  A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)

@@ -7,26 +7,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
-## [UNRELEASED]
+## [1.1.0] - 2025-02-21
 
 ### Added
 
 - Module will now call into the ZenCart Plugin database to see if there is a new version available. If there is, you will see a banner on the top of the page alerting you. [#19](https://github.com/retched/ZC-USPSRestful/issues/19)
-- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23)
+- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23). (In short, if you have both Priority Mail and Priority Mail Cubic both quoted, with the toggle made for Priority Mail, the module will choose the cheaper of the two methods and display that.)
 
 ### Removed
 
-- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then check that.)
+- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then convert the defaults to that. Now, the module will check on install, place those defaults, and leave it. Which means if you change the measuring standard, you'll have to reset the defaults.)
 - Removed the unit of measure from the shipping methods table.
 
 ## Changed
 
-- Debug mode now has two separate modes: Display Errors, Generate Logs. If errors are found, they are hidden from the customer view. You can now enable those errors being show. Additionally, you can generate logs for all requests. (TODO: On any error, generate a log.)
+- Debug mode now has two separate modes: Display Errors, Generate Logs. If errors are found, they are hidden from the customer view unless toggled on. Additionally, you can generate logs for all requests. (TODO: On any error, generate a log regardless of setting.)
 
 ## Fixed
 
 - There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
-- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messsages still bled through even though there was a series of flags and checks to make sure not to bother with launch the quote. If there is 
+- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messsages still bled through even though there was a series of flags and checks to make sure not to bother with launch the quote. Now the logic is: If the order country is bound to the United States and there is no zip code, the module will not try to get a quote. If the quote is requested for an order going elsewhere, the Zip Code is less important.
 
 
 ## [1.0.0] - 2025-02-18
