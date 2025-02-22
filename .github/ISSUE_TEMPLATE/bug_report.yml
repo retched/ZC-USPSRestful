@@ -25,7 +25,7 @@ body:
     id: zencart-version
     attributes:
       label: ZenCart Version
-      description: What version of ZenCart are you running? If you're running an older or non-published version, please selected "Older" and describe in the "What happened?" section below.
+      description: What version of ZenCart are you running? If you're running an older or non-published version, please selected "Older/Other" and describe in the "What happened?" section below.
       multiple: false
       options:
         - 2.1.x
