@@ -69,6 +69,20 @@ class ScriptedInstaller extends ScriptedInstallBase
                 'sort_order' => 0,
                 'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
             ]);
+
+            // Change the Debug Mode to be a split selection between showing logs or showing errors
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                'configuration_title' => 'Debug Mode',
+                'configuration_value' => ((defined('MODULE_SHIPPING_USPSR_DEBUG_MODE') && MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs') ? "Generate Logs" : "--none--"),
+                'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                'date_added' => 'now()'
+            ]);
+
+            // Created a function to either show the value or to show none
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                'use_function' => 'zen_cfg_uspsr_account_display',
+            ]);
         }
 
         switch ($oldVersion) {
@@ -78,20 +92,6 @@ class ScriptedInstaller extends ScriptedInstallBase
                 // Change the Change the USPSr Version display to a read-only
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                     'set_function' => 'zen_cfg_read_only('
-                ]);
-
-                // Change the Debug Mode to be a split selection between showing logs or showing errors
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                    'configuration_title' => 'Debug Mode',
-                    'configuration_value' => ((defined('MODULE_SHIPPING_USPSR_DEBUG_MODE') && MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs') ? "Generate Logs" : "--none--"),
-                    'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
-                    'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
-                    'date_added' => 'now()'
-                ]);
-
-                // Created a function to either show the value or to show none
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
-                    'use_function' => 'zen_cfg_uspsr_account_display',
                 ]);
                 break;
 
@@ -153,43 +153,43 @@ class ScriptedInstaller extends ScriptedInstallBase
                 // Rename MODULE_SHIPPING_USPSR_PROCESSING_CLASS to MODULE_SHIPPING_USPSR_MEDIA_CLASS
                 $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = 'MODULE_SHIPPING_USPSR_MEDIA_CLASS' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS' ");
 
-                // The PROCESSING_CLASS, now MEDIA_CLASS, changed quite a bit.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS',
-                    [
-                        'configuration_title' => 'Packaging Class - Media Mail',
-                        'configuration_description' => 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece designed and sized to be processed by automated postal equipment. Typically this is rigid mail, that fits a certain shape and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.',
-                        'set_function' => 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ',
-                    ]
-                );
-
-                // Language error in the description of Exclusions from Media Mail
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
-                    [
-                        'configuration_title' => 'Categories to Excluded from Media Mail',
-                    ]
-                );
-
-                // The description Domestic and International Services changed
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES',
-                    [
-                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
-                    ]
-                );
-
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES',
-                    [
-                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
-                    ]
-                );
-
-                // Language changed for USPSR
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
-                    [
-                        'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
-                    ]
-                );
-
                 if ($module_installed) {
+                    // The PROCESSING_CLASS, now MEDIA_CLASS, changed quite a bit.
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS',
+                        [
+                            'configuration_title' => 'Packaging Class - Media Mail',
+                            'configuration_description' => 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece designed and sized to be processed by automated postal equipment. Typically this is rigid mail, that fits a certain shape and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.',
+                            'set_function' => 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ',
+                        ]
+                    );
+
+                    // Language error in the description of Exclusions from Media Mail
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
+                        [
+                            'configuration_title' => 'Categories to Excluded from Media Mail',
+                        ]
+                    );
+
+                    // The description Domestic and International Services changed
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES',
+                        [
+                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                        ]
+                    );
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES',
+                        [
+                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                        ]
+                    );
+
+                    // Language changed for USPSR
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
+                        [
+                            'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
+                        ]
+                    );
+
                     // NEW SETTINGS, Dispatch Cart Total, Dimensional Class Pricing, Cubic Class Pricing
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', [
                         'configuration_title' => 'Send cart total as part of quote?',
