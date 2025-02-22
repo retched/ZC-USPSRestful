@@ -1,693 +1,692 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<style>
-			          /*
-			GitHub css for use with MarkdownView.wlx
-			Based on: https://github.com/hyrious/github-markdown-css
-			*/
-
-			          /***************  COLOR PALETTE  ****************
-			body background...............: #ffffff
-			body text.....................: #24292f
-			headers.......................: #1c2025
-			header code background........: #e1e4e9
-			code background...............: #d8dee4
-			blockquote background.........: #f6f8fa
-			blockquote text...............: #57606a
-			borders.......................: #d0d7de
-			table header background.......: #edeff3
-			links.........................: #0969da
-			marks.........................: #fff8c5
-			************************************************/
-
-			          /******************    MAIN    ******************/
-			          body {
-			              font-family: "Arial Nova", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif, "Segoe UI Emoji", "Noto Emoji";
-			              font-size: 12pt;
-			              line-height: 1.6;
-			              color: #24292f;
-			              background-color: #ffffff;
-			              margin-left: 1em;
-			              padding: 15px;
-			              overflow: initial;
-			              box-sizing: border-box;
-			              word-wrap: break-word;
-			          }
-			          body > *:first-child {
-			              margin-top: 0 !important;
-			          }
-			          body > *:last-child {
-			              margin-bottom: 0 !important;
-			          }
-			          h1 {
-			              color: #1c2025;
-			              font-size: 2.15em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              margin-top: 2em;
-			          }
-			          h2 {
-			              color: #1c2025;
-			              font-size: 1.75em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              padding-bottom: 0.2em;
-			              border-bottom: 1px solid #d9e1e8;
-			              margin-top: 1.4em;
-			              margin-bottom: 0.5em;
-			          }
-			          h3 {
-			              color: #1c2025;
-			              font-size: 1.5em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              margin-top: 1.2em;
-			              margin-bottom: 0.3em;
-			          }
-			          h4 {
-			              color: #1c2025;
-			              font-size: 1.25em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              margin-top: 1em;
-			              margin-bottom: 0;
-			          }
-			          h5 {
-			              color: #1c2025;
-			              font-size: 1.1em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              margin-top: 0.7em;
-			              margin-bottom: 0;
-			          }
-			          h6 {
-			              color: #57606a;
-			              font-size: 1em;
-			              font-weight: 600;
-			              line-height: 1.2;
-			              margin-top: 0.7em;
-			              margin-bottom: 0;
-			          }
-			          h2:first-child,
-			          h1:first-child,
-			          h1:first-child + h2,
-			          h3:first-child,
-			          h4:first-child,
-			          h5:first-child,
-			          h6:first-child {
-			              margin-top: 0;
-			              padding-top: 0;
-			          }
-			          body > h2:first-child,
-			          body > h1:first-child,
-			          body > h1:first-child + h2,
-			          body > h3:first-child,
-			          body > h4:first-child,
-			          body > h5:first-child,
-			          body > h6:first-child {
-			              margin-top: 0;
-			              padding-top: 0;
-			          }
-			          h1 p,
-			          h2 p,
-			          h3 p,
-			          h4 p,
-			          h5 p,
-			          h6 p {
-			              margin-top: 0;
-			          }
-			          h4 + pre {
-			              margin-top: 0.1em;
-			          }
-			          strong {
-			              color: #1c2025;
-			          }
-			          a:not([href]) {
-			              color: inherit;
-			              text-decoration: none;
-			          }
-			          a {
-			              color: #0969da;
-			              text-decoration: none;
-			          }
-			          a:hover {
-			              text-decoration: underline;
-			          }
-			          img {
-			              max-width: 100%;
-			          }
-			          body > p {
-			              margin-top: 0;
-			              margin-bottom: 16px;
-			              word-wrap: break-word;
-			          }
-			          body > ul,
-			          body > ol {
-			              margin-bottom: 16px;
-			          }
-			          ul,
-			          ol {
-			              padding-left: 32px;
-			          }
-			          ul.no-list,
-			          ol.no-list {
-			              padding: 0;
-			              list-style-type: none;
-			          }
-			          ul ul,
-			          ul ol,
-			          ol ol,
-			          ol ul {
-			              margin-top: 0;
-			              margin-bottom: 0;
-			          }
-			          li {
-			              margin-bottom: 0;
-			          }
-			          li > p {
-			              margin-top: 0;
-			              margin-bottom: 0;
-			          }
-			          li > p + pre {
-			              margin-top: 0.5em;
-			          }
-			          blockquote {
-			              margin: 16px 0;
-			              font-size: inherit;
-			              padding: 5px 15px;
-			              color: #57606a;
-			              background-color: #edeff3;
-			              border-left: 4px solid #d0d7de;
-			              border-radius: 0 4px 4px 0;
-			          }
-			          blockquote strong {
-			              color: #57606a;
-			          }
-			          blockquote > :first-child {
-			              margin-top: 0;
-			          }
-			          blockquote > :last-child {
-			              margin-bottom: 0;
-			          }
-			          hr {
-			              height: 3px;
-			              margin: 32px 0;
-			              background-color: #d0d7de;
-			              border: 0 none;
-			          }
-			          table {
-			              margin: 10px 0 15px 0;
-			              font-size: 12pt;
-			              border-collapse: collapse;
-			              border-spacing: 0;
-			              display: block;
-			              overflow: auto;
-			              word-break: normal;
-			              word-break: keep-all;
-			          }
-			          table th {
-			              font-weight: bold;
-			              font-size: 0.9em;
-			              color: #1c2025;
-			              background-color: #edeff3;
-			          }
-			          table td,
-			          table th {
-			              border: 1px solid #d0d7de;
-			              padding: 6px 13px;
-			          }
-			          table td code {
-			              font-size: 0.9em;
-			          }
-			          dl {
-			              padding: 0;
-			          }
-			          dl dt {
-			              padding: 0;
-			              margin-top: 16px;
-			              font-size: 1em;
-			              font-style: italic;
-			              font-weight: bold;
-			          }
-			          dl dd {
-			              padding: 0 16px;
-			              margin-bottom: 16px;
-			          }
-			          code {
-			              font-family: Consolas, "Liberation Mono", Menlo, "Courier New", monospace;
-			              font-size: 0.9em;
-			              color: #1c2025;
-			              background-color: #d8dee4;
-			              border-radius: 3px;
-			              padding: 0.15em 0.1em;
-			          }
-			          code::before,
-			          code::after {
-			              letter-spacing: -0.2em;
-			              content: "\00a0";
-			          }
-			          pre > code {
-			              padding: 0;
-			              margin: 0;
-			              font-size: 0.85em !important;
-			              word-break: normal;
-			              white-space: pre;
-			              background-color: transparent;
-			              border: 0;
-			          }
-			          pre code,
-			          pre tt {
-			              display: inline;
-			              max-width: initial;
-			              padding: 0;
-			              margin: 0;
-			              overflow: initial;
-			              line-height: inherit;
-			              word-wrap: normal;
-			              background-color: transparent;
-			              border: 0;
-			          }
-			          pre code:before,
-			          pre tt:before,
-			          pre code:after,
-			          pre tt:after {
-			              content: normal;
-			          }
-			          h1 code,
-			          h2 code,
-			          h3 code,
-			          h4 code,
-			          h5 code,
-			          h6 code {
-			              background-color: #e1e4e9;
-			              font-weight: normal;
-			          }
-			          h2 code {
-			              padding-top: 0.1em;
-			              padding-bottom: 0.23em;
-			              border-bottom: 1px solid #d9e1e8;
-			              border-radius: 3px 3px 0 0;
-			          }
-			          p,
-			          blockquote,
-			          ul,
-			          ol,
-			          dl,
-			          pre {
-			              margin-top: 0;
-			              margin-bottom: 16px;
-			          }
-			          /* Code blocks */
-			          pre {
-			              background-color: #f6f8fa;
-			              line-height: 1.4;
-			              padding: 1.2em;
-			              border: 1px solid #e2e4e6;
-			              border-radius: 6px;
-			              overflow: auto;
-			              word-wrap: normal;
-			              white-space: pre;
-			              word-spacing: normal;
-			              word-break: normal;
-			          }
-			          kbd {
-			              color: #24292f;
-			              background-color: #f6f8fa;
-			              font-size: 0.9em;
-			              padding: 2px 4px;
-			              border: 1px solid #afb8c1;
-			              border-bottom: 2px solid #afb8c1;
-			              border-radius: 3px;
-			              box-shadow: inset 0 -1px 0 #afb8c1;
-			          }
-
-			          /****************** EXTENSIONS ******************/
-
-			          .footnotes {
-			              font-size: 0.75em;
-			              color: #57606a;
-			          }
-			          .footnotes hr {
-			              height: 1px;
-			              background-color: #d0d7de;
-			          }
-			          del {
-			              color: #57606a;
-			          }
-			          mark {
-			              color: #24292f;
-			              background-color: #fff8c5;
-			              padding: 0.1em 0.1em;
-			          }
-
-			          /******************   DOUBTS   ******************/
-			          /*
-			code, pre {
-			-o-tab-size: 8;
-			tab-size: 8;
-			-ms-hyphens: none;
-			hyphens: none;
-			}
-			// Inline code
-			:not(pre) > code {
-			padding: .1em;
-			white-space: normal;
-			}
-			*/
-		</style>
-	<title>USPSRestful for ZenCart - Version 1.1.0 Readme</title>
-	</head>
-	<body>
-		<h1>USPS Shipping (RESTful) for Zen Cart</h1>
-
-		<p>
-			<img
-				src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto"
-				alt="ZC-USPSRestful"
-			/>
-		</p>
-
-		<p>
-			<img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP" />
-			<img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0" />
-			<img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit" />
-			<img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release" />
-		</p>
-
-		<p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
-
-		<p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
-
-		<h2>Module Version</h2>
-
-		<ul>
-			<li>
-				Last Stable Release: 1.1.0<br />
-				<em>Released February 22, 2025 for ZenCart 2.1.0.</em>
-			</li>
-			<li>Next Version Number: ???</li>
-		</ul>
-
-		<h3>Version/Release History</h3>
-
-		<ul>
-			<li>
-				1.1.0<br />
-				Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now when you update the module, you no longer need to reset the module as a whole, the module will automatically
-				whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.
-			</li>
-			<li>
-				1.0.0<br />
-				A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to
-				allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
-			</li>
-			<li>
-				0.2.0<br />
-				Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
-			</li>
-			<li>
-				0.1.0<br />
-				First &ldquo;release&rdquo;.
-			</li>
-			<li>
-				0.0.0<br />
-				<em>
-					Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database
-					<a href="https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin">was only a placeholder</a>. Pulling from the Repository is not recommended.
-				</em>
-			</li>
-		</ul>
-
-		<h2>Additional Links</h2>
-
-		<ul>
-			<li><a href="https://developers.usps.com/apis">USPS API Documentation</a> - This API takes advantage of four APIs: <em>Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0.</em></li>
-			<li><a href="https://www.zen-cart.com/downloads.php?do=file&amp;id=2395">ZenCart Plugins Directory Listing</a> (or use the Releases function on the GitHub repository)</li>
-			<li>
-				<a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module, for assistance with the original USPS module
-				which uses the WebTools API, you should post it here in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a>.
-			</li>
-		</ul>
-
-		<h2>Setup, Install, and Upgrading</h2>
-
-		<p>Both versions (encapsulated and non-encapsualted) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separated file.)</p>
-
-		<ul>
-			<li>
-				<p>
-					<strong>Non-encapsulated</strong> (ZC 1.5.5+)<br />
-					<br />
-					If you want to install the non-encapsulated version of the module, copy <strong>ONLY</strong> the <code>admin/</code> and <code>includes/</code> directory in the root of the zip file to the matching directories in the
-					root of your ZenCart installation. (<strong>NOTE:</strong> Be sure to rename the <code>admin/</code> directory to match your admin directory in your ZenCart installation. DO NOT copy the
-					<code>zc_plugins/</code> directory.)
-				</p>
-			</li>
-			<li>
-				<p>
-					<strong>Encapsulated</strong> (ZC 2.1.0 or ZC 2.0.x <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">with these modifications</a>)<br />
-					<br />
-					If you want to install the encapsulated version of the module, copy <strong>ONLY</strong> the contents of the <code>zc_plugins</code> directory into the matching <code>zc_plugins</code> directory of your ZenCart
-					installation.
-				</p>
-			</li>
-		</ul>
-
-		<p>
-			You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the
-			<a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository.
-		</p>
-
-		<p>Upgrading the non-encapsulated version? <strong>Overwrite ALL files of the old version.</strong> (If you&rsquo;re using the encapsulated version, it is safe to upload the new version which exists in a separate folder.)</p>
-
-		<h2>Uninstallation</h2>
-
-		<ul>
-			<li>
-				<p>
-					<strong>Non-encapsulated</strong><br />
-					To uninstall the non-encapsulated version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.
-				</p>
-			</li>
-			<li>
-				<p>
-					<strong>Encapsulated</strong><br />
-					To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click &ldquo;Uninstall&rdquo;. If desired, you can clean up the
-					installation to have ZenCart delete the files for you.
-				</p>
-			</li>
-		</ul>
-
-		<h2>Frequently Asked Questions</h2>
-
-		<p>This won&rsquo;t answer all the questions you may have, but it may answer some that I thought of.</p>
-
-		<h3>What version of ZenCart does this module support?</h3>
-
-		<p>That can be answered with this chart:</p>
-
-		<table>
-			<thead>
-				<tr>
-					<th></th>
-					<th style="text-align: center;">Encapsulated</th>
-					<th style="text-align: center;">Non-Encapsulated</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				<tr>
-					<td>ZenCart 1.5.5</td>
-					<td style="text-align: center;">❌</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 1.5.6</td>
-					<td style="text-align: center;">❌</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 1.5.7</td>
-					<td style="text-align: center;">❌</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 1.5.8</td>
-					<td style="text-align: center;">❌</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 2.0.0</td>
-					<td style="text-align: center;">🔧</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 2.0.1</td>
-					<td style="text-align: center;">🔧</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-				<tr>
-					<td>ZenCart 2.1.0</td>
-					<td style="text-align: center;">✅</td>
-					<td style="text-align: center;">✅</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<ul>
-			<li>✅ = Fully supported</li>
-			<li>❌ = Not supported</li>
-			<li>🔧 = Can work but will need <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">core file edits</a> to make it work</li>
-		</ul>
-
-		<h3>What is the difference between this version and the original USPS module?</h3>
-
-		<p>
-			The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS&#39; various services as well as the
-			estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based
-			API which this codebase uses.
-		</p>
-
-		<h3>I already have a <code>USERID</code> and <code>PASSWORD</code> from WebTools, but I&rsquo;m getting error messages while I try to retrieve quotes. What happened?</h3>
-
-		<p>
-			The older <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire
-			new USPS Business Account provided that you don&rsquo;t already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">here</a> and on the
-			<a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you
-			are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.
-		</p>
-
-		<h3>Why should I use this version versus the one that&rsquo;s out there now?</h3>
-
-		<p>
-			The USPS created an &ldquo;in-before-the-lock&rdquo; situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access but they will read you the &ldquo;riot act&rdquo;
-			with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled, and at that
-			point, everyone will have to use the RESTful version of the API going forward.
-		</p>
-
-		<h3>What is this OAuth Token? Do I need to get one?</h3>
-
-		<p>
-			An OAuth token is effectively a (temporary) password meant to provide access to the OAuth API. (Similar to the WebTools API USERID and PASSWORD.) You do not need to do anything to get one, this script will instead create the
-			token for you (or at least your customer) as their cart requests the estimations of the costs of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when
-			it&rsquo;s done with the API call.
-		</p>
-
-		<h3>I&rsquo;m not seeing the USPS Connect rate even though I selected it, what&rsquo;s going on?</h3>
-
-		<p>
-			USPS Connect rates are only available to retailers who have specifically signed up for it at <a href="https://www.uspsconnect.com">https://www.uspsconnect.com</a> and have their USPS Business Accounts activated to enable USPS
-			Connect. Additionally, you must select and choose to display the &ldquo;Commercial&rdquo; rates (formerly called &ldquo;Online&rdquo; in the WebTools module) to see the rates while providing a list of Zip Codes that can use
-			Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you&rsquo;re dropping off the packages at the DESTINATION Zip Code. (There is a
-			USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)
-		</p>
-
-		<h3>&ldquo;The module is not showing at all even though I made my choices&rdquo;</h3>
-
-		<p>
-			Make sure that your store is configured to ship out of the United States and that you made sure to enter a five-digit (or nine-digit) Zip Code where your orders are originating from. Additionally, make sure that you have chosen
-			at least one shipping method to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
-		</p>
-
-		<h3>&ldquo;I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don&rsquo;t see it as an option during checkout, what gives?&rdquo;</h3>
-
-		<p>
-			That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package&rsquo;s destination zip code is not one of those types
-			of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the
-			<a href="https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB">USPS Postal Store online</a> and request them. (Remember these boxes can ONLY be used for APO/DPO/FPO Mail. If you
-			use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away.
-			It&rsquo;s likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.
-		</p>
-
-		<h3>What is the handling field for?</h3>
-
-		<p>There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per-method basis.</p>
-
-		<p>
-			The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each &ldquo;box&rdquo;, or both). If you wish to charge a surcharge for
-			certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as
-			a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)
-		</p>
-
-		<h3>What is the min/max box for?</h3>
-
-		<p>
-			<strong>NEW</strong> The original USPS WebTools had a way to clamp the different modules based on the weight of each order. You would put two values into those boxes and then the rate for that method would be offered if the
-			total weight of the order fell between those two numbers. This is completely optional to use and should be left alone to its defaults if you&rsquo;re not actively using them. (<strong>NOTE:</strong> The number entered here will
-			be converted into pounds, so if you&rsquo;re using kilograms as your standard, enter the amount in kilograms here. If you&rsquo;re using pounds, enter pounds here.)
-		</p>
-
-		<h3>Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?</h3>
-
-		<p>
-			Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the &ldquo;average&rdquo; package thresholds of this module. A future update
-			will see these included.
-		</p>
-
-		<h3>What happened to the ® and ™ symbols that were on the original module?</h3>
-
-		<p>Those symbols don&rsquo;t appear within the new USPS API calls as they do on the original one. I can modify the script to place them but they might be more trouble than anything.</p>
-
-		<h3>My store&rsquo;s measurements are in centimeters and kilograms, do I have to convert everything?</h3>
-
-		<p>SORT OF. You don&rsquo;t have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.</p>
-
-		<ul>
-			<li>
-				Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely &ldquo;Shipping Weight Units&rdquo; and &ldquo;Shipping Dimension Units&rdquo;.
-			</li>
-			<li>
-				Running ZenCart 1.5.8 or older? You must make a file edit to <code>/includes/modules/shipping/usps.php</code>. Around lines 48 and 54, you will see two constant defines that can be edited. Simply follow the instructions
-				there. Be sure to leave single quotation marks and to match the values as listed. (That is you must enter either <code>&quot;inches&quot;</code> or <code>&quot;centimeters&quot;</code> (case sensitive) and
-				<code>kgs</code> or <code>lbs</code> (case sensitive, no period).)
-			</li>
-		</ul>
-
-		<p>If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.</p>
-
-		<h2>Known Limitations/Issues</h2>
-
-		<ul>
-			<li>
-				As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn&rsquo;t something I care to fix although if asked or suggested, I could theoretically put
-				them back in the appropriate places.
-			</li>
-			<li>
-				Trying to visit <code>cmd=configuration&amp;gID=6</code> while this module is active, will cause that admin configurator to break. This is likely because the display functions use custom functions that are cooked directly
-				into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to
-				visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when
-				you&rsquo;re ready, reenable it.
-			</li>
-			<li>
-				Not all of the Observers/Notifier triggers made it here from the original USPS module. I eye-balled this and tried to place the original triggers and observers where I best guessed they fit in. But I&rsquo;m not going to
-				lie, I&rsquo;m not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me
-				via the ZenCart forums PM system or the ZenCart thread linked above. (I&rsquo;m missing about six of them as of this release, but I&rsquo;ll pass through and re-add them as I can.)
-			</li>
-		</ul>
-
-		<h2>Credits</h2>
-
-		<p>For the original module</p>
-
-		<ul>
-			<li>Ajeh, the original poster of the ZC 1.5 module</li>
-			<li>lat9</li>
-			<li>The ZenCart Team</li>
-		</ul>
-
-		<p>For the update</p>
-
-		<ul>
-			<li>retched (me)</li>
-		</ul>
-
-		<h2>File Listing</h2>
-
-		<p>These are the file lists that should be included with this module, depending on which version you&rsquo;re running.</p>
-
-		<pre><code class="language-text">- CONTRIBUTING.md
+<head>
+<meta charset="utf-8" />
+<style>
+    /*
+    GitHub css for use with MarkdownView.wlx
+    Based on: https://github.com/hyrious/github-markdown-css
+    */
+
+    /***************  COLOR PALETTE  ****************
+    body background...............: #ffffff
+    body text.....................: #24292f
+    headers.......................: #1c2025
+    header code background........: #e1e4e9
+    code background...............: #d8dee4
+    blockquote background.........: #f6f8fa
+    blockquote text...............: #57606a
+    borders.......................: #d0d7de
+    table header background.......: #edeff3
+    links.........................: #0969da
+    marks.........................: #fff8c5
+    ************************************************/
+
+    /******************    MAIN    ******************/
+    body {
+        font-family: "Arial Nova", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif, "Segoe UI Emoji", "Noto Emoji";
+        font-size: 12pt;
+        line-height: 1.6;
+        color: #24292f;
+        background-color: #ffffff;
+        margin-left: 1em;
+        padding: 15px;
+        overflow: initial;
+        box-sizing: border-box;
+        word-wrap: break-word;
+    }
+    body > *:first-child {
+        margin-top: 0 !important;
+    }
+    body > *:last-child {
+        margin-bottom: 0 !important;
+    }
+    h1 {
+        color: #1c2025;
+        font-size: 2.15em;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-top: 2em;
+    }
+    h2 {
+        color: #1c2025;
+        font-size: 1.75em;
+        font-weight: 600;
+        line-height: 1.2;
+        padding-bottom: 0.2em;
+        border-bottom: 1px solid #d9e1e8;
+        margin-top: 1.4em;
+        margin-bottom: 0.5em;
+    }
+    h3 {
+        color: #1c2025;
+        font-size: 1.5em;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-top: 1.2em;
+        margin-bottom: 0.3em;
+    }
+    h4 {
+        color: #1c2025;
+        font-size: 1.25em;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-top: 1em;
+        margin-bottom: 0;
+    }
+    h5 {
+        color: #1c2025;
+        font-size: 1.1em;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-top: 0.7em;
+        margin-bottom: 0;
+    }
+    h6 {
+        color: #57606a;
+        font-size: 1em;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-top: 0.7em;
+        margin-bottom: 0;
+    }
+    h2:first-child,
+    h1:first-child,
+    h1:first-child + h2,
+    h3:first-child,
+    h4:first-child,
+    h5:first-child,
+    h6:first-child {
+        margin-top: 0;
+        padding-top: 0;
+    }
+    body > h2:first-child,
+    body > h1:first-child,
+    body > h1:first-child + h2,
+    body > h3:first-child,
+    body > h4:first-child,
+    body > h5:first-child,
+    body > h6:first-child {
+        margin-top: 0;
+        padding-top: 0;
+    }
+    h1 p,
+    h2 p,
+    h3 p,
+    h4 p,
+    h5 p,
+    h6 p {
+        margin-top: 0;
+    }
+    h4 + pre {
+        margin-top: 0.1em;
+    }
+    strong {
+        color: #1c2025;
+    }
+    a:not([href]) {
+        color: inherit;
+        text-decoration: none;
+    }
+    a {
+        color: #0969da;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    img {
+        max-width: 100%;
+    }
+    body > p {
+        margin-top: 0;
+        margin-bottom: 16px;
+        word-wrap: break-word;
+    }
+    body > ul,
+    body > ol {
+        margin-bottom: 16px;
+    }
+    ul,
+    ol {
+        padding-left: 32px;
+    }
+    ul.no-list,
+    ol.no-list {
+        padding: 0;
+        list-style-type: none;
+    }
+    ul ul,
+    ul ol,
+    ol ol,
+    ol ul {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    li {
+        margin-bottom: 0;
+    }
+    li > p {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    li > p + pre {
+        margin-top: 0.5em;
+    }
+    blockquote {
+        margin: 16px 0;
+        font-size: inherit;
+        padding: 5px 15px;
+        color: #57606a;
+        background-color: #edeff3;
+        border-left: 4px solid #d0d7de;
+        border-radius: 0 4px 4px 0;
+    }
+    blockquote strong {
+        color: #57606a;
+    }
+    blockquote > :first-child {
+        margin-top: 0;
+    }
+    blockquote > :last-child {
+        margin-bottom: 0;
+    }
+    hr {
+        height: 3px;
+        margin: 32px 0;
+        background-color: #d0d7de;
+        border: 0 none;
+    }
+    table {
+        margin: 10px 0 15px 0;
+        font-size: 12pt;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: block;
+        overflow: auto;
+        word-break: normal;
+        word-break: keep-all;
+    }
+    table th {
+        font-weight: bold;
+        font-size: 0.9em;
+        color: #1c2025;
+        background-color: #edeff3;
+    }
+    table td,
+    table th {
+        border: 1px solid #d0d7de;
+        padding: 6px 13px;
+    }
+    table td code {
+        font-size: 0.9em;
+    }
+    dl {
+        padding: 0;
+    }
+    dl dt {
+        padding: 0;
+        margin-top: 16px;
+        font-size: 1em;
+        font-style: italic;
+        font-weight: bold;
+    }
+    dl dd {
+        padding: 0 16px;
+        margin-bottom: 16px;
+    }
+    code {
+        font-family: Consolas, "Liberation Mono", Menlo, "Courier New", monospace;
+        font-size: 0.9em;
+        color: #1c2025;
+        background-color: #d8dee4;
+        border-radius: 3px;
+        padding: 0.15em 0.1em;
+    }
+    code::before,
+    code::after {
+        letter-spacing: -0.2em;
+        content: "\00a0";
+    }
+    pre > code {
+        padding: 0;
+        margin: 0;
+        font-size: 0.85em !important;
+        word-break: normal;
+        white-space: pre;
+        background-color: transparent;
+        border: 0;
+    }
+    pre code,
+    pre tt {
+        display: inline;
+        max-width: initial;
+        padding: 0;
+        margin: 0;
+        overflow: initial;
+        line-height: inherit;
+        word-wrap: normal;
+        background-color: transparent;
+        border: 0;
+    }
+    pre code:before,
+    pre tt:before,
+    pre code:after,
+    pre tt:after {
+        content: normal;
+    }
+    h1 code,
+    h2 code,
+    h3 code,
+    h4 code,
+    h5 code,
+    h6 code {
+        background-color: #e1e4e9;
+        font-weight: normal;
+    }
+    h2 code {
+        padding-top: 0.1em;
+        padding-bottom: 0.23em;
+        border-bottom: 1px solid #d9e1e8;
+        border-radius: 3px 3px 0 0;
+    }
+    p,
+    blockquote,
+    ul,
+    ol,
+    dl,
+    pre {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+    /* Code blocks */
+    pre {
+        background-color: #f6f8fa;
+        line-height: 1.4;
+        padding: 1.2em;
+        border: 1px solid #e2e4e6;
+        border-radius: 6px;
+        overflow: auto;
+        word-wrap: normal;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+    }
+    kbd {
+        color: #24292f;
+        background-color: #f6f8fa;
+        font-size: 0.9em;
+        padding: 2px 4px;
+        border: 1px solid #afb8c1;
+        border-bottom: 2px solid #afb8c1;
+        border-radius: 3px;
+        box-shadow: inset 0 -1px 0 #afb8c1;
+    }
+
+    /****************** EXTENSIONS ******************/
+
+    .footnotes {
+        font-size: 0.75em;
+        color: #57606a;
+    }
+    .footnotes hr {
+        height: 1px;
+        background-color: #d0d7de;
+    }
+    del {
+        color: #57606a;
+    }
+    mark {
+        color: #24292f;
+        background-color: #fff8c5;
+        padding: 0.1em 0.1em;
+    }
+
+    /******************   DOUBTS   ******************/
+    /*
+    code, pre {
+        -o-tab-size: 8;
+        tab-size: 8;
+    -	ms-hyphens: none;
+        hyphens: none;
+    }
+    
+    // Inline code
+    :not(pre) > code {
+        padding: .1em;
+        white-space: normal;
+    }
+    */
+</style>
+<title>USPSRestful for ZenCart - Version 1.1.0 Readme</title>
+</head>
+<body>
+<h1>USPS Shipping (RESTful) for Zen Cart</h1>
+
+<p>
+    <img
+        src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto"
+        alt="ZC-USPSRestful"
+    />
+</p>
+
+<p>
+    <img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP" />
+    <img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0" />
+    <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit" />
+    <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release" />
+</p>
+
+<p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
+
+<p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
+
+<h2>Module Version</h2>
+
+<ul>
+    <li>
+        Last Stable Release: 1.1.0<br />
+        <em>Released February 22, 2025 for ZenCart 2.1.0.</em>
+    </li>
+    <li>Next Version Number: ???</li>
+</ul>
+
+<h3>Version/Release History</h3>
+
+<ul>
+    <li>
+        1.1.0<br />
+        Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now when you update the module, you no longer need to reset the module as a whole, the module will automatically
+        whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.
+    </li>
+    <li>
+        1.0.0<br />
+        A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to
+        allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
+    </li>
+    <li>
+        0.2.0<br />
+        Various bugfixing including the reintroduction of First Class Mail Package International Service to the quote pool.
+    </li>
+    <li>
+        0.1.0<br />
+        First &ldquo;release&rdquo;.
+    </li>
+    <li>
+        0.0.0<br />
+        <em>
+            Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database
+            <a href="https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin">was only a placeholder</a>. Pulling from the Repository is not recommended.
+        </em>
+    </li>
+</ul>
+
+<h2>Additional Links</h2>
+
+<ul>
+    <li><a href="https://developers.usps.com/apis">USPS API Documentation</a> - This API takes advantage of four APIs: <em>Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0.</em></li>
+    <li><a href="https://www.zen-cart.com/downloads.php?do=file&amp;id=2395">ZenCart Plugins Directory Listing</a> (or use the Releases function on the GitHub repository)</li>
+    <li>
+        <a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module, for assistance with the original USPS module
+        which uses the WebTools API, you should post it here in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a>.
+    </li>
+</ul>
+
+<h2>Setup, Install, and Upgrading</h2>
+
+<p>Both versions (encapsulated and non-encapsualted) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separated file.)</p>
+
+<ul>
+    <li>
+        <p>
+            <strong>Non-encapsulated</strong> (ZC 1.5.5+)<br />
+            If you want to install the non-encapsulated version of the module, copy <strong>ONLY</strong> the <code>admin/</code> and <code>includes/</code> directory in the root of the zip file to the matching directories in the
+            root of your ZenCart installation. (<strong>NOTE:</strong> Be sure to rename the <code>admin/</code> directory to match your admin directory in your ZenCart installation. DO NOT copy the
+            <code>zc_plugins/</code> directory.)
+        </p>
+    </li>
+    <li>
+        <p>
+            <strong>Encapsulated</strong> (ZC 2.1.0 or ZC 2.0.x <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">with these modifications</a>)<br />
+            If you want to install the encapsulated version of the module, copy <strong>ONLY</strong> the contents of the <code>zc_plugins</code> directory into the matching <code>zc_plugins</code> directory of your ZenCart
+            installation.
+        </p>
+    </li>
+</ul>
+
+<p>
+    You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the
+    <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository.
+</p>
+
+<p>Upgrading the non-encapsulated version? <strong>Overwrite ALL files of the old version.</strong> (If you&rsquo;re using the encapsulated version, it is safe to upload the new version which exists in a separate folder.)</p>
+
+<h2>Uninstallation</h2>
+
+<ul>
+    <li>
+        <p>
+            <strong>Non-encapsulated</strong><br />
+            To uninstall the non-encapsulated version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.
+        </p>
+    </li>
+    <li>
+        <p>
+            <strong>Encapsulated</strong><br />
+            To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click &ldquo;Uninstall&rdquo;. If desired, you can clean up the
+            installation to have ZenCart delete the files for you.
+        </p>
+    </li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+
+<p>This won&rsquo;t answer all the questions you may have, but it may answer some that I thought of.</p>
+
+<h3>What version of ZenCart does this module support?</h3>
+
+<p>That can be answered with this chart:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th style="text-align: center;">Encapsulated</th>
+            <th style="text-align: center;">Non-Encapsulated</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>ZenCart 1.5.5</td>
+            <td style="text-align: center;">❌</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 1.5.6</td>
+            <td style="text-align: center;">❌</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 1.5.7</td>
+            <td style="text-align: center;">❌</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 1.5.8</td>
+            <td style="text-align: center;">❌</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 2.0.0</td>
+            <td style="text-align: center;">🔧</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 2.0.1</td>
+            <td style="text-align: center;">🔧</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+        <tr>
+            <td>ZenCart 2.1.0</td>
+            <td style="text-align: center;">✅</td>
+            <td style="text-align: center;">✅</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul>
+    <li>✅ = Fully supported</li>
+    <li>❌ = Not supported</li>
+    <li>🔧 = Can work but will need <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">core file edits</a> to make it work</li>
+</ul>
+
+<h3>What is the difference between this version and the original USPS module?</h3>
+
+<p>
+    The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS&#39; various services as well as the
+    estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based
+    API which this codebase uses.
+</p>
+
+<h3>I already have a <code>USERID</code> and <code>PASSWORD</code> from WebTools, but I&rsquo;m getting error messages while I try to retrieve quotes. What happened?</h3>
+
+<p>
+    The older <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire
+    new USPS Business Account provided that you don&rsquo;t already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">here</a> and on the
+    <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you
+    are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.
+</p>
+
+<h3>Why should I use this version versus the one that&rsquo;s out there now?</h3>
+
+<p>
+    The USPS created an &ldquo;in-before-the-lock&rdquo; situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access but they will read you the &ldquo;riot act&rdquo;
+    with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled, and at that
+    point, everyone will have to use the RESTful version of the API going forward.
+</p>
+
+<h3>What is this OAuth Token? Do I need to get one?</h3>
+
+<p>
+    An OAuth token is effectively a (temporary) password meant to provide access to the OAuth API. (Similar to the WebTools API USERID and PASSWORD.) You do not need to do anything to get one, this script will instead create the
+    token for you (or at least your customer) as their cart requests the estimations of the costs of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when
+    it&rsquo;s done with the API call.
+</p>
+
+<h3>I&rsquo;m not seeing the USPS Connect rate even though I selected it, what&rsquo;s going on?</h3>
+
+<p>
+    USPS Connect rates are only available to retailers who have specifically signed up for it at <a href="https://www.uspsconnect.com">https://www.uspsconnect.com</a> and have their USPS Business Accounts activated to enable USPS
+    Connect. Additionally, you must select and choose to display the &ldquo;Commercial&rdquo; rates (formerly called &ldquo;Online&rdquo; in the WebTools module) to see the rates while providing a list of Zip Codes that can use
+    Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you&rsquo;re dropping off the packages at the DESTINATION Zip Code. (There is a
+    USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)
+</p>
+
+<h3>&ldquo;The module is not showing at all even though I made my choices&rdquo;</h3>
+
+<p>
+    Make sure that your store is configured to ship out of the United States and that you made sure to enter a five-digit (or nine-digit) Zip Code where your orders are originating from. Additionally, make sure that you have chosen
+    at least one shipping method to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)
+</p>
+
+<h3>&ldquo;I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don&rsquo;t see it as an option during checkout, what gives?&rdquo;</h3>
+
+<p>
+    That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package&rsquo;s destination zip code is not one of those types
+    of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the
+    <a href="https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB">USPS Postal Store online</a> and request them. (Remember these boxes can ONLY be used for APO/DPO/FPO Mail. If you
+    use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away.
+    It&rsquo;s likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.
+</p>
+
+<h3>What is the handling field for?</h3>
+
+<p>There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per-method basis.</p>
+
+<p>
+    The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each &ldquo;box&rdquo;, or both). If you wish to charge a surcharge for
+    certain kinds of shipping methods, you can enter an amount in the entry box next to the method and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as
+    a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)
+</p>
+
+<h3>What is the min/max box for?</h3>
+
+<p>
+    <strong>NEW</strong> The original USPS WebTools had a way to clamp the different modules based on the weight of each order. You would put two values into those boxes and then the rate for that method would be offered if the
+    total weight of the order fell between those two numbers. This is completely optional to use and should be left alone to its defaults if you&rsquo;re not actively using them. (<strong>NOTE:</strong> The number entered here will
+    be converted into pounds, so if you&rsquo;re using kilograms as your standard, enter the amount in kilograms here. If you&rsquo;re using pounds, enter pounds here.)
+</p>
+
+<h3>Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?</h3>
+
+<p>
+    Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the &ldquo;average&rdquo; package thresholds of this module. A future update
+    will see these included.
+</p>
+
+<h3>What happened to the ® and ™ symbols that were on the original module?</h3>
+
+<p>Those symbols don&rsquo;t appear within the new USPS API calls as they do on the original one. I can modify the script to place them but they might be more trouble than anything.</p>
+
+<h3>My store&rsquo;s measurements are in centimeters and kilograms, do I have to convert everything?</h3>
+
+<p>SORT OF. You don&rsquo;t have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.</p>
+
+<ul>
+    <li>
+        Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely &ldquo;Shipping Weight Units&rdquo; and &ldquo;Shipping Dimension Units&rdquo;.
+    </li>
+    <li>
+        Running ZenCart 1.5.8 or older? You must make a file edit to <code>/includes/modules/shipping/usps.php</code>. Around lines 48 and 54, you will see two constant defines that can be edited. Simply follow the instructions
+        there. Be sure to leave single quotation marks and to match the values as listed. (That is you must enter either <code>&quot;inches&quot;</code> or <code>&quot;centimeters&quot;</code> (case sensitive) and
+        <code>kgs</code> or <code>lbs</code> (case sensitive, no period).)
+    </li>
+</ul>
+
+<p>If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.</p>
+
+<h2>Known Limitations/Issues</h2>
+
+<ul>
+    <li>
+        As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn&rsquo;t something I care to fix although if asked or suggested, I could theoretically put
+        them back in the appropriate places.
+    </li>
+    <li>
+        Trying to visit <code>cmd=configuration&amp;gID=6</code> while this module is active, will cause that admin configurator to break. This is likely because the display functions use custom functions that are cooked directly
+        into the modules file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to
+        visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when
+        you&rsquo;re ready, reenable it.
+    </li>
+    <li>
+        Not all of the Observers/Notifier triggers made it here from the original USPS module. I eye-balled this and tried to place the original triggers and observers where I best guessed they fit in. But I&rsquo;m not going to
+        lie, I&rsquo;m not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me
+        via the ZenCart forums PM system or the ZenCart thread linked above. (I&rsquo;m missing about six of them as of this release, but I&rsquo;ll pass through and re-add them as I can.)
+    </li>
+</ul>
+
+<h2>Credits</h2>
+
+<p>For the original module</p>
+
+<ul>
+    <li>Ajeh, the original poster of the ZC 1.5 module</li>
+    <li>lat9</li>
+    <li>The ZenCart Team</li>
+</ul>
+
+<p>For the update</p>
+
+<ul>
+    <li>retched (me)</li>
+</ul>
+
+<h2>File Listing</h2>
+
+<p>These are the file lists that should be included with this module, depending on which version you&rsquo;re running.</p>
+
+<pre><code class="language-text">- CONTRIBUTING.md
 - LICENSE
 - README.md (this file)
 - changelog.md
@@ -705,35 +704,21 @@
 - \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
 </code></pre>
 
-		<h2>Support the author</h2>
+<h2>Support the author</h2>
 
-		<!-- Should this repository be forked, please remove this section -->
+<!-- Should this repository be forked, please remove this section -->
 
-		<p>
-			<a href="https://cash.app/$retched">
-				<img
-					src="https://img.shields.io/badge/cashapp-green?style=flat&amp;logo=cashapp&amp;logoColor=white&amp;logoSize=auto&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fcash.app%2Fretched"
-					alt="Support via CashApp"
-				/>
-			</a>
-			<a href="https://paypal.me/retched"><img src="https://img.shields.io/badge/paypal-blue?style=flat&amp;logo=paypal&amp;logoColor=white&amp;logoSize=auto&amp;labelColor=black&amp;color=purple" alt="Support via PayPal" /></a>
-			<a href="https://www.patreon.com/retched">
-				<img src="https://img.shields.io/badge/patreon-white?style=flat&amp;logo=patreon&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fwww.patreon.com%2Fretched" alt="Support via Patreon" />
-			</a>
-			<a href="https://buymeacoffee.com/retched">
-				<img
-					src="https://img.shields.io/badge/buymeacoffee-white?style=flat&amp;logo=buymeacoffee&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fbuymeacoffee.com%2Fretched"
-					alt="Support via BuyMeACoffee"
-				/>
-			</a>
-			<a href="https://kofi.com/retched">
-				<img src="https://img.shields.io/badge/kofi-white?style=flat&amp;logo=buymeacoffee&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fkofi.com%2Fretched" alt="Support via Kofi" />
-			</a>
-		</p>
+<p>
+    <a href="https://cash.app/$retched"><img src="https://img.shields.io/badge/cashapp-green?style=flat&amp;logo=cashapp&amp;logoColor=white&amp;logoSize=auto&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fcash.app%2Fretched" alt="Support via CashApp" /></a>
+    <a href="https://paypal.me/retched"><img src="https://img.shields.io/badge/paypal-blue?style=flat&amp;logo=paypal&amp;logoColor=white&amp;logoSize=auto&amp;labelColor=black&amp;color=purple" alt="Support via PayPal" /></a>
+    <a href="https://www.patreon.com/retched"><img src="https://img.shields.io/badge/patreon-white?style=flat&amp;logo=patreon&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fwww.patreon.com%2Fretched" alt="Support via Patreon" /></a>
+    <a href="https://buymeacoffee.com/retched"><img src="https://img.shields.io/badge/buymeacoffee-white?style=flat&amp;logo=buymeacoffee&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fbuymeacoffee.com%2Fretched" alt="Support via BuyMeACoffee" /></a>
+    <a href="https://kofi.com/retched"><img src="https://img.shields.io/badge/kofi-white?style=flat&amp;logo=buymeacoffee&amp;logoColor=white&amp;labelColor=black&amp;color=purple&amp;link=https%3A%2F%2Fkofi.com%2Fretched" alt="Support via Kofi" /></a>
+</p>
 
-		<h2>License</h2>
+<h2>License</h2>
 
-		<pre><code class="language-text">USPS Shipping (RESTful) for Zen Cart
+<pre><code class="language-text">USPS Shipping (RESTful) for Zen Cart
 A shipping module for ZenCart, an e-commerce platform
 Copyright (C) 2025 Paul Williams (retched / retched@hotmail.com)
 
@@ -750,5 +735,5 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 </code></pre>
-	</body>
+</body>
 </html>

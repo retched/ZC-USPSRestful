@@ -11,23 +11,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Module will now call into the ZenCart Plugin database to see if there is a new version available. If there is, you will see a banner on the top of the page alerting you. [#19](https://github.com/retched/ZC-USPSRestful/issues/19)
-- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23). (In short, if you have both Priority Mail and Priority Mail Cubic both quoted, with the toggle made for Priority Mail, the module will choose the cheaper of the two methods and display that.)
+- The module will now call into the ZenCart Plugin database to see if a new version is available. If there is, you will see a banner on the top of the page alerting you. [#19](https://github.com/retched/ZC-USPSRestful/issues/19)
+- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23). (In short, if you have both Priority Mail and Priority Mail Cubic quoted, with the toggle made for Priority Mail, the module will choose the cheaper of the two methods and display that.)
 
 ### Removed
 
-- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then convert the defaults to that. Now, the module will check on install, place those defaults, and leave it. Which means if you change the measuring standard, you'll have to reset the defaults.)
+- Removed the check and comparison to see what format the site is using for shipping and length measurements on upgrades. (It was supposed to check if kilograms was the rate at the time of installation and then convert the defaults to that. Now, the module will check on install, place those defaults, and leave it. This means if you change the measuring standard, you'll have to reset the limits of the shipping methods.)
 - Removed the unit of measure from the shipping methods table.
 
-## Changed
+### Changed
 
-- Debug mode now has two separate modes: Display Errors, Generate Logs. If errors are found, they are hidden from the customer view unless toggled on. Additionally, you can generate logs for all requests. (TODO: On any error, generate a log regardless of setting.)
+- Debug mode now has two separate modes: Display Errors, and Generate Logs. If errors are found, they are hidden from the customer view unless toggled on. Additionally, you can generate logs for all requests. (TODO: On any error, generate a log regardless of setting.)
 
-## Fixed
+### Fixed
 
 - There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
-- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messsages still bled through even though there was a series of flags and checks to make sure not to bother with launch the quote. Now the logic is: If the order country is bound to the United States and there is no zip code, the module will not try to get a quote. If the quote is requested for an order going elsewhere, the Zip Code is less important.
-
+- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messages still bled through even though there was a series of flags and checks to make sure not to bother with launching the quote. Now the logic is: If the order country is bound to the United States and there is no zip code, the module will not try to get a quote. If the quote is requested for an order going elsewhere, the Zip Code is less important.
 
 ## [1.0.0] - 2025-02-18
 
