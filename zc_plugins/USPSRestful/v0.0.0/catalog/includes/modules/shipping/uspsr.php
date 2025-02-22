@@ -1724,7 +1724,7 @@ class uspsr extends base
                 case "v1.0.0":
                     // Any changes to the database from v1.0.0 should go here
                     // Check to see if the module is active?
-                    if (preg_match("/uspsr.php;?/", MODULE_SHIPPING_INSTALLED)) {
+                    if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
                         // Add Squash alike methods together
                         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
                             'configuration_title' => 'Squash Alike Methods Together',
@@ -1734,26 +1734,22 @@ class uspsr extends base
                             'sort_order' => 0,
                             'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
                         ]);
+
+                        // Change the Debug Mode to be a split selection between showing logs or showing errors
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                            'configuration_title' => 'Debug Mode',
+                            'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
+                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                            'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                            'date_added' => 'now()'
+                        ]);
+
+                        // Created a function to either show the value or to show none
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                            'use_function' => 'zen_cfg_uspsr_account_display',
+                        ]);
                     }
 
-                    // Change the Change the USPSr Version display to a read-only
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
-                        'set_function' => 'zen_cfg_read_only('
-                    ]);
-
-                    // Change the Debug Mode to be a split selection between showing logs or showing errors
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                        'configuration_title' => 'Debug Mode',
-                        'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
-                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
-                        'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
-                        'date_added' => 'now()'
-                    ]);
-
-                    // Created a function to either show the value or to show none
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
-                        'use_function' => 'zen_cfg_uspsr_account_display',
-                    ]);
                     break;
 
                 case "v0.3.0": // This version didn't officially get released but was the old format of the repository
@@ -1836,33 +1832,37 @@ class uspsr extends base
                         ]
                     );
 
-                    // NEW SETTINGS, Dispatch Cart Total, Dimensional Class Pricing, Cubic Class Pricing
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', [
-                        'configuration_title' => 'Send cart total as part of quote?',
-                        'configuration_value' => 'Yes',
-                        'configuration_description' => 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ',
-                    ]);
+                    if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
 
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
-                        'configuration_title' => 'Packaging Class - Dimensional Pricing',
-                        'configuration_value' => 'Rectangular',
-                        'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ',
-                    ]);
+                        // NEW SETTINGS, Dispatch Cart Total, Dimensional Class Pricing, Cubic Class Pricing
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', [
+                            'configuration_title' => 'Send cart total as part of quote?',
+                            'configuration_value' => 'Yes',
+                            'configuration_description' => 'As part of the quoting process, you can send the customer\'s order total to the USPS API for it to calculate Insurance and eligibility for international shipping. (The USPS puts a limit on how much merchandise can be sent to certain countries and by certain methods.) If you choose \"No\", the module will send a cart value of $5 to be processed.<br><br><strong>CAUTION:</strong> If you don\'t send the total, your customer will not receive inaccurate price details from the USPS and you may end up paying more for the actual postage.',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_option([\'Yes\', \'No\'], ',
+                        ]);
 
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
-                        'configuration_title' => 'Packaging Class - Cubic Pricing',
-                        'configuration_value' => 'Non-Soft',
-                        'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
-                    ]);
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS' , [
+                            'configuration_title' => 'Packaging Class - Dimensional Pricing',
+                            'configuration_value' => 'Rectangular',
+                            'configuration_description' => 'Are your packages typically rectangular?<br><br><em>\"Rectangular\"</em> means a mail piece that is a standard four-corner box shape that is not significantly curved or oddly angled. Something like a typical cardboard shipping box would fit this. If you use any kind of bubble mailer or poly mailer instead of a basic box, you should choose Nonrectangular.<br><br><em>Typically this would only really apply under extreme quotes like extra heavy or big packages.</em>',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_option([\'Rectangular\', \'Nonrectangular\'], ',
+                        ]);
+
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CUBIC_CLASS', [
+                            'configuration_title' => 'Packaging Class - Cubic Pricing',
+                            'configuration_value' => 'Non-Soft',
+                            'configuration_description' => 'How would you class the packaging of your items?<br><br><em>\"Non-Soft\"</em> refers to packaging that is rigid in shape and form, like a box.<br><br><em>\"Soft\"</em> refers to packaging that is usually cloth, plastic, or vinyl packaging that is flexible enough to adhere closely to the contents being packaged and strong enough to securely contain the contents.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to Cubic Pricing such as Ground Advantage Cubic, Priority Mail Cubic, Priority Mail Express Cubic</em>',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
+                        ]);
+
+                    }
 
                     break;
                 case "0.0.0":
@@ -2817,7 +2817,7 @@ function zen_cfg_uspsr_account_display($key_value)
 {
     // The key_value is either something or nothing
 
-    if (zen_not_null($key_value)) {
+    if (zen_not_null($key_value) && !empty($key_value)) {
         return trim($key_value);
     } else { return "--none--"; }
 
