@@ -55,10 +55,25 @@ class ScriptedInstaller extends ScriptedInstallBase
          *
          */
 
+        $active_modules     = $this->getConfigurationKeyDetails(MODULE_SHIPPING_INSTALLED);
+        $module_installed   = preg_match("/uspsr.php;?/", $active_modules['configuration_value']);
+        
         switch ($oldVersion) {
             case "v1.0.0":
                 // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
-                
+                // Check if the module is installed, if so, install the SQUASH_OPTIONS
+                if ($module_installed) {
+                    // Add Squash alike methods together
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                        'configuration_title' => 'Squash Alike Methods Together',
+                        'configuration_value' => '--none--',
+                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                    ]);
+                }
+
                 // Change the Change the USPSr Version display to a read-only
                 $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                     'set_function' => 'zen_cfg_read_only('
