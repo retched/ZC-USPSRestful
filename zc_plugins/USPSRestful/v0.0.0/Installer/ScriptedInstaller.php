@@ -1,7 +1,7 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 1.1.0
+ * Version 0.0.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
