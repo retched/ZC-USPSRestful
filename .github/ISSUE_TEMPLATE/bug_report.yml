@@ -50,11 +50,10 @@ body:
       required: true
   - type: input
     id: related-thread
-    placeholder: Be sure to include the https:// in the front
     attributes:
       label: Related Thread
+      placeholder: Be sure to include the https:// in the front
       description: Is this issued related to a thread/post from the ZenCart forums? If so, link it here.
-      render: markdown
   - type: textarea
     id: what-happened
     attributes:
