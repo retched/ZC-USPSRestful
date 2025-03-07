@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
+## [UNRELEASED]
+
+### Fixed
+
+- Resolved all issues with regards to the selection of shipping methods during checkout. (Issues [#28](https://github.com/retched/ZC-USPSRestful/issues/28), [#29](https://github.com/retched/ZC-USPSRestful/issues/29), [#30](https://github.com/retched/ZC-USPSRestful/issues/30), [#31](https://github.com/retched/ZC-USPSRestful/issues/31)) (Long and short run, there was a problem with the counting of each module presented and it caused issues.)
+- Fixed an issue that came up when trying to squash options but you were also using estimated dates/times (the squashing was ignored and all options were presented anyway, bad regex matching). (Issue [#32](https://github.com/retched/ZC-USPSRestful/issues/32))
+
 ## [1.1.0] - 2025-02-22
 
 ### Added
