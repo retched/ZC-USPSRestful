@@ -60,6 +60,10 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         // Regardless of prior version - check if the module is installed, if so, install the NEW keys
         if ($module_installed) {
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
+            ]);
+
             // Add Squash alike methods together
             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
                 'configuration_title' => 'Squash Alike Methods Together',
@@ -93,7 +97,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         switch ($oldVersion) {
             case "v1.0.0":
-                // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
+            // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
                 break;
 
             case "v0.3.0":
