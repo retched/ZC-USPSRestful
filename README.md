@@ -43,7 +43,7 @@ Both versions (encapsulated and non-encapsualted) are now shared in the same rel
   If you want to install the non-encapsulated version of the module, copy **ONLY** the `admin/` and `includes/` directory in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. DO NOT copy the `zc_plugins/` directory.)
 
 - **Encapsulated** (ZC 2.1.0 or ZC 2.0.x [with these modifications](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142))  
-  If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation.
+  If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation. **DO NOT** rename the `admin/` directory inside of the `zc_plugins/` directory!!! Copy the directories AS IS!!!
 
 You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository.
 
