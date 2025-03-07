@@ -872,6 +872,8 @@ class uspsr extends base
                             continue;
                         }
 
+                        if (zen_not_null($method) && ($method != $quotes['id']) ) $match = FALSE;
+
                         // Okay so ... we need to figure out are we even going to add this shipping method. Copy the min_weight and max_weight as needed.
                         if ( !( ($this->quote_weight >= $method_item['min_weight']) && ($this->quote_weight <= $method_item['max_weight']) ) ) $made_weight = FALSE;
 
@@ -901,6 +903,8 @@ class uspsr extends base
                                 $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
 
                                 $build_quotes[] = $quotes;
+                            } else {
+                                $quote_message .= "\n" . 'Skipping the method :"' . $quotes['title'] . '" because it did not match.' . "\n";
                             }
 
                         } elseif (!$method_to_add) {
