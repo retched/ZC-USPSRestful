@@ -364,8 +364,8 @@ class uspsr extends base
         // (typically because you're visiting the shopping cart estimator)
         $delivery_postcode = (array_key_exists('postcode', $order->delivery) && !empty($order->delivery['postcode']) ? $order->delivery['postcode'] : NULL);
 
-        // Is this going to the US and has a zipcode?
-        if ($this->is_us_shipment && !zen_not_null($delivery_postcode)) { // If this is a US bound package and no zip code
+        // Is this going to the US and has a VALID (5 or 9 digit) zipcode?
+        if ($this->is_us_shipment && !uspsr_validate_zipcode($delivery_postcode)) { // If this is a US bound package and a valid zip code
             $this->enabled = false; // Disable the module
             return;
         } else { // Otherewise it's a not US Bound package OR it's a US bound package and HAS a zipcode.
@@ -633,6 +633,7 @@ class uspsr extends base
             // Are we applying the cost per box or the whole order?
             $handling_ext = $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
             $quote_message = '';
+            $m = 0; // Index for making the quote id's with
 
             if (isset($uspsQuote['rateOptions'])) {
 
@@ -645,7 +646,6 @@ class uspsr extends base
                     // If there is a method with "Nonstandard" and "Flat Rate Envelope" in its name... SKIP IT.
                     if (strpos($rate['rates'][0]['description'], "Nonstandard") !== FALSE && strpos($rate['rates'][0]['description'], "Flat Rate Envelope")) continue;
 
-                    $m = 0; // Index for making the quote id's with
                     foreach($selected_methods as $method)
                     {
                         $match = FALSE;
@@ -1501,7 +1501,7 @@ class uspsr extends base
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
             'configuration_title' => 'Debug Mode',
             'configuration_value' => '--none--',
-            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
             'configuration_group_id' => 6,
             'sort_order' => 0,
             'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
@@ -1721,7 +1721,16 @@ class uspsr extends base
             global $db;
 
             switch (MODULE_SHIPPING_USPSR_VERSION) {
-                case "v1.0.0":
+                case "v1.0.0": // Released 2025-03-06
+                    // New change, fixing a spelling error in the description of Debug Mode.
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
+                    ]);
+                    break;
+
+                case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
+                case "v0.2.0": // Released 2025-01-17
+                case "v0.1.0": // Released 2024-12-22
                     // Any changes to the database from v1.0.0 should go here
                     // Check to see if the module is active?
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
@@ -1750,11 +1759,6 @@ class uspsr extends base
                         ]);
                     }
 
-                    break;
-
-                case "v0.3.0": // This version didn't officially get released but was the old format of the repository
-                case "v0.2.0":
-                case "v0.1.0":
                     // Changing this to be a more descriptive description.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
                         'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
@@ -2064,9 +2068,11 @@ class uspsr extends base
             // Check to see if the order fits for USPS Connect Local
             if (uspsr_check_connect_local($order->delivery['postcode'])) $mailClasses[] = "USPS_CONNECT_LOCAL";
 
+            $destination_zip = uspsr_validate_zipcode($order->delivery['postcode']);
+
             $json_body = [
-                'originZIPCode' => SHIPPING_ORIGIN_ZIP,
-                'destinationZIPCode' => $order->delivery['postcode'],
+                'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
+                'destinationZIPCode' => $destination_zip,
                 'weight' => $shipping_weight,
                 'length' => $domm_length,
                 'width' => $domm_width,
@@ -2079,8 +2085,8 @@ class uspsr extends base
 
             // Let's make a standards request now.
             $standards_query = [
-                'originZIPCode' => SHIPPING_ORIGIN_ZIP,
-                'destinationZIPCode' => $order->delivery['postcode'],
+                'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
+                'destinationZIPCode' => $destination_zip,
                 'mailClass' => 'ALL',
                 'weight' => $shipping_weight
             ];
@@ -2108,7 +2114,7 @@ class uspsr extends base
             $focus = "rates-intl";
 
             $json_body = [
-                "originZIPCode" => SHIPPING_ORIGIN_ZIP,
+                "originZIPCode" => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 "foreignPostalCode" => $order->delivery['postcode'],
                 "destinationCountryCode" => $order->delivery['country']['iso_code_2'],
                 "weight" => $shipping_weight,
@@ -3084,12 +3090,15 @@ function uspsr_pretty_json_print($json)
 
 function uspsr_validate_zipcode($entry)
 {
-    // Remove any non-digit characters, US Zip codes are only digits.
-    $digits = preg_replace('/\D/', '', $entry);
+    // Don't do anything if $entry is NULL (likely because the page loaded)
+    if (zen_not_null($entry)) {
+        // Remove any non-digit characters, US Zip codes are only digits.
+        $digits = preg_replace('/\D/', '', $entry);
 
-    // Handle 5 digits or 9 digits by returning the first five.
-    if ( (strlen($digits) === 5) || (strlen($digits) === 9) ) {
-        return substr($digits, 0, 5);
+        // Handle 5 digits or 9 digits by returning the first five.
+        if ( (strlen($digits) === 5) || (strlen($digits) === 9) ) {
+            return substr($digits, 0, 5); // Only the initial five digits are necessary, filter anything else.
+        }
     }
 
     // Return false if it doesn't have 5 or 9 digits. That generally means it's an invalid zip.
