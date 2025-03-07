@@ -409,7 +409,7 @@ class uspsr extends base
     }
 
 
-    public function quote()
+    public function quote($method = '')
     {
         global $order, $shipping_weight, $shipping_num_boxes, $currencies;
 
@@ -646,7 +646,7 @@ class uspsr extends base
                     // If there is a method with "Nonstandard" and "Flat Rate Envelope" in its name... SKIP IT.
                     if (strpos($rate['rates'][0]['description'], "Nonstandard") !== FALSE && strpos($rate['rates'][0]['description'], "Flat Rate Envelope")) continue;
 
-                    foreach($selected_methods as $method)
+                    foreach($selected_methods as $method_item)
                     {
                         $match = FALSE;
                         $quote = []; //Temp holder, if overriden, this gets skipped.
@@ -654,11 +654,11 @@ class uspsr extends base
                         $made_weight = TRUE;
 
                         // Plainly, the final quote price is the quote + handling + order handling. Return that.
-                        $price = (isset($rate['totalPrice']) ? (double)$rate['totalPrice'] : (double)$rate['totalBasePrice'] ) + (double)$method['handling'] + (double)$handling_ext;
+                        $price = (isset($rate['totalPrice']) ? (double)$rate['totalPrice'] : (double)$rate['totalBasePrice'] ) + (double)$method_item['handling'] + (double)$handling_ext;
 
                         // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
                         // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
-                        if (!$this->is_apo_dest && ($method['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
+                        if (!$this->is_apo_dest && ($method_item['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO')) continue;
 
                         $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : trim($rate['rates'][0]['description']) );
 
@@ -680,7 +680,7 @@ class uspsr extends base
                          */
 
                         // Does the description match an option from the $selected_method?
-                        if ($method['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
+                        if ($method_item['method'] == "Media Mail" && (strpos($rate_name, "Media Mail") !== FALSE)) {
                             if (MODULE_SHIPPING_USPSR_PRICING === 'Retail') {
                                 // If this is retail, we need to match it against the appropriate rate.
                                 if ((((strpos($rate['rates'][0]['description'], "Machinable") !== false) && $this->machinable == 'Machinable') || ((strpos($rate['rates'][0]['description'], "Nonstandard") !== false) && $this->machinable == 'Nonstandard')) && strpos($rate['rates'][0]['description'], "5-digit") === false ) {
@@ -724,7 +724,7 @@ class uspsr extends base
                                 }
                             }
 
-                        } elseif (($rate_name === "Priority Mail Cubic") && ($method['method'] == "Priority Mail Cubic")) {
+                        } elseif (($rate_name === "Priority Mail Cubic") && ($method_item['method'] == "Priority Mail Cubic")) {
                             // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
                             if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
                                 $quotes = [
@@ -737,7 +737,7 @@ class uspsr extends base
                                 $match = TRUE;
                             }
 
-                        } elseif (($rate_name === "USPS Ground Advantage Cubic") && ($method['method'] == "USPS Ground Advantage Cubic")) {
+                        } elseif (($rate_name === "USPS Ground Advantage Cubic") && ($method_item['method'] == "USPS Ground Advantage Cubic")) {
                             // There will be two difference classes of rates for Cubic Ground Advantage, Non-Soft and Soft. Track down which one we need and if it the method name matches, add a quote for that.
                             if (((strpos($rate['rates'][0]['description'], "Non-Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Non-Soft') || ((strpos($rate['rates'][0]['description'], "Soft") !== false) && MODULE_SHIPPING_USPSR_CUBIC_CLASS == 'Soft') ) {
                                 $quotes = [
@@ -750,7 +750,7 @@ class uspsr extends base
                                 $match = TRUE;
                             }
 
-                        } elseif (($rate_name === "Priority Mail") && ($method['method'] === "Priority Mail")) {
+                        } elseif (($rate_name === "Priority Mail") && ($method_item['method'] === "Priority Mail")) {
                             // If there are more than one Priority Mail, it's likely we have a Dimmensional Quote.
                             if ($priorityMailCount === 1) {
                                 // Only one Priority Mail quote, so add it
@@ -789,7 +789,7 @@ class uspsr extends base
                                 }
                             }
 
-                        } elseif (($rate_name === "USPS Ground Advantage") && ($method['method'] == "USPS Ground Advantage") ) {
+                        } elseif (($rate_name === "USPS Ground Advantage") && ($method_item['method'] == "USPS Ground Advantage") ) {
 
                             // If there are more than one USPS Ground Advantage, it's likely we have a Dimmensional Quote.
                             if ($groundAdvantageCount === 1) {
@@ -819,7 +819,7 @@ class uspsr extends base
                                 }
                             }
 
-                        } elseif (($rate_name === "Priority Mail Express") && ($method['method'] == "Priority Mail Express")) {
+                        } elseif (($rate_name === "Priority Mail Express") && ($method_item['method'] == "Priority Mail Express")) {
 
                             // If there are more than one USPS Priority Mail Express, it's likely we have a Dimmensional Quote.
                             if ($priorityMailExpressCount === 1) {
@@ -848,7 +848,7 @@ class uspsr extends base
                                     $match = TRUE;
                                 }
                             }
-                        } elseif (($method['method'] == $rate_name)) { // Match up the name of the quotes to the selected options.
+                        } elseif (($method_item['method'] == $rate_name)) { // Match up the name of the quotes to the selected options.
 
                             /**
                              * Each member of $build_quotes is made up of the follow core pieces
@@ -873,7 +873,7 @@ class uspsr extends base
                         }
 
                         // Okay so ... we need to figure out are we even going to add this shipping method. Copy the min_weight and max_weight as needed.
-                        if ( !( ($this->quote_weight >= $method['min_weight']) && ($this->quote_weight <= $method['max_weight']) ) ) $made_weight = FALSE;
+                        if ( !( ($this->quote_weight >= $method_item['min_weight']) && ($this->quote_weight <= $method_item['max_weight']) ) ) $made_weight = FALSE;
 
                         // Insurance is directly pulled from the quote and added, setting this to allow "extra" insurance by an observer.
                         // Maybe make it an extra field on the admin config? $extra_insurance in this case does NOT need the currency symbol, leave it off.
@@ -883,22 +883,32 @@ class uspsr extends base
                         // The name in param1 must match the internal name from the API. Check the JSON from the debug to see. (Where a productName is offered, use that. Otherwise, use the EXACT description.)
                         $this->notify('NOTIFY_USPS_UPDATE_OR_DISALLOW_TYPE', $rate_name, $method_to_add, $quotes['title'], $quotes['cost']);
 
-
-                        if ($match && $method_to_add && !empty($quotes) && $made_weight) {
+                        if ($match && $method_to_add && !empty($quotes) && $made_weight && !zen_not_null($method)) {
 
                             // The Observer did not block this.. And we have something add, so add it to the main list.
                             $build_quotes[] = $quotes;
 
                             $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                            $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
+                            $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double)$rate['totalPrice']) : $currencies->format((double)$rate['totalBasePrice'] )) . " , Handling : " . $currencies->format((double)$method_item['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
                             $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
+
+                        } elseif (zen_not_null($method)) {
+
+                            // We're searching for a specific quote. So see that one out.
+                            if ($quotes['id'] == $method) {
+
+                                $quote_message .= "\n" . 'Selected method : (' . $quotes['id'] . ") " . $quotes['title'] . "\n";
+                                $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
+
+                                $build_quotes[] = $quotes;
+                            }
 
                         } elseif (!$method_to_add) {
                             // The observer rejected/blocked this from being added.
 
                             $quote_message .= 'The Observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
                         } elseif (!$made_weight && $match) {
-                            $quote_message .= "Order failed to make weight for " . $method['method'] . ". (Minimum Weight : " . $method['min_weight'] . " , Maximum Weight: " . $method['max_weight'] . ")\n";
+                            $quote_message .= "Order failed to make weight for " . $method_item['method'] . ". (Minimum Weight : " . $method_item['min_weight'] . " , Maximum Weight: " . $method_item['max_weight'] . ")\n";
                         }
 
 
@@ -942,12 +952,13 @@ class uspsr extends base
                 // We need to reiterate each quote and remove the more expensive one.
                 if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Priority Mail") !== FALSE) {
                     $priorityOptions = [];
-                    $pattern = '/^Priority Mail(?: Cubic)?/';
+                    $pattern1 = '/^Priority Mail(?: Cubic)? \[est\./'; // In case Estimates are being used.
+                    $pattern2 = '/^Priority Mail(?: Cubic)*$/'; // In case they're not.
 
                     // Loop through the array to collect priority mail options
                     foreach ($build_quotes as $key => $option) {
-                        if (preg_match($pattern, $option['title'])) {
-                            $priorityOptions[$option['title']] = [
+                        if (preg_match($pattern1, $option['title']) || preg_match($pattern2, $option['title'])) {
+                            $priorityOptions[] = [
                                 'key' => $key,
                                 'cost' => $option['cost']
                             ];
@@ -955,10 +966,11 @@ class uspsr extends base
                     }
 
                     // If both variants exist, remove the more expensive one
-                    if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic'])) {
-                        $removeKey = ($priorityOptions['Priority Mail']['cost'] > $priorityOptions['Priority Mail Cubic']['cost'])
-                            ? $priorityOptions['Priority Mail']['key']
-                            : $priorityOptions['Priority Mail Cubic']['key'];
+                    if (count($priorityOptions) == 2) {
+                    //if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic'])) {
+                        $removeKey = ($priorityOptions[0]['cost'] > $priorityOptions[1]['cost'])
+                            ? $priorityOptions[0]['key']
+                            : $priorityOptions[1]['key'];
 
 
                         // Removal Message for Debug
@@ -974,12 +986,12 @@ class uspsr extends base
 
                 if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Ground Advantage") !== FALSE) {
                     $groundOptions = [];
-                    $pattern = '/^Ground Advantage(?: Cubic)?/';
+                    $pattern = '/Ground Advantage/'; // There is no flat rate Ground Advantage, so  just leave it alone.
 
                     // Loop through the array to collect priority mail options
                     foreach ($build_quotes as $key => $option) {
                         if (preg_match($pattern, $option['title'])) {
-                            $groundOptions[$option['title']] = [
+                            $groundOptions[] = [
                                 'key' => $key,
                                 'cost' => $option['cost']
                             ];
@@ -987,10 +999,11 @@ class uspsr extends base
                     }
 
                     // If both variants exist, remove the more expensive one
-                    if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic'])) {
-                        $removeKey = ($groundOptions['Ground Advantage']['cost'] > $groundOptions['Ground Advantage Cubic']['cost'])
-                            ? $groundOptions['Ground Advantage']['key']
-                            : $groundOptions['Ground Advantage']['key'];
+                    if (count($groundOptions) == 2) {
+                    //if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic'])) {
+                        $removeKey = ($groundOptions[0]['cost'] > $groundOptions[1]['cost'])
+                            ? $groundOptions[0]['key']
+                            : $groundOptions[1]['key'];
 
 
                         $removal_message = '';
