@@ -10,13 +10,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.1.0  
+- Last Stable Release: 1.1.1  
 _Released February 22, 2025 for ZenCart 2.1.0._
-- Next Version Number: 1.1.1
+- Next Version Number: ???
 
 ### Version/Release History
 
-- ???  
+- 1.1.1  
   Minor bug fixes with regards to the selection of cheapest shipping method. Also fixed a conflict with OPC that prevent any method from being selected. Additionally, fixed an issue with regards to shipping method squashing.
 - 1.1.0  
   Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now when you update the module, you no longer need to reset the module as a whole, the module will automatically whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.
