@@ -10,12 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.1.1  
-_Released February 22, 2025 for ZenCart 2.1.0._
+- Last Stable Release: 1.1.2  
+_Released March 7, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
+- 1.1.2  
+  Bugfix to mend selection criteria being ignored during normal ZenCart checkout. (A shipping method would be selected but would be ignored in favor or the "first" shipping method listed.)
 - 1.1.1  
   Minor bug fixes with regards to the selection of cheapest shipping method. Also fixed a conflict with OPC that prevent any method from being selected. Additionally, fixed an issue with regards to shipping method squashing.
 - 1.1.0  
@@ -43,11 +45,11 @@ Both versions (encapsulated and non-encapsualted) are now shared in the same rel
   If you want to install the non-encapsulated version of the module, copy **ONLY** the `admin/` and `includes/` directory in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. DO NOT copy the `zc_plugins/` directory.)
 
 - **Encapsulated** (ZC 2.1.0 or ZC 2.0.x [with these modifications](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142))  
-  If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation. **DO NOT** rename the `admin/` directory inside of the `zc_plugins/` directory!!! Copy the directories AS IS!!!
+  If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation. **DO NOT** rename the `admin/` directory inside of the `zc_plugins/` directory!!! Copy the directories **AS IS**!!!
 
 You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository.
 
-Upgrading the non-encapsulated version? **Overwrite ALL files of the old version.** (If you're using the encapsulated version, it is safe to upload the new version which exists in a separate folder.)
+Upgrading the non-encapsulated version? **Overwrite ALL files of the old version.** (If you're using the encapsulated version, it is safe to upload the new version into the matching `USPSRestful/` which exists in a separate folder.)
 
 ## Uninstallation
 

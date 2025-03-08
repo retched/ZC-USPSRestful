@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [1.1.2] - 2025-03-07
 
-(Yes, it's released the same day as `1.1.1`. `1.1.1`'s release was deleted and replaced with 1.1.2 instead.)
+(Yes, it's released the same day as `1.1.1`. `1.1.1`'s release was deleted and replaced with `1.1.2` instead.)
 
 ### Fixed
 
