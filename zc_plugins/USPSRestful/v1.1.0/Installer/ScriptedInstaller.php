@@ -227,7 +227,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
             case "0.0.0":
             case "v0.0.0":
-                $messageStack->addSession("<strong>USPSr Installation error:</strong> You are using the developmental version (v0.0.0) from the GitHub. To upgrade, you must COMPLETELY uninstall this version before installing the new version.", 'error');
+                $messageStack->add_session("<strong>USPSr Installation error:</strong> You are using the developmental version (v0.0.0) from the GitHub. To upgrade, you must COMPLETELY uninstall this version before installing the new version.", 'error');
                 return false;
         }
 
