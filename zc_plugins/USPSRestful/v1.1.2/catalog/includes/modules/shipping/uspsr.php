@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.0.0
+ * Version 1.1.2
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: uspsr.php 2025-03-07 retched Version 1.1.2 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -179,7 +179,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = 'v0.0.0';
+    private const USPSR_CURRENT_VERSION = 'v1.1.2';
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and

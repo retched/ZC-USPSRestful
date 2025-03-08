@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
+## [1.1.2] - 2025-03-07
+
+(Yes, it's released the same day as `1.1.1`. `1.1.1`'s release was deleted and replaced with 1.1.2 instead.)
+
+### Fixed
+
+- Resolved issue that users had with selecting a shipping method and having it "stick". (There was an unused method variable that was set by ZenCart that stored the selected method which is used to carry it forward.)
+
 ## [1.1.1] - 2025-03-07
 
 ### Fixed
