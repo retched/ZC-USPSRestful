@@ -921,38 +921,6 @@ class uspsr extends base
                 }
                 if (zen_not_null($quote_message)) $this->uspsrDebug($quote_message);
 
-
-                // Go through each one of the the $build_quotes and tack on the transit time as needed.
-                // @todo Can this be moved back into the main loop?
-                if (isset($uspsStandards) && is_array($uspsStandards)) {
-                    foreach ($uspsStandards as $standard) {
-                        foreach ($build_quotes as &$quote) { // Adding the & since we're modifying the original
-                            if ($quote['mailClass'] === $standard['mailClass']) {
-                                // we have a match...
-
-                                // If this matches, pull the "days" off the JSON and attach it to the title.
-                                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Delivery") {
-
-                                    // The format of 'scheduledDeliveryDateTime' is '2024-12-30T18:00:00'.
-                                    // Let's change that around to Y-m-D
-
-                                    $est_delivery = new DateTime($standard['delivery']['scheduledDeliveryDateTime']);
-                                    $est_delivery = $est_delivery->format(DATE_FORMAT);
-
-                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
-
-                                } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
-
-                                    // We only need the number of days from the JSON.
-                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
-                                } else {
-                                    // Don't show anything.
-                                }
-                            }
-                        }
-                    }
-                }
-
                 // We need to reiterate each quote and remove the more expensive one.
                 if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Priority Mail") !== FALSE) {
                     $priorityOptions = [];
@@ -979,7 +947,7 @@ class uspsr extends base
 
                         // Removal Message for Debug
                         $removal_message = '';
-                        $removal_message .= "\n" . 'DELETED option : ' . $build_quotes[$removeKey]['title'] . "\n";
+                        $removal_message .= "\n" . 'SQUASHED option : ' . $build_quotes[$removeKey]['title'] . "\n";
 
                         unset($build_quotes[$removeKey]);
                         $this->uspsrDebug($removal_message);
@@ -1011,7 +979,7 @@ class uspsr extends base
 
 
                         $removal_message = '';
-                        $removal_message .= "\n" . 'DELETED option : ' . $build_quotes[$removeKey]['title'] . "\n";
+                        $removal_message .= "\n" . 'SQUASHED option : ' . $build_quotes[$removeKey]['title'] . "\n";
 
                         unset($build_quotes[$removeKey]);
                         $this->uspsrDebug($removal_message);
@@ -1738,6 +1706,8 @@ class uspsr extends base
             global $db;
 
             switch (MODULE_SHIPPING_USPSR_VERSION) {
+                case "v1.1.2":
+                case "v1.1.1":
                 case "v1.0.0": // Released 2025-03-06
                     // New change, fixing a spelling error in the description of Debug Mode.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
@@ -1765,7 +1735,7 @@ class uspsr extends base
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
                             'configuration_title' => 'Debug Mode',
                             'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
-                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file is at least 300KB big.',
                             'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
                             'date_added' => 'now()'
                         ]);
