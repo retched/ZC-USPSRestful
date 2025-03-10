@@ -988,6 +988,40 @@ class uspsr extends base
                     $build_quotes = array_values($build_quotes);
                 }
 
+                // Go through each one of the the $build_quotes and tack on the transit time as needed.
+                // @todo Can this be moved back into the main loop?
+                if (isset($uspsStandards) && is_array($uspsStandards)) {
+                    foreach ($uspsStandards as $standard) {
+                        foreach ($build_quotes as &$quote) { // Adding the & since we're modifying the original
+                            if ($quote['mailClass'] === $standard['mailClass']) {
+                                // we have a match...
+
+                                // If this matches, pull the "days" off the JSON and attach it to the title.
+                                if (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Delivery") {
+
+                                    // The format of 'scheduledDeliveryDateTime' is '2024-12-30T18:00:00'.
+                                    // Let's change that around to Y-m-D
+
+                                    $est_delivery_raw = new DateTime($standard['delivery']['scheduledDeliveryDateTime']);
+                                    $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
+
+                                    if (strpos($quote['title'], MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY) === FALSE) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
+
+                                } elseif (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time") { // MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT == "Estimate Transit Time"
+
+                                    // We only need the number of days from the JSON.
+                                    if (strpos($quote['title'], MODULE_SHIPPING_USPSR_TEXT_ESTIMATED) === FALSE) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($standard['serviceStandard']) .  "]";
+                                } else {
+                                    // Don't show anything.
+                                }
+
+                            }
+                        }
+
+                        unset($quote);
+                    }
+                }
+
                 // Okay we have our list of Build Quotes, so now... we need to sort pursurant to options
                 switch (MODULE_SHIPPING_USPSR_QUOTE_SORT) {
                     case 'Alphabetical':
