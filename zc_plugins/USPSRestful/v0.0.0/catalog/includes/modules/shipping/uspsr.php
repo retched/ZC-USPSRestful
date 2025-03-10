@@ -1740,9 +1740,9 @@ class uspsr extends base
             global $db;
 
             switch (MODULE_SHIPPING_USPSR_VERSION) {
-                case "v1.1.2":
-                case "v1.1.1":
-                case "v1.0.0": // Released 2025-03-06
+                case "v1.1.2": // Released 2025-03-07
+                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
+                case "v1.0.0": // Released 2025-02-18
                     // New change, fixing a spelling error in the description of Debug Mode.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
                         'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',

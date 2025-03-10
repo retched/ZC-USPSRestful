@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 
+## UNRELEASED
+
+### Fixed
+
+- Fixed an issue where the estimated delivery and estimated day count would repeat twice. (Ex: "USPS (Priority Mail [est. delivery 03/09/2025] [est. delivery 03/09/2025])) Still not sure where it came from but it's resolved. [#36](https://github.com/retched/ZC-USPSRestful/issues/36)
+
 ## [1.1.2] - 2025-03-07
 
 (Yes, it's released the same day as `1.1.1`. `1.1.1`'s release was deleted and replaced with 1.1.2 instead.)

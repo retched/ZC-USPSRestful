@@ -60,7 +60,9 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         // Regardless of prior version - check if the module is installed, if so, install the NEW keys
         switch ($oldVersion) {
-            case "v1.0.0":
+            case "v1.1.2": // Released 2025-03-07
+            case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
+            case "v1.0.0": // Released 2025-02-18
                 // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
                 if ($module_installed) {
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
@@ -69,9 +71,9 @@ class ScriptedInstaller extends ScriptedInstallBase
                 }
                 break;
 
-            case "v0.3.0":
-            case "v0.2.0":
-            case "v0.1.0":
+            case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
+            case "v0.2.0": // Released 2025-01-17
+            case "v0.1.0": // Released 2024-12-22
                 if ($module_installed) {
                     // Created a function to either show the value or to show none
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
