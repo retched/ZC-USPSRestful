@@ -2605,7 +2605,7 @@ class uspsr extends base
         // Add the last updated value to be updated to now()
         $sql_data_array['last_modified'] = "now()";
 
-        zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'UPDATE', "configuration_key = '$key_name'");
+        zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
     }
 
     protected function addConfigurationKey($key_name, $value_array)
@@ -3225,4 +3225,15 @@ function zen_cfg_uspsr_numericupdown($key_value, $key = '')
     $output_str = zen_draw_input_field($key, $key_value, 'class="form-control" min="0" step="1"', FALSE, 'number');
 
     return $output_str;
+}
+
+// Compatibility for ZC 1.5.5
+if(!function_exists('zen_cfg_read_only')) {
+    function zen_cfg_read_only($text, $key = '')
+    {
+        $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+        $text = htmlspecialchars_decode($text, ENT_COMPAT);
+
+        return $text . zen_draw_hidden_field($name, $text);
+    }
 }
