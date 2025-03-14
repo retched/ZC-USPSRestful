@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 
 - Fixed an issue where the estimated delivery and estimated day count would repeat twice. (Ex: "USPS (Priority Mail [est. delivery 03/09/2025] [est. delivery 03/09/2025])) Still not sure where it came from but it's resolved. [#36](https://github.com/retched/ZC-USPSRestful/issues/36)
+- Fixed an issue where an older version of ZenCart would try to invoke zen_db_perform with capitalized commands (`UPDATE` instead of `update`) and ZC just doesn't know what to do. [#40](https://github.com/retched/ZC-USPSRestful/issues/40)
 
 ## [1.1.2] - 2025-03-07
 

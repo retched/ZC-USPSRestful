@@ -17,7 +17,7 @@ _Released March 7, 2025 for ZenCart 2.1.0._
 ### Version/Release History
 
 - 1.1.3  
-  Fixed an issue where estimated dates and travel times were posted twice as part of the quote.
+  Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.
 - 1.1.2  
   Bugfix to mend selection criteria being ignored during normal ZenCart checkout. (A shipping method would be selected but would be ignored in favor or the "first" shipping method listed.)
 - 1.1.1  
