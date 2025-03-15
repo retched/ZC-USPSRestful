@@ -2653,6 +2653,7 @@ class uspsr extends base
         // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
 
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = '$new_name' WHERE configuration_key = '$old_name'");
+        zen_record_admin_activity("Renamed configuration key: Changed '$old_name' to '$new_name'", 'warning');
     }
 }
 
