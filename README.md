@@ -67,7 +67,7 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### What version of ZenCart does this module support?
 
-That can be answered with this chart:
+Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart Server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version).)
 
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
@@ -79,9 +79,9 @@ That can be answered with this chart:
 | ZenCart 2.0.1 |      :wrench:      | :white_check_mark: |
 | ZenCart 2.1.0 | :white_check_mark: | :white_check_mark: |
 
-* :white_check_mark: = Fully supported
-* :x: = Not supported
-* :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
+- :white_check_mark: = Fully supported
+- :x: = Not supported
+- :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
 
 ### What is the difference between this version and the original USPS module?
 
