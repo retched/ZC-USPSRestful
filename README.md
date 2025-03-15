@@ -67,7 +67,7 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### What version of ZenCart does this module support?
 
-Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart Server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version).)
+Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.)
 
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
