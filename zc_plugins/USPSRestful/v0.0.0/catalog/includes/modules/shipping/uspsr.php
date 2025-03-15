@@ -1737,7 +1737,6 @@ class uspsr extends base
 
         if (MODULE_SHIPPING_USPSR_VERSION !== self::USPSR_CURRENT_VERSION) {
             // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
-            global $db;
 
             switch (MODULE_SHIPPING_USPSR_VERSION) {
                 case "v1.1.2": // Released 2025-03-07
@@ -2606,6 +2605,9 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
+        
+        zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
+
     }
 
     // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
@@ -2620,16 +2622,30 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
     }
 
     // Quick delete a config key, should be used sparingly.
-    protected function deleteConfigurationKey($key_name)
+    protected function deleteConfigurationKeys(array $key_names): int
     {
-        global $db;
+        if (empty($key_names)) {
+            return 0;
+        }
 
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '$key_name'");
+        global $db;
+        $keys_list = implode("','", array_map(static fn($val) => $db->prepare_input($val), $key_names));
+
+        $sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . $keys_list . "')";
+        $db->Execute($sql);
+
+        $rows = $db->affectedRows();
+
+        zen_record_admin_activity('Deleted configuration record(s): ' . $keys_list . ", $rows rows affected.", 'warning');
+
+        return $rows;
     }
 
+    
     // Renames a config key, should be used sparingly.
     protected function renameConfigurationKey($old_name, $new_name)
     {
