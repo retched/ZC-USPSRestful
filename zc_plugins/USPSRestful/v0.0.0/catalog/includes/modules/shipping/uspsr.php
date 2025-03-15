@@ -2633,7 +2633,7 @@ class uspsr extends base
         }
 
         global $db;
-        $keys_list = implode("','", array_map(static fn($val) => $db->prepare_input($val), $key_names));
+        $keys_list = implode("','", $key_names);
 
         $sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . $keys_list . "')";
         $db->Execute($sql);
