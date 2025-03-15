@@ -540,7 +540,7 @@ class uspsr extends base
             }
 
             // Duplicate International Priority Mail
-            $methodCountString = '';
+            $methodCountString = "\n";
 
             $methodCountString .= "Priority Mail Count (in response): $priorityMailCount" . "\n";
             $methodCountString .= "Priority Mail Express Count (in response): $priorityMailExpressCount" . "\n";
