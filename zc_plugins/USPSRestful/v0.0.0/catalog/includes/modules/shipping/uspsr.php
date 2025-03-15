@@ -1819,7 +1819,7 @@ class uspsr extends base
                     $messageStack->add_session('<strong>USPSr Warning:</strong> Due to changes in configuration, if USPSr was enabled and already installed, you must now go to <a href="' . zen_href_link(FILENAME_DEFAULT, 'cmd=modules&set=shipping&module=uspsr') . '">Modules > Shipping > USPSr</a> and reselect your desired USPS Shipping Methods.', 'warning');
 
                     // Rename MODULE_SHIPPING_USPSR_PROCESSING_CLASS to MODULE_SHIPPING_USPSR_MEDIA_CLASS
-                    $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = 'MODULE_SHIPPING_USPSR_MEDIA_CLASS' WHERE configuration_key = 'MODULE_SHIPPING_USPSR_PROCESSING_CLASS' ");
+                    $this->renameConfigurationKey('MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'MODULE_SHIPPING_USPSR_MEDIA_CLASS');
 
                     // The PROCESSING_CLASS, now MEDIA_CLASS, changed quite a bit.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS',
@@ -2595,9 +2595,9 @@ class uspsr extends base
         return $data;
     }
 
+    // Mimics the ScriptedInstallerBase updateConfigurationKey, but uses the normal zen_db_perform instead.
     protected function updateConfigurationKey($key_name, $value_array)
     {
-        // Mimics the ScriptedInstallerBase updateConfigurationKey, but uses the normal zen_db_perform instead.
 
         // Add the value array to the outgoing $sql_data_array
         $sql_data_array = $value_array;
@@ -2608,10 +2608,9 @@ class uspsr extends base
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
     }
 
+    // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
     protected function addConfigurationKey($key_name, $value_array)
     {
-        global $db;
-        // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
 
         // Add the value array to the outgoing $sql_data_array
         $sql_data_array = $value_array;
@@ -2621,6 +2620,23 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+    }
+
+    // Quick delete a config key, should be used sparingly.
+    protected function deleteConfigurationKey($key_name)
+    {
+        global $db;
+
+        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '$key_name'");
+    }
+
+    // Renames a config key, should be used sparingly.
+    protected function renameConfigurationKey($old_name, $new_name)
+    {
+        global $db;
+        // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
+
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = '$new_name' WHERE configuration_key = '$old_name'");
     }
 }
 
