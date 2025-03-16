@@ -10,13 +10,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.1.2  
+- Last Stable Release: 1.2.0  
 _Released March 7, 2025 for ZenCart 2.1.0._
-- Next Version Number: 1.1.3
+- Next Version Number: ???
 
 ### Version/Release History
 
-- 1.1.3  
+- 1.2.0  
   Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.
 - 1.1.2  
   Bugfix to mend selection criteria being ignored during normal ZenCart checkout. (A shipping method would be selected but would be ignored in favor or the "first" shipping method listed.)
