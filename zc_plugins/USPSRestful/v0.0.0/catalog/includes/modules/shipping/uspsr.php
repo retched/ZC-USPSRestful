@@ -1697,9 +1697,13 @@ class uspsr extends base
                     AND zone_country_id = " . (int)$order->delivery['country']['id'] . "
                 ORDER BY zone_id ASC"
             );
-
-            foreach ($check->fields['zone_id'] as $zone) {
-                if ($zone < 1 || $zone === $order->delivery['zone_id']) $check_flag = true;
+            
+            while (!$check->EOF) {
+                if ($check->fields['zone_id'] < 1 || $check->fields['zone_id'] === $order->delivery['zone_id']) {
+                    $check_flag = true;
+                    break;
+                }
+                $check->MoveNext();
             }
 
             if ($check_flag == false) {
