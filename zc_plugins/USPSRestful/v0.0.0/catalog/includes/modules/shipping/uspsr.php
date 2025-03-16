@@ -2829,6 +2829,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
     // Establish a list of codes.
     // Format: (API Code) => ['Name of Service', Is this International Friendly (TRUE/FALSE)]
     $services = [
+        -1  => ['', TRUE], // Hidden placeholder, should not be visible. 
         910 => ['Certified Mail', FALSE],
         930 => ['Insurance', TRUE],
         925 => ['Priority Mail Express Merchandise Insurance', FALSE],
@@ -2889,6 +2890,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
 
     $output = '';
     $services = [
+        -1  => '', // Hidden placeholder, should not be visible. 
         910 => 'Certified Mail',
         930 => 'Insurance',
         925 => 'Priority Mail Express Merchandise Insurance',
@@ -3131,7 +3133,7 @@ function uspsr_pretty_json_print($json)
             $in_escape = true;
         }
         if( $new_line_level !== NULL ) {
-            $result .= "\n".str_repeat( "\t", $new_line_level );
+            $result .= "\n".str_repeat( "    ", $new_line_level );
         }
         $result .= $char.$post;
     }
