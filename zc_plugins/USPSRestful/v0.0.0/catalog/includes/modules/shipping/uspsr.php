@@ -2031,6 +2031,7 @@ class uspsr extends base
         $intl_height = max((double)$dimmensions[5], 1.625);
 
         $services_dmst = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DMST_SERVICES));
+        $services_intl = array_filter(explode(', ', MODULE_SHIPPING_USPSR_INTL_SERVICES));
 
         /**
          * If 930 is in the array, add 931. The API will intelligently pull the
@@ -2042,20 +2043,18 @@ class uspsr extends base
             $services_dmst[] = 931;
         }
 
-        // Make sure that we only have numbers in the array
-        foreach ($services_dmst as &$service) {
-            $service = (int)$service;
-        }
-
-        $services_intl = array_filter(explode(', ', MODULE_SHIPPING_USPSR_INTL_SERVICES));
         if (in_array(930, $services_intl)) {
             $services_intl[] = 931;
         }
 
-        // Make sure that we only have numbers in the array
-        foreach ($services_intl as &$service) {
-            $service = (int)$service;
-        }
+        // Make sure that we only have positive numbers in the array (-1 is the current placeholder)
+        $services_dmst = array_values(array_filter(array_map('intval', $services_dmst), function($service) {
+            return $service > 0; // Keep only positive integers
+        }));
+
+        $services_intl = array_values(array_filter(array_map('intval', $services_intl), function($service) {
+            return $service > 0; // Keep only positive integers
+        }));
 
         /**
          * Build the JSON Call to the server
@@ -2064,6 +2063,7 @@ class uspsr extends base
 
         // Prepare a Standards Query
         $standards_query = [];
+        
         if ($this->usps_countries == 'US') {
             // Set focus to the Domestic API
             $focus = "rates-domestic";
@@ -2151,20 +2151,19 @@ class uspsr extends base
 
         }
 
-            $todays_date = new DateTime();
-            $daystoadd = (int)MODULE_SHIPPING_USPSR_HANDLING_TIME;
+        $todays_date = new DateTime();
+        $daystoadd = (int)MODULE_SHIPPING_USPSR_HANDLING_TIME;
 
-            $todays_date_plus = $todays_date->modify("+{$daystoadd} days");
-            $json_body['mailingDate'] = $todays_date_plus->format('Y-m-d');
+        $todays_date_plus = $todays_date->modify("+{$daystoadd} days");
+        $json_body['mailingDate'] = $todays_date_plus->format('Y-m-d');
 
-            // If the Pricing is Contract, add the Contract Type and AccountNumber
-            if (MODULE_SHIPPING_USPSR_PRICING == 'Contract') {
-                $json_body['accountType']   = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
-                $json_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
-            }
+        // If the Pricing is Contract, add the Contract Type and AccountNumber
+        if (MODULE_SHIPPING_USPSR_PRICING == 'Contract') {
+            $json_body['accountType']   = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
+            $json_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
+        }
 
-            $request_data = json_encode($json_body);
-
+        $request_data = json_encode($json_body);
 
         // Okay we have our request body ready.
         // Let's pull it.
@@ -2240,8 +2239,6 @@ class uspsr extends base
         // CURL-related errors and the shipping-methods being requested.  If a CURL error was returned,
         // no JSON is returned in the response (aka $body).
         //
-        //$this->quoteLogParamsBody($query);
-
         //if communication error, return -1 because no quotes were found, and user doesn't need to see the actual error message (set DEBUG mode to get the messages logged instead)
         if ($this->commErrNo != 0) {
             return -1;
@@ -2866,9 +2863,9 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         foreach ($services as $code => $service) {
             if ($service[1]) $output_str .= zen_draw_checkbox_field($name, $code, (in_array($code, $key_values) ? TRUE : FALSE)) . "&nbsp;&nbsp;" . $service[0] . "<br>" . "\n";
         }
-
     }
 
+    $output_str .= zen_draw_hidden_field($name, "-1");
 
     return $output_str;
 }
