@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue where an older version of ZenCart would try to invoke zen_db_perform with capitalized commands (`UPDATE` instead of `update`) and ZC just doesn't know what to do. [#40](https://github.com/retched/ZC-USPSRestful/issues/40)
 - Fixed an issue where after selecting add-ons, you couldn't clear all of them off in bulk. In short, you had to leave one up and deselect the others. [#42](https://github.com/retched/ZC-USPSRestful/issues/42)
 - Fixed an issue where the originating JSON request wasn't being attached to the log. [#43](https://github.com/retched/ZC-USPSRestful/issues/43)
-- Fixed an issue that caused a crash when using the "Shipping Zones" function to limit where the module should be allowed. (This evidently was also an issue in lat9's USPS module as they were trying to move away from the legacy form of traversing `$db` output. Whenever the `MoveNext()` functionality is removed, that will cause a breaking change in the module as older ZC's will be left out.)
+- Fixed an issue that caused a crash when using the "Shipping Zones" function to limit where the module should be allowed. (This evidently was also an issue in lat9's USPS module as they were trying to move away from the legacy form of traversing `$db` output. Whenever the `MoveNext()` functionality is removed, that will cause a breaking change in the module as older ZC's will be left out.) [#44](https://github.com/retched/ZC-USPSRestful/issues/44)
 
 ## [1.1.2] - 2025-03-07
 
