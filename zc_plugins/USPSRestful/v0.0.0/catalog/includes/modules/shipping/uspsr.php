@@ -2335,7 +2335,7 @@ class uspsr extends base
     {
         global $order;
 
-        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
+        if ($this->debug_enabled === false) {
             return;
         }
 
@@ -2354,7 +2354,7 @@ class uspsr extends base
     {
         global $order;
 
-        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
+        if ($this->debug_enabled === false) {
             return;
         }
 
