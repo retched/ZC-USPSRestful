@@ -2829,7 +2829,6 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
     // Establish a list of codes.
     // Format: (API Code) => ['Name of Service', Is this International Friendly (TRUE/FALSE)]
     $services = [
-        -1  => ['', TRUE], // Hidden placeholder, should not be visible. 
         910 => ['Certified Mail', FALSE],
         930 => ['Insurance', TRUE],
         925 => ['Priority Mail Express Merchandise Insurance', FALSE],
@@ -2858,10 +2857,14 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
     if ($focus) {
         // If this is a Domestic, search through
         foreach ($services as $code => $service) {
+            if ($code === -1) continue;
+
             $output_str .= zen_draw_checkbox_field($name, $code, (in_array($code, $key_values) ? TRUE : FALSE)) . "&nbsp;&nbsp;" . $service[0] . "<br>" . "\n";
         }
     } else {
         foreach ($services as $code => $service) {
+            if ($code === -1) continue;
+
             if ($service[1]) $output_str .= zen_draw_checkbox_field($name, $code, (in_array($code, $key_values) ? TRUE : FALSE)) . "&nbsp;&nbsp;" . $service[0] . "<br>" . "\n";
         }
     }
