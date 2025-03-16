@@ -6,8 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Planned
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
+- Add a \<label\> tag to checkboxes for the addon section and possibly with the main methods section.
 
 ## [1.2.0] - 2025-03-15
+
+### Changed
+
+- Changed the tab spacing to four hard spaces in the debug log output for the JSON.
+- Changed description of logs in the configuration section. (It's logs not long.)
 
 ### Fixed
 
