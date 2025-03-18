@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Looking into following what the RESTful versions of UPS and FedEX do and put the generated token into the `$_SESSION` variable and retrieve it there. (Currently the module generates an access token, uses it to generate a set of quotes, then revokes it rather than letting it expire.)
 - Add a \<label\> tag to checkboxes for the addon section and possibly with the main methods section.
+- Add Domestic and International letters rate cards to the output.
 
 ## [1.2.0] - 2025-03-15
 
