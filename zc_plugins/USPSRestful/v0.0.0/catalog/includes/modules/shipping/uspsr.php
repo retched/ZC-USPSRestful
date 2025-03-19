@@ -1404,7 +1404,7 @@ class uspsr extends base
         if(defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                 'configuration_title' => 'Shipping Methods (Domestic and International)',
-                'configuration_value' => '0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00',
+                'configuration_value' => '0, 0.0992, 0.00, 0, 31.7515, 0.00, 0, 9.0718, 0.00, 0, 31.7515, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7515, 0.00, 0, 9.0718, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 31.7515, 0.00, 0, 0.0992, 0.00, 0, 1.8144, 0.00, 0, 31.7515, 0.00, 0, 1.8144, 0.00, 0, 1.8144, 0.00, 0, 1.8144, 0.00, 0, 1.8144, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7515, 0.00, 0, 1.8144, 0.00, 0, 1.8144, 0.00, 0, 1.8144, 0.00',
                 'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                 'configuration_group_id' => 6,
                 'sort_order' => 0,
@@ -1738,11 +1738,14 @@ class uspsr extends base
          * If this is encapsulated, the upgrader already ran. (Any missing keys would have been added and any values would be updated. More importantly, the versions would already match.)
          * If this is not encapsulated, the version in the database would fall short. So check that.
          */
-
-        if (MODULE_SHIPPING_USPSR_VERSION !== self::USPSR_CURRENT_VERSION) {
-            // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
-
+        
+         // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
+        if (MODULE_SHIPPING_USPSR_VERSION !== self::USPSR_CURRENT_VERSION && MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0") {
+                        
             switch (MODULE_SHIPPING_USPSR_VERSION) {
+                case "v1.2.0": // Released 2025-03-15
+                    break;
+
                 case "v1.1.2": // Released 2025-03-07
                 case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
                 case "v1.0.0": // Released 2025-02-18
@@ -1752,10 +1755,13 @@ class uspsr extends base
                     ]);
                     break;
 
+                // BREAKING CHANGE... The data table was changed! 
                 case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
                 case "v0.2.0": // Released 2025-01-17
                 case "v0.1.0": // Released 2024-12-22
                     // Any changes to the database from v1.0.0 should go here
+                    // v0.3.0 and before didn't have the Min/Max table. Let's add it.
+
                     // Check to see if the module is active?
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
                         // Add Squash alike methods together
@@ -1814,7 +1820,7 @@ class uspsr extends base
                         ]);
                     } else {
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
-                            'configuration_value' => '0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
+                            'configuration_value' => '0, 0.21875, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 0.21875, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
                             'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                             'configuration_title' => 'Shipping Methods (Domestic and International)',
                         ]);
@@ -1891,12 +1897,7 @@ class uspsr extends base
                         ]);
 
                     }
-
-                    break;
-                case "0.0.0":
-                case "v0.0.0": // Developmental version of the repository.
-                    // Do nothing.
-                    $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
+                    // Add datatable column here 
                     break;
             }
 
@@ -1907,8 +1908,51 @@ class uspsr extends base
 
             ]);
 
+            // The applies to all versions BEFORE 1.3.0
+            if (version_compare(str_replace("v", "", MODULE_SHIPPING_USPSR_VERSION), "1.3.0", "<")) {
+                /**
+                 * Adding new methods into the shipping methods datatable.
+                 * 
+                 * This is done by adding the value at the front for US First Class Mail Letter then splicing it into the datatable.
+                 */
+                // Regardless of the version, we need to update the data field for MODULE_SHIPPING_USPSR_TYPES.
+                $original_methods = MODULE_SHIPPING_USPSR_TYPES;
+
+                // Add the line for US First Class Mail Letter.
+                if(defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
+                    $original_methods = "0, 0.099223, 0.00, " . $original_methods;
+                } else {
+                    $original_methods = "0, 0.21875, 0.00, " . $original_methods;
+                }
+
+                // Break apart the TYPES string into an array
+                $config_methods = preg_split("/,\s+/", $original_methods);
+                $method = 0; // Count how many methods
+                for ($i = 0; $i <= (count($config_methods) - 1); $i++) {
+                    $method += 1;
+                
+                    if ($method == 22) { // On the 22nd method on the list, break and add data for the First-Class Mail International Letter
+                        array_splice($config_methods, $i, 0, [0, ((defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') ? 0.099223 : 0.21875), "0.00"]);
+                        break; // We're only adding ONE as the domestic method is already added. So one was already added, don't add anymore.
+                    }
+                    
+                    if ( !is_numeric($config_methods[$i]) ) $i += 3;
+                    else $i += 2;
+                }
+
+                // Rebuild the value and reinsert it into the database.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                    'configuration_value' => implode(", ", $config_methods),
+                    'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\', \'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], '
+                ]);
+
+            }
+            
+
             $messageStack->add_session(sprintf(MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS, self::USPSR_CURRENT_VERSION), 'success');
 
+        } elseif (MODULE_SHIPPING_USPSR_VERSION == "v0.0.0") { // The upgrader should NOT run if the version is 0.0.0.
+            $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
         }
 
         /**
@@ -3266,7 +3310,7 @@ function zen_cfg_uspsr_numericupdown($key_value, $key = '')
     return $output_str;
 }
 
-// Compatibility for ZC 1.5.5
+// Compatibility for pre-ZC 1.5.8
 if(!function_exists('zen_cfg_read_only')) {
     function zen_cfg_read_only($text, $key = '')
     {
