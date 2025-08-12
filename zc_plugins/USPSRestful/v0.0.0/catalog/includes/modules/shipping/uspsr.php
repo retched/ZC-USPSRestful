@@ -156,6 +156,7 @@ class uspsr extends base
     protected $is_apo_dest = FALSE;
     protected $usps_countries;
     protected $enable_media_mail;
+    protected $api_base = 'https://api.usps.com/';
 
     /**
      * Variable to hold the weight standard of the site. If the site is running
@@ -1697,13 +1698,9 @@ class uspsr extends base
                     AND zone_country_id = " . (int)$order->delivery['country']['id'] . "
                 ORDER BY zone_id ASC"
             );
-            
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1 || $check->fields['zone_id'] === $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
+
+            foreach ($check->fields['zone_id'] as $zone) {
+                if ($zone < 1 || $zone === $order->delivery['zone_id']) $check_flag = true;
             }
 
             if ($check_flag == false) {
@@ -2067,7 +2064,7 @@ class uspsr extends base
 
         // Prepare a Standards Query
         $standards_query = [];
-        
+
         if ($this->usps_countries == 'US') {
             // Set focus to the Domestic API
             $focus = "rates-domestic";
@@ -2198,7 +2195,7 @@ class uspsr extends base
 
         $ch = curl_init();
         $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/service-standards/v3/estimates?' . $paramsBuild,
+            CURLOPT_URL => $this->api_base . 'service-standards/v3/estimates?' . $paramsBuild,
             CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
             CURLOPT_FRESH_CONNECT => 1,
             CURLOPT_HEADER => 0,
@@ -2271,8 +2268,8 @@ class uspsr extends base
          */
 
         $usps_calls = [
-            'rates-domestic' => 'https://apis.usps.com/prices/v3/total-rates/search',
-            'rates-intl' => 'https://apis.usps.com/international-prices/v3/total-rates/search',
+            'rates-domestic' => $this->api_base . 'prices/v3/total-rates/search',
+            'rates-intl' => $this->api_base . 'international-prices/v3/total-rates/search',
         ];
 
         $ch = curl_init();
@@ -2398,18 +2395,18 @@ class uspsr extends base
 
         $ch = curl_init();
         $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/oauth2/v3/token',
+            CURLOPT_URL => $this->api_base . 'oauth2/v3/token',
             CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
             CURLOPT_FRESH_CONNECT => 1,
             CURLOPT_HEADER => 0,
             CURLOPT_VERBOSE => 0,
             CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => 'grant_type=client_credentials&client_id=' . MODULE_SHIPPING_USPSR_API_KEY . '&client_secret=' . MODULE_SHIPPING_USPSR_API_SECRET,
+            CURLOPT_POSTFIELDS => $call_body,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_USERAGENT => 'Zen Cart',
             CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded"
+                "content-type: application/json"
             )
         ];
 
@@ -2467,13 +2464,14 @@ class uspsr extends base
         $call_body = json_encode([
             'client_id' => MODULE_SHIPPING_USPSR_API_KEY,
             'client_secret' => MODULE_SHIPPING_USPSR_API_SECRET,
-            'revoke_token' => $this->bearerToken,
-            "token_type" => 'access_token',
+            'token' => $this->bearerToken,
+            "token_type_hint" => 'access_token',
         ]);
 
         $ch = curl_init();
         $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/oauth2/v3/revoke',
+            CURLOPT_URL => $this->api_base . 'oauth2/v3/revoke',
+
             CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
             CURLOPT_FRESH_CONNECT => 1,
             CURLOPT_HEADER => 0,
@@ -2481,7 +2479,7 @@ class uspsr extends base
             CURLOPT_POST => 1,
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => MODULE_SHIPPING_USPSR_API_KEY . ":" . MODULE_SHIPPING_USPSR_API_SECRET,
-            CURLOPT_POSTFIELDS => 'token=' . $this->bearerToken . "&token_type=access_token",
+            CURLOPT_POSTFIELDS => http_build_query(['token' => $this->bearerToken, "token_type_hint" => "access_token"]),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_USERAGENT => 'Zen Cart',
@@ -2606,7 +2604,7 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
-        
+
         zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
 
     }
@@ -2646,7 +2644,7 @@ class uspsr extends base
         return $rows;
     }
 
-    
+
     // Renames a config key, should be used sparingly.
     protected function renameConfigurationKey($old_name, $new_name)
     {
@@ -2897,7 +2895,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
 
     $output = '';
     $services = [
-        -1  => '', // Hidden placeholder, should not be visible. 
+        -1  => '', // Hidden placeholder, should not be visible.
         910 => 'Certified Mail',
         930 => 'Insurance',
         925 => 'Priority Mail Express Merchandise Insurance',
@@ -3096,7 +3094,7 @@ function uspsr_pretty_json_print($json)
 
     unset($encoded_json['client_secret']);
 
-    $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT);
+    $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
 
     $json_length = strlen( $sanitized_json );
 
