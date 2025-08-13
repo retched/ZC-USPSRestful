@@ -30,8 +30,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     exit('Illegal Access');
 }
 
-// Start of USPSRestful
-
 /**
  * If you're using a version of ZenCart older than 2.0.0, you should probably change
  * these to match your cart BEFORE you install the module in the backend.
@@ -156,6 +154,7 @@ class uspsr extends base
     protected $is_apo_dest = FALSE;
     protected $usps_countries;
     protected $enable_media_mail;
+    protected $api_base = 'https://apis.usps.com/';
 
     /**
      * Variable to hold the weight standard of the site. If the site is running
@@ -260,6 +259,8 @@ class uspsr extends base
     public function __construct()
     {
         global $template, $current_page_base, $current_page;
+
+        $this->bearerToken = $_SESSION['usps_token'] ?? NULL;
         $this->machinable = (defined('MODULE_SHIPPING_USPSR_MACHINABLE') ? MODULE_SHIPPING_USPSR_MACHINABLE : 'Machinable');
         $this->_standard = (defined('SHIPPING_WEIGHT_UNITS') ? SHIPPING_WEIGHT_UNITS : 'lbs');
 
@@ -274,15 +275,13 @@ class uspsr extends base
         $this->description = MODULE_SHIPPING_USPSR_TEXT_DESCRIPTION;
         $this->sort_order = (defined('MODULE_SHIPPING_USPSR_SORT_ORDER')) ? MODULE_SHIPPING_USPSR_SORT_ORDER : null;
 
-        // Should this line be removed?
         if ($this->sort_order === null) {
             return false;
         }
 
-        $this->enabled = (MODULE_SHIPPING_USPSR_STATUS === 'True');
-
-        $this->tax_class = (int)MODULE_SHIPPING_USPSR_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_USPSR_TAX_BASIS;
+        $this->enabled = (defined('MODULE_SHIPPING_USPSR_STATUS')) ? (MODULE_SHIPPING_USPSR_STATUS === 'True') : FALSE;
+        $this->tax_class = (defined('MODULE_SHIPPING_USPSR_TAX_CLASS')) ? (int)MODULE_SHIPPING_USPSR_TAX_CLASS : NULL;
+        $this->tax_basis = (defined('MODULE_SHIPPING_USPSR_TAX_BASIS')) ? MODULE_SHIPPING_USPSR_TAX_BASIS : NULL;
 
         // -----
         // Set debug-related variables for use by the uspsrDebug method.
@@ -414,7 +413,8 @@ class uspsr extends base
         global $order, $shipping_weight, $shipping_num_boxes, $currencies;
 
         // Make a token for the API
-        $this->getBearerToken();
+        // If the Bearer Token is empty, make it.
+        if (!zen_not_null($this->bearerToken)) $this->getBearerToken();
 
         // What unit are we working with?
         switch ($this->_standard) {
@@ -1091,10 +1091,6 @@ class uspsr extends base
 
             $message = '';
             $message .= "\n" . '===============================================' . "\n";
-            $message .= 'Revoking Bearer Token...' . "\n";
-            $this->uspsrDebug($message);
-
-            $this->revokeBearerToken();
 
             return $this->quotes;
 
@@ -1114,7 +1110,6 @@ class uspsr extends base
                 $this->enabled = false;
             }
 
-            $this->revokeBearerToken();
             return $this->quotes;
         }
     }
@@ -1697,13 +1692,9 @@ class uspsr extends base
                     AND zone_country_id = " . (int)$order->delivery['country']['id'] . "
                 ORDER BY zone_id ASC"
             );
-            
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1 || $check->fields['zone_id'] === $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
+
+            foreach ($check->fields['zone_id'] as $zone) {
+                if ($zone < 1 || $zone === $order->delivery['zone_id']) $check_flag = true;
             }
 
             if ($check_flag == false) {
@@ -1932,7 +1923,7 @@ class uspsr extends base
         global $messageStack;
 
         // Try to get a bearer token
-        $this->getBearerToken();
+        if (!zen_not_null($this->bearerToken )) $this->getBearerToken();
 
         // Need to have at least one method enabled
         $usps_shipping_methods_cnt = 0;
@@ -1997,9 +1988,6 @@ class uspsr extends base
                 $messageStack->add_session(MODULE_SHIPPING_USPSR_ERROR_REJECTED_CREDENTIALS, 'error');
             }
 
-        } else {
-            // Revoke the test token
-            $this->revokeBearerToken();
         }
 
         return $this->enabled;
@@ -2067,7 +2055,7 @@ class uspsr extends base
 
         // Prepare a Standards Query
         $standards_query = [];
-        
+
         if ($this->usps_countries == 'US') {
             // Set focus to the Domestic API
             $focus = "rates-domestic";
@@ -2198,7 +2186,7 @@ class uspsr extends base
 
         $ch = curl_init();
         $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/service-standards/v3/estimates?' . $paramsBuild,
+            CURLOPT_URL => $this->api_base . 'service-standards/v3/estimates?' . $paramsBuild,
             CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
             CURLOPT_FRESH_CONNECT => 1,
             CURLOPT_HEADER => 0,
@@ -2271,8 +2259,8 @@ class uspsr extends base
          */
 
         $usps_calls = [
-            'rates-domestic' => 'https://apis.usps.com/prices/v3/total-rates/search',
-            'rates-intl' => 'https://apis.usps.com/international-prices/v3/total-rates/search',
+            'rates-domestic' => $this->api_base . 'prices/v3/total-rates/search',
+            'rates-intl' => $this->api_base . 'international-prices/v3/total-rates/search',
         ];
 
         $ch = curl_init();
@@ -2398,18 +2386,18 @@ class uspsr extends base
 
         $ch = curl_init();
         $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/oauth2/v3/token',
+            CURLOPT_URL => $this->api_base . 'oauth2/v3/token',
             CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
             CURLOPT_FRESH_CONNECT => 1,
             CURLOPT_HEADER => 0,
             CURLOPT_VERBOSE => 0,
             CURLOPT_POST => 1,
-            CURLOPT_POSTFIELDS => 'grant_type=client_credentials&client_id=' . MODULE_SHIPPING_USPSR_API_KEY . '&client_secret=' . MODULE_SHIPPING_USPSR_API_SECRET,
+            CURLOPT_POSTFIELDS => $call_body,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_USERAGENT => 'Zen Cart',
             CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded"
+                "content-type: application/json"
             )
         ];
 
@@ -2424,7 +2412,7 @@ class uspsr extends base
         // Log the starting time of the to-be-sent USPS request.
         //
         $message = '';
-        $message .= "\n" . 'Requesting Token from USPS' . "\n";
+        $message .= "\n" . 'No token detected, requesting session token from USPS' . "\n";
         $message .= 'Token Request' . "\n" . uspsr_pretty_json_print($call_body) . "\n";
 
         $this->uspsrDebug($message);
@@ -2456,89 +2444,9 @@ class uspsr extends base
         $body = json_decode($body, TRUE);
 
 
-        $this->bearerToken = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL );
-
+        $_SESSION['usps_token'] = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL );
+        $this->bearerToken = $_SESSION['usps_token'];
         return;
-    }
-    protected function revokeBearerToken()
-    {
-        global $request_type;
-
-        $call_body = json_encode([
-            'client_id' => MODULE_SHIPPING_USPSR_API_KEY,
-            'client_secret' => MODULE_SHIPPING_USPSR_API_SECRET,
-            'revoke_token' => $this->bearerToken,
-            "token_type" => 'access_token',
-        ]);
-
-        $ch = curl_init();
-        $curl_options = [
-            CURLOPT_URL => 'https://apis.usps.com/oauth2/v3/revoke',
-            CURLOPT_REFERER => ($request_type == 'SSL') ? (HTTPS_SERVER . DIR_WS_HTTPS_CATALOG) : (HTTP_SERVER . DIR_WS_CATALOG),
-            CURLOPT_FRESH_CONNECT => 1,
-            CURLOPT_HEADER => 0,
-            CURLOPT_VERBOSE => 0,
-            CURLOPT_POST => 1,
-            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_USERPWD => MODULE_SHIPPING_USPSR_API_KEY . ":" . MODULE_SHIPPING_USPSR_API_SECRET,
-            CURLOPT_POSTFIELDS => 'token=' . $this->bearerToken . "&token_type=access_token",
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_TIMEOUT => 15,
-            CURLOPT_USERAGENT => 'Zen Cart',
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded"
-            )
-        ];
-
-        if (CURL_PROXY_REQUIRED === 'True') {
-            $curl_options[CURLOPT_HTTPPROXYTUNNEL] = !defined('CURL_PROXY_TUNNEL_FLAG') || strtoupper(CURL_PROXY_TUNNEL_FLAG) !== 'FALSE';
-            $curl_options[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
-            $curl_options[CURLOPT_PROXY] = CURL_PROXY_SERVER_DETAILS;
-        }
-        curl_setopt_array($ch, $curl_options);
-
-        // -----
-        // Log the starting time of the to-be-sent USPS request.
-        //
-        $message = '';
-        $message .= 'Revoking a Token from USPS' . "\n";
-        $message .= 'Revocation Request' . "\n" . uspsr_pretty_json_print($call_body) . "\n";
-
-        $this->uspsrDebug($message);
-        // -----
-        // Submit the request to USPS via CURL.
-        //
-        $body = curl_exec($ch);
-        $this->commError = curl_error($ch);
-        $this->commErrNo = curl_errno($ch);
-        $this->commInfo = curl_getinfo($ch);
-
-        // done with CURL, so close connection
-        curl_close ($ch);
-
-        // -----
-        // Log the CURL response (will also capture the time the response was received) to capture any
-        // CURL-related errors and the shipping-methods being requested.  If a CURL error was returned,
-        // no JSON is returned in the response (aka $body).
-        //
-        // If there is a resonse here... something went wrong. Make a log of it, but don't break or anything.
-        if (zen_not_null($body)) {
-            $this->quoteLogCurlResponse($body);
-        } else {
-            $this->uspsrDebug('No response received from the USPS... assuming the token has been revoked.' . "\n");
-        }
-
-
-        //if communication error, return -1 because no quotes were found, and user doesn't need to see the actual error message (set DEBUG mode to get the messages logged instead)
-        if ($this->commErrNo != 0) {
-            return -1;
-        }
-        // EOF CURL
-
-        // Return JUST the token
-        $body = json_decode($body, TRUE);
-
-        return $body;
     }
 
     /**
@@ -2606,7 +2514,7 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
-        
+
         zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
 
     }
@@ -2646,7 +2554,7 @@ class uspsr extends base
         return $rows;
     }
 
-    
+
     // Renames a config key, should be used sparingly.
     protected function renameConfigurationKey($old_name, $new_name)
     {
@@ -2897,7 +2805,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
 
     $output = '';
     $services = [
-        -1  => '', // Hidden placeholder, should not be visible. 
+        -1  => '', // Hidden placeholder, should not be visible.
         910 => 'Certified Mail',
         930 => 'Insurance',
         925 => 'Priority Mail Express Merchandise Insurance',
@@ -3096,7 +3004,7 @@ function uspsr_pretty_json_print($json)
 
     unset($encoded_json['client_secret']);
 
-    $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT);
+    $sanitized_json = json_encode($encoded_json, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
 
     $json_length = strlen( $sanitized_json );
 
