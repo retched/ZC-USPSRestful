@@ -59,76 +59,82 @@ class ScriptedInstaller extends ScriptedInstallBase
         $module_installed   = preg_match('/uspsr.php/', $active_modules['configuration_value']);
 
         // Regardless of prior version - check if the module is installed, if so, install the NEW keys
+        if ($module_installed) {
+            // Add Squash alike methods together
+            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                'configuration_title' => 'Squash Alike Methods Together',
+                'configuration_value' => '--none--',
+                'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                'configuration_group_id' => 6,
+                'sort_order' => 0,
+                'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+            ]);
+
+            // Change the Debug Mode to be a split selection between showing logs or showing errors
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                'configuration_title' => 'Debug Mode',
+                'configuration_value' => ((defined('MODULE_SHIPPING_USPSR_DEBUG_MODE') && MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs') ? "Generate Logs" : "--none--"),
+                'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
+                'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                'date_added' => 'now()'
+            ]);
+
+            // Created a function to either show the value or to show none
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                'use_function' => 'zen_cfg_uspsr_account_display',
+            ]);
+
+            // Change the Change the USPSr Version display to a read-only
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
+                'set_function' => 'zen_cfg_read_only('
+            ]);
+
+        }
+
         switch ($oldVersion) {
+            case "v1.2.0": // Released 2025-03-15
             case "v1.1.2": // Released 2025-03-07
             case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
-            case "v1.0.0": // Released 2025-02-18
-                // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
-                if ($module_installed) {
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
-                    ]);
-                }
+            case "v1.0.0": // Released 2025-02-18, no need to test if version 1.5.6 or better because only 2.0.0 works with Encapsulated Mods.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                    'set_function' => NULL,
+                    'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                    'val_function' => '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}'
+                ]);
+
+                // New change, fixing a spelling error in the description of Debug Mode.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                    'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
+                ]);
                 break;
 
-            case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
-            case "v0.2.0": // Released 2025-01-17
-            case "v0.1.0": // Released 2024-12-22
-                if ($module_installed) {
-                    // Created a function to either show the value or to show none
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
-                        'use_function' => 'zen_cfg_uspsr_account_display',
-                    ]);
-        
-                    // Change the Change the USPSr Version display to a read-only
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
-                        'set_function' => 'zen_cfg_read_only('
-                    ]);
-        
-    
-                    // Change the Debug Mode to be a split selection between showing logs or showing errors
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                        'configuration_title' => 'Debug Mode',
-                        'configuration_value' => ((defined('MODULE_SHIPPING_USPSR_DEBUG_MODE') && MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs') ? "Generate Logs" : "--none--"),
-                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each long file is at least 300KB big.',
-                        'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
-                        'date_added' => 'now()'
-                    ]);
-    
-                    // Changing this to be a more descriptive description.
+            case "v0.3.0":
+            case "v0.2.0":
+            case "v0.1.0":
+
+                // Changing this to be a more descriptive description.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
+                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
+                ]);
+
+                // If the Constant is set to "Estimate Time, we should update the value too.
+                if (defined('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT') && MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                        'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
+                        'configuration_value' => 'Estimate Transit Time',
+                        'configuration_description' => 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.',
                     ]);
-    
-                    // If the Constant is set to "Estimate Time, we should update the value too.
-                    if (defined('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT') && MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                            'configuration_value' => 'Estimate Transit Time',
-                            'configuration_description' => 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.',
-                        ]);
-                    }
-    
-                    // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
-                        'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
-                    ]);
-    
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
-                        'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
-                    ]);
+                }
 
-                    // Add Squash alike methods together
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                        'configuration_title' => 'Squash Alike Methods Together',
-                        'configuration_value' => '--none--',
-                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
-                    ]);
+                // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
+                    'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
+                ]);
 
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
+                    'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
+                ]);
 
-
+                if ($module_installed) {
                     // Update and reset the Shipping Methods Table and configuration.
                     if(defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
