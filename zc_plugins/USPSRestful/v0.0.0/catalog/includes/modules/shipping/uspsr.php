@@ -179,6 +179,7 @@ class uspsr extends base
     protected $commError, $commErrNo, $commInfo;
 
     private const USPSR_CURRENT_VERSION = 'v0.0.0';
+    private const ZEN_CART_PLUGIN_ID = 2395;
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
@@ -1346,16 +1347,23 @@ class uspsr extends base
             'date_added' => 'now()'
         ]);
 
-        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+
+        $insert_handling_array = [
             'configuration_title' => 'Handling Time',
             'configuration_value' => '1',
-            'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. This will be added to the estimated delivery date or time.)',
+            'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
             'configuration_group_id' => 6,
             'sort_order' => 0,
-            'set_function' => 'zen_cfg_uspsr_numericupdown(',
             'use_function' => 'zen_uspsr_estimate_days',
             'date_added' => 'now()'
-        ]);
+        ];
+
+        // If this is ZenCart 1.5.5, the val_function column doesn't exist. So in 1.5.6 and high, add:
+        if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
+            $insert_handling_array['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
+        };
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $insert_handling_array);
 
         /**
          * Package Dimensions
@@ -1734,9 +1742,18 @@ class uspsr extends base
             // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
 
             switch (MODULE_SHIPPING_USPSR_VERSION) {
+                case "v1.2.0": // Released 2025-03-15
                 case "v1.1.2": // Released 2025-03-07
                 case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
                 case "v1.0.0": // Released 2025-02-18
+                    $update_handling_time = [
+                        'set_function' => NULL,
+                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                    ];
+
+                    if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $update_handling_time);
+
                     // New change, fixing a spelling error in the description of Debug Mode.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
                         'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
@@ -1884,11 +1901,6 @@ class uspsr extends base
                     }
 
                     break;
-                case "0.0.0":
-                case "v0.0.0": // Developmental version of the repository.
-                    // Do nothing.
-                    $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
-                    break;
             }
 
             // After all this, update the modules version number as necessary.
@@ -1907,10 +1919,15 @@ class uspsr extends base
          *
          * Make a call into the ZenCart Module DB and compare the returned result versus the number
          */
-        $check_for_new_version = plugin_version_check_for_updates("2395", MODULE_SHIPPING_USPSR_VERSION);
-        if($check_for_new_version) {
+        $check_for_new_version = plugin_version_check_for_updates(ZEN_CART_PLUGIN_ID, MODULE_SHIPPING_USPSR_VERSION);
+        if ($check_for_new_version && MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0") {
             $messageStack->add_session(MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE, 'caution');
         }
+
+        /**
+         * Are you using 0.0.0? Seriously, stop.
+         */
+        if (MODULE_SHIPPING_USPSR_VERSION === "v0.0.0") $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
     }
 
     /**
