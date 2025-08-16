@@ -1558,6 +1558,7 @@ class uspsr extends base
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
             'MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS',
+            'MODULE_SHIPPING_USPSR_LTR_PROCESSING',
             'MODULE_SHIPPING_USPSR_TYPES',
             'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
             'MODULE_SHIPPING_USPSR_CONNECT_LOCAL_ZIP',
@@ -2760,7 +2761,7 @@ class uspsr extends base
 
         return $rows;
     }
-  
+
     // Renames a config key, should be used sparingly.
     protected function renameConfigurationKey($old_name, $new_name)
     {

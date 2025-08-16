@@ -241,30 +241,18 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
                     ]);
 
-
-                // Changing this to be a more descriptive description.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
-                ]);
-
-                // If the Constant is set to "Estimate Time, we should update the value too.
-                if (defined('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT') && MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT === 'Estimate Time') {
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                        'configuration_value' => 'Estimate Transit Time',
-                        'configuration_description' => 'Would you like to display an estimated delivery date (ex. \"est. delivery: 12/25/2025\") or estimate delivery time (ex. \"est. 2 days\") for the service? This is pulled from the service guarantees listed by the USPS. If the service doesn\'t have a set guideline, no time quote will be displayed.<br><br>Only applies to US based deliveries.',
+                    // Add Squash alike methods together
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                        'configuration_title' => 'Squash Alike Methods Together',
+                        'configuration_value' => '--none--',
+                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
                     ]);
-                }
 
-                // Changing the description of the USPSr API Key and Secret prompts to warn that you CANNOT use the WebTools credentials.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_KEY', [
-                    'configuration_description' => 'Enter your USPS API Consumer Key assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools USERID and is NOT your USPS.com account Username.'
-                ]);
 
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_API_SECRET', [
-                    'configuration_description' => 'Enter the USPS API Consumer Secret assigned to the app dedicated for this website.<br><br><strong>NOTE:</strong> This is NOT the same as the WebTools PASSWORD and is NOT your USPS.com account Password.'
-                ]);
 
-                if ($module_installed) {
                     // Update and reset the Shipping Methods Table and configuration.
                     if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
@@ -409,6 +397,7 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_DIMMENSIONS',
             'MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS',
+            'MODULE_SHIPPING_USPSR_LTR_PROCESSING',
             'MODULE_SHIPPING_USPSR_TYPES',
             'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
             'MODULE_SHIPPING_USPSR_CONNECT_LOCAL_ZIP',
@@ -416,6 +405,7 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_INTL_SERVICES',
             'MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES',
             'MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES',
+            'MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS',
             'MODULE_SHIPPING_USPSR_PRICING',
             'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
             'MODULE_SHIPPING_USPSR_ACCT_NUMBER',
