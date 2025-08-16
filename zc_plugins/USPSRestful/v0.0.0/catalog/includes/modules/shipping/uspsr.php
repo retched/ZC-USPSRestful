@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.0.0
+ * Version 1.3.0
  *
  * @package shippingMethod
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: uspsr.php 2025-08-16 retched Version 1.3.0 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -67,7 +67,7 @@ class uspsr extends base
 
     protected $commError, $commErrNo, $commInfo;
 
-    private const USPSR_CURRENT_VERSION = 'v0.0.0';
+    private const USPSR_CURRENT_VERSION = 'v1.3.0';
     private const ZEN_CART_PLUGIN_ID = 2395;
 
     /**
