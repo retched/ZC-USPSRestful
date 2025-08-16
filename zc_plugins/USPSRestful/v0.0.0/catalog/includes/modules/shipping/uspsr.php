@@ -2563,8 +2563,8 @@ class uspsr extends base
         // Return JUST the token
         $body = json_decode($body, TRUE);
 
-        $_SESSION['usps_token'] = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL);
-        $this->bearerToken = $_SESSION['usps_token'];
+        if (is_array($body)) $_SESSION['usps_token'] = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL);
+        $this->bearerToken = $_SESSION['usps_token'] ?? NULL;
         return;
     }
 
