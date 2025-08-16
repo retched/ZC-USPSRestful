@@ -10,12 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.2.0  
-_Released March 7, 2025 for ZenCart 2.1.0._
+- Last Stable Release: 1.3.0  
+_Released August 16, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
+- 1.3.0
+  Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.
 - 1.2.0  
   Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.
 - 1.1.2  
@@ -44,7 +46,7 @@ _Released March 7, 2025 for ZenCart 2.1.0._
 Both versions (encapsulated and non-encapsualted) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separated file.)
 
 - **Non-encapsulated** (ZC 1.5.5+)  
-  If you want to install the non-encapsulated version of the module, copy **ONLY** the `admin/` and `includes/` directory in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. DO NOT copy the `zc_plugins/` directory.)
+  If you want to install the non-encapsulated version of the module, copy **ONLY** the `admin/` and `includes/` directory in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. **DO NOT copy the `zc_plugins/` directory.**)
 
 - **Encapsulated** (ZC 2.1.0 or ZC 2.0.x [with these modifications](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142))  
   If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation. **DO NOT** rename the `admin/` directory inside of the `zc_plugins/` directory!!! Copy the directories **AS IS**!!!
@@ -119,7 +121,7 @@ The handling field next to the selection of methods is generally for adding a su
 
 ### What is the min/max box for?
 
-**NEW** The original USPS WebTools had a way to clamp the different modules based on the weight of each order. You would put two values into those boxes and then the rate for that method would be offered if the total weight of the order fell between those two numbers. This is completely optional to use and should be left alone to its defaults if you're not actively using them. (**NOTE:** The number entered here will be converted into pounds, so if you're using kilograms as your standard, enter the amount in kilograms here. If you're using pounds, enter pounds here.)
+The original USPS WebTools had a way to clamp the different modules based on the weight of each order. You would put two values into those boxes and then the rate for that method would be offered if the total weight of the order fell between those two numbers. This is completely optional to use and should be left alone to its defaults if you're not actively using them. (**NOTE:** The number entered here will be converted into pounds, so if you're using kilograms as your standard, enter the amount in kilograms here. If you're using pounds, enter pounds here.)
 
 ### Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?
 
@@ -134,7 +136,7 @@ Those symbols don't appear within the new USPS API calls as they do on the origi
 SORT OF. You don't have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.
 
 - Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely "Shipping Weight Units" and "Shipping Dimension Units".
-- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 48 and 54, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, no period).)
+- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 45 and 51, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, and no period at the end).)
 
 If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
 
@@ -171,12 +173,12 @@ These are the file lists that should be included with this module, depending on 
 - includes\languages\english\modules\shipping\uspsr.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.3.0\manifest.php
+- \zc_plugins\USPSRestful\v1.3.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.3.0\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author
