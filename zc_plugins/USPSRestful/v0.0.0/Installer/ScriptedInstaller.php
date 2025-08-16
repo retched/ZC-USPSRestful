@@ -101,9 +101,18 @@ class ScriptedInstaller extends ScriptedInstallBase
 
             switch ($oldVersion) {
                 case "v1.2.0":
-                    // Have to change the descriptions too.
-                    $this->updateConfigurationKey('', [
+                    // Changing descriptions
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                        'set_function' => '',
+                    ]);
 
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (International Packages)',
                     ]);
 
                     // Adding new key for Domestic and International Letter Services.

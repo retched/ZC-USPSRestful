@@ -1769,10 +1769,19 @@ class uspsr extends base
                 case "v1.1.2": // Released 2025-03-07
                 case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
                 case "v1.0.0": // Released 2025-02-18
-                    $update_handling_time = [
-                        'set_function' => NULL,
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
                         'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
-                    ];
+                        'set_function' => '',
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (International Packages)',
+                    ]);
 
                     if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">="))
                         $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
