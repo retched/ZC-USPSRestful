@@ -545,7 +545,7 @@ class uspsr extends base
                 foreach ($uspsQuote['rateOptions'] as $rate) {
 
                     // Do not use any "OPEN_AND_DISTRIBUTE"
-                    if (isset($rate['processingCategory']) && $rate['rates'][0]['processingCategory'] === 'OPEN_AND_DISTRIBUTE')
+                    if (isset($rate['rates'][0]['processingCategory']) && $rate['rates'][0]['processingCategory'] === 'OPEN_AND_DISTRIBUTE')
                         continue;
 
                     foreach ($selected_methods as $method_item) {
@@ -1344,7 +1344,6 @@ class uspsr extends base
             'configuration_group_id' => 6,
             'sort_order' => 0,
             'set_function' => 'zen_cfg_select_option([\'Letters\', \'Flats\', \'Cards\'], ',
-            'use_function' => 'zen_cfg_uspsr_showdimmensions',
             'date_added' => 'now()'
         ]);
 
