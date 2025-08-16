@@ -59,14 +59,16 @@ class uspsr extends base
      *
      * @var bool
      */
+
     protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
     protected $api_base = 'https://apis.usps.com/';
     protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter;
 
+
     protected $commError, $commErrNo, $commInfo;
 
     private const USPSR_CURRENT_VERSION = 'v0.0.0';
-    const ZEN_CART_PLUGIN_ID = 2395;
+    private const ZEN_CART_PLUGIN_ID = 2395;
 
     /**
      * This holds all of the USPS Zip Codes which are either APO (Air/Army Post Office), FPOs (Fleet Post Office), and
@@ -1268,7 +1270,6 @@ class uspsr extends base
         if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
             $insert_handling_array['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
         }
-        ;
 
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $insert_handling_array);
 
@@ -1769,7 +1770,6 @@ class uspsr extends base
                 case "v1.1.2": // Released 2025-03-07
                 case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
                 case "v1.0.0": // Released 2025-02-18
-
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
                         'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
                         'set_function' => '',
@@ -1777,6 +1777,7 @@ class uspsr extends base
 
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
                         'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
+
                     ]);
 
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
@@ -2006,6 +2007,7 @@ class uspsr extends base
          * Don't make this call if the current version is v0.0.0. (There will always be a "better" version than v0.0.0)
          */
         $check_for_new_version = plugin_version_check_for_updates(self::ZEN_CART_PLUGIN_ID, MODULE_SHIPPING_USPSR_VERSION);
+
         if ($check_for_new_version && MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0") {
             $messageStack->add_session(MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE, 'caution');
         }
@@ -2029,6 +2031,7 @@ class uspsr extends base
         // Try to get a bearer token
         if (!zen_not_null($this->bearerToken))
             $this->getBearerToken();
+
 
         // Need to have at least one method enabled
         $usps_shipping_methods_cnt = 0;
@@ -2757,7 +2760,7 @@ class uspsr extends base
 
         return $rows;
     }
-
+  
     // Renames a config key, should be used sparingly.
     protected function renameConfigurationKey($old_name, $new_name)
     {
