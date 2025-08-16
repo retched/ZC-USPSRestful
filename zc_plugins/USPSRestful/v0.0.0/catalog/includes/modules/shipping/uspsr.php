@@ -389,6 +389,10 @@ class uspsr extends base
             $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING);
             $_letter['rates'][0]['productName'] = ($this->usps_countries == 'US' ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
+            
+            # Bug fix for letters since the metered rate is four cents less. 
+            $_letter['rates'][0]['price'] += 0.04;
+            $_letter['totalBasePrice'] += 0.04;
             $uspsQuote['rateOptions'][] = $_letter;
         }
 
