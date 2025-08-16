@@ -170,7 +170,6 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_group_id' => 6,
                         'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_option([\'Letters\', \'Flats\', \'Cards\'], ',
-                        'use_function' => 'zen_cfg_uspsr_showdimmensions',
                         'date_added' => 'now()'
                     ]);
 
