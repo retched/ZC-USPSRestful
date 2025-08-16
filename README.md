@@ -12,10 +12,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 - Last Stable Release: 1.3.0  
 _Released August 16, 2025 for ZenCart 2.1.0._
-- Next Version Number: ???
+- Next Version Number: 1.3.1
 
 ### Version/Release History
 
+- 1.3.1
+  Minor bug fix to readd the four cent difference between Metered First-Class Mail and non-metered First-Class Mail.
 - 1.3.0
   Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.
 - 1.2.0  
