@@ -58,7 +58,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         $active_modules = $this->getConfigurationKeyDetails('MODULE_SHIPPING_INSTALLED');
         $module_installed = preg_match('/uspsr.php/', $active_modules['configuration_value']);
 
-        if ($module_installed) { // Regardless of prior version - check if the module is installed, if so, install the NEW keys
+        if ($module_installed) { // Regardless of prior version - check if the module is installed, if so, install/update the NEW keys
             // Have to add in support for the First Class Letters settings in the services table.
             if (version_compare(str_replace("v", "", MODULE_SHIPPING_USPSR_VERSION), "1.3.0", "<")) {
                 /**
@@ -100,101 +100,6 @@ class ScriptedInstaller extends ScriptedInstallBase
             }
 
             switch ($oldVersion) {
-                case "v1.2.0":
-                    // Changing descriptions
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
-                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
-                        'set_function' => '',
-                    ]);
-
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
-                    ]);
-
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (International Packages)',
-                    ]);
-
-                    // Adding new key for Domestic and International Letter Services.
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (Domestic Letters)',
-                        'configuration_value' => '',
-                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic letters (First Class Mail Letters). (The USPS API will do the math as necessary.)<br>',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_uspsr_extraservices(\'domestic-letters\', ',
-                        'use_function' => 'zen_cfg_uspsr_extraservices_display',
-                        'date_added' => 'now()'
-                    ]);
-
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (International Letters)',
-                        'configuration_value' => '',
-                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international letters (First Class International Letters). (The USPS API will do the math as necessary.)<br>',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_uspsr_extraservices(\'intl-letters\', ',
-                        'use_function' => 'zen_cfg_uspsr_extraservices_display',
-                        'date_added' => 'now()'
-                    ]);
-
-                    // Adding in support Letter Dimmensions
-                    if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
-                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
-                            'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
-                            'configuration_value' => '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275',
-                            'configuration_description' => 'The Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported by this module at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br><br><em>These measurements will be converted to inches as part of the quoting process as your cart was set to centimeters when it was installed. If you change your cart setting, you will need to reenter these values.<br>',
-                            'configuration_group_id' => 6,
-                            'sort_order' => 0,
-                            'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
-                            'use_function' => 'zen_cfg_uspsr_showdimmensions',
-                            'date_added' => 'now()'
-                        ]);
-                    } else {
-                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
-                            'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
-                            'configuration_value' => '4.125, 4.125, 9.5, 9.5, 0.007, 0.007',
-                            'configuration_description' => 'The Minimum Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>',
-                            'configuration_group_id' => 6,
-                            'sort_order' => 0,
-                            'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
-                            'use_function' => 'zen_cfg_uspsr_showdimmensions',
-                            'date_added' => 'now()'
-                        ]);
-                    }
-
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_PROCESSING', [
-                        'configuration_title' => 'Packaging Class - Letters',
-                        'configuration_value' => 'Letters',
-                        'configuration_description' => 'How would you class the packaging of your letters?<br><br><em>\"Letters\"</em> refers to packaging that is rigid in shape and form, like a plain white envelope (#10). A letter is a rectangular piece no more than 6.125" by 11.5" with a thickness no greater than .25" inches. (Anything greater than this or smaller than the minimums will be treated as non-machineable.<br><br><em>\"Flats\"</em> typically refer to large envelopes, newsletters, and magazines. Flats must be no greater than 12 inches by 15 inches with a thickness no greater than .75 inches.<br><br><em>\"Cards\"</em> plainly mean simple postcards with specific measurements.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to First Class Mail Letters and First Class Mail International Letters.</em><br>',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_option([\'Letters\', \'Flats\', \'Cards\'], ',
-                        'date_added' => 'now()'
-                    ]);
-
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS', [
-                        'configuration_title' => 'Machineability Flags (First-Class Mail Letter)',
-                        'configuration_value' => '--none--',
-                        'configuration_description' => 'When sending items via USPS First-Class Mail, check below if any applies to the typical method of how you send your orders.<br><br>- <em>Polybagged</em>: Is the letter/flat/card polybagged, polywrapped, enclosed in any plastic material, or has an exterior surface made of a material that is not paper. Windows in envelopes made of paper do not make mailpieces nonmachinable. Attachments allowable under applicable eligibility standards do not make mailpieces nonmachinable.<br><br>- <em>ClosureDevices</em>: Does the letter/flat/card have clasps, strings, buttons, or similar closure devices?<br><br>- <em>LooseItems</em>: Does the letter/flat/card contain items such as pens, pencils, keys, or coins that cause the thickness of the mailpiece to be uneven; or loose keys or coins or similar objects not affixed to the contents within the mailpiece. Loose items may cause a letter to be nonmailable when mailed in paper envelopes.<br><br>- <em>Rigid</em>: Is the letter/flat/card too rigid?<br><br>- <em>SelfMailer</em>: Is your item a folded self-mailer?<br><br>- <em>Booklet</em>: Is the letter/flat/card a booklet?',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_multioption([\'Polybagged\', \'ClosureDevices\', \'LooseItems\', \'Rigid\', \'SelfMailer\', \'Booklet\'], ',
-                        'use_function' => '',
-                        'date_added' => 'now()'
-                    ]);
-
-                    break;
-
-                case "v1.1.2": // Released 2025-03-07
-                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
-                case "v1.0.0": // Released 2025-02-18
-                    // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
-                    ]);
-                    break;
-
                 case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
                 case "v0.2.0": // Released 2025-01-17
                 case "v0.1.0": // Released 2024-12-22
@@ -249,8 +154,6 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'sort_order' => 0,
                         'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
                     ]);
-
-
 
                     // Update and reset the Shipping Methods Table and configuration.
                     if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
@@ -352,11 +255,117 @@ class ScriptedInstaller extends ScriptedInstallBase
                             'sort_order' => 0,
                             'set_function' => 'zen_cfg_select_option([\'Non-Soft\', \'Soft\'], '
                         ]);
+                    
                     }
-
 
                     // Cosmetic change: changing the description to match its new one. (This should only change the ONE line).
                     $this->executeInstallerSql("UPDATE " . TABLE_PLUGIN_CONTROL . " SET description = 'This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS\' REST API using OAuth.<br><br>This module supports versions 1.5.8 onward innately. (Support from 1.5.7 and backward is not necessarily guaranteed but is plausible.) This script was primarily written with PHP8 in mind. (It might have problems working with PHP7.)' WHERE unique_key = 'USPSRestful' ");
+
+                case "v1.1.2": // Released 2025-03-07
+                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
+                case "v1.0.0": // Released 2025-02-18
+                    // Changes to the database from v1.0.0 should be put here. (No keys should be ADDED here, only updates.)
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
+                    ]);
+
+                case "v1.2.0":
+                case "v1.3.0":
+                    // No need to check for ZenCart version, if you're running encapsulated... this MUST be 2.x.x+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [ 
+                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                        'set_function' => '',
+                        'val_function' => '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}',
+                    ]);
+
+                    // Changing descriptions
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (International Packages)',
+                    ]);
+
+
+                    // Adding new key for Domestic and International Letter Services.
+                    if (!defined('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES')) {
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES', [
+                            'configuration_title' => 'Shipping Add-ons (Domestic Letters)',
+                            'configuration_value' => '',
+                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic letters (First Class Mail Letters). (The USPS API will do the math as necessary.)<br>',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_uspsr_extraservices(\'domestic-letters\', ',
+                            'use_function' => 'zen_cfg_uspsr_extraservices_display',
+                            'date_added' => 'now()'
+                        ]);
+                    }
+
+                    if (!defined('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES')) {
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES', [
+                            'configuration_title' => 'Shipping Add-ons (International Letters)',
+                            'configuration_value' => '',
+                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international letters (First Class International Letters). (The USPS API will do the math as necessary.)<br>',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_uspsr_extraservices(\'intl-letters\', ',
+                            'use_function' => 'zen_cfg_uspsr_extraservices_display',
+                            'date_added' => 'now()'
+                        ]);
+                    }
+
+                    if (!defined('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS')) {
+                        // Adding in support Letter Dimmensions
+                        if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
+                                'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
+                                'configuration_value' => '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275',
+                                'configuration_description' => 'The Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported by this module at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br><br><em>These measurements will be converted to inches as part of the quoting process as your cart was set to centimeters when it was installed. If you change your cart setting, you will need to reenter these values.<br>',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
+                                'use_function' => 'zen_cfg_uspsr_showdimmensions',
+                                'date_added' => 'now()'
+                            ]);
+                        } else {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
+                                'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
+                                'configuration_value' => '4.125, 4.125, 9.5, 9.5, 0.007, 0.007',
+                                'configuration_description' => 'The Minimum Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
+                                'use_function' => 'zen_cfg_uspsr_showdimmensions',
+                                'date_added' => 'now()'
+                            ]);
+                        }
+                    }
+
+                    if (!defined('MODULE_SHIPPING_USPSR_LTR_PROCESSING')) {
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_PROCESSING', [
+                            'configuration_title' => 'Packaging Class - Letters',
+                            'configuration_value' => 'Letters',
+                            'configuration_description' => 'How would you class the packaging of your letters?<br><br><em>\"Letters\"</em> refers to packaging that is rigid in shape and form, like a plain white envelope (#10). A letter is a rectangular piece no more than 6.125" by 11.5" with a thickness no greater than .25" inches. (Anything greater than this or smaller than the minimums will be treated as non-machineable.<br><br><em>\"Flats\"</em> typically refer to large envelopes, newsletters, and magazines. Flats must be no greater than 12 inches by 15 inches with a thickness no greater than .75 inches.<br><br><em>\"Cards\"</em> plainly mean simple postcards with specific measurements.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to First Class Mail Letters and First Class Mail International Letters.</em><br>',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_option([\'Letters\', \'Flats\', \'Cards\'], ',
+                            'date_added' => 'now()'
+                        ]);
+                    }
+
+                    if (!defined('MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS')) {
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS', [
+                            'configuration_title' => 'Machineability Flags (First-Class Mail Letter)',
+                            'configuration_value' => '--none--',
+                            'configuration_description' => 'When sending items via USPS First-Class Mail, check below if any applies to the typical method of how you send your orders.<br><br>- <em>Polybagged</em>: Is the letter/flat/card polybagged, polywrapped, enclosed in any plastic material, or has an exterior surface made of a material that is not paper. Windows in envelopes made of paper do not make mailpieces nonmachinable. Attachments allowable under applicable eligibility standards do not make mailpieces nonmachinable.<br><br>- <em>ClosureDevices</em>: Does the letter/flat/card have clasps, strings, buttons, or similar closure devices?<br><br>- <em>LooseItems</em>: Does the letter/flat/card contain items such as pens, pencils, keys, or coins that cause the thickness of the mailpiece to be uneven; or loose keys or coins or similar objects not affixed to the contents within the mailpiece. Loose items may cause a letter to be nonmailable when mailed in paper envelopes.<br><br>- <em>Rigid</em>: Is the letter/flat/card too rigid?<br><br>- <em>SelfMailer</em>: Is your item a folded self-mailer?<br><br>- <em>Booklet</em>: Is the letter/flat/card a booklet?',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_multioption([\'Polybagged\', \'ClosureDevices\', \'LooseItems\', \'Rigid\', \'SelfMailer\', \'Booklet\'], ',
+                            'use_function' => '',
+                            'date_added' => 'now()'
+                        ]);
+                    }
                     break;
             }
         }
