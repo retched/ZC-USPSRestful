@@ -10,14 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.3.0  
+- Last Stable Release: 1.3.1  
 _Released August 16, 2025 for ZenCart 2.1.0._
-- Next Version Number: 1.3.1
+- Next Version Number: ???
 
 ### Version/Release History
 
 - 1.3.1  
-  Minor bug fix to readd the four cent difference between Metered First-Class Mail and non-metered First-Class Mail. 
+  Minor bug fix to readd the four cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.
 - 1.3.0  
   Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.
 - 1.2.0  
@@ -41,7 +41,7 @@ _Released August 16, 2025 for ZenCart 2.1.0._
 
 - [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
-- [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread).
+- [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module. For assistance with the original USPS module which uses the WebTools API, you should post in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread) on the ZenCart forums.
 
 ## Setup, Install, and Upgrading
 
@@ -55,7 +55,10 @@ Both versions (encapsulated and non-encapsualted) are now shared in the same rel
 
 You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository.
 
-Upgrading the non-encapsulated version? **Overwrite ALL files of the old version.** (If you're using the encapsulated version, it is safe to upload the new version into the matching `USPSRestful/` which exists in a separate folder.)
+### Upgrading/updating
+
+- Non-encapsulated version: **Overwrite ALL files of the old version.**
+- Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, selected the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts. When done, you can choose to delete the older versions.
 
 ## Uninstallation
 
@@ -64,6 +67,10 @@ Upgrading the non-encapsulated version? **Overwrite ALL files of the old version
 
 - **Encapsulated**  
   To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click "Uninstall". If desired, you can clean up the installation to have ZenCart delete the files for you.
+
+## Contributions
+
+Contributions are welcomed. I try to follow the GitHub flow with regards to the process of resolving issues. For more details, you should check out the [CONTRIBUTING.md](.github/CONTRIBUTING.md) document before making the contribution..
 
 ## Frequently Asked Questions
 
@@ -93,7 +100,7 @@ The original USPS module works by using the older USPS WebTools API. For years, 
 
 ### I already have a `USERID` and `PASSWORD` from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?
 
-The older `USERID` and `PASSWORD` from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [here](https://developers.usps.com/getting-started) and on the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.
+The older `USERID` and `PASSWORD` from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [on the USPS Developers website](https://developers.usps.com/getting-started) and on the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.
 
 ### Why should I use this version versus the one that's out there now?
 
@@ -105,7 +112,7 @@ An OAuth token is effectively a (temporary) password meant to provide access to 
 
 ### I'm not seeing the USPS Connect rate even though I selected it, what's going on?
 
-USPS Connect rates are only available to retailers who have specifically signed up for it at https://www.uspsconnect.com and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the "Commercial" rates (formerly called "Online" in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)
+USPS Connect rates are only available to retailers who have specifically signed up for it at the [USPS Connect website](https://www.uspsconnect.com) and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the "Commercial" rates (formerly called "Online" in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)
 
 ### "The module is not showing at all even though I made my choices"
 
@@ -174,13 +181,13 @@ These are the file lists that should be included with this module, depending on 
 - includes\languages\english\modules\shipping\lang.uspsr.php
 - includes\languages\english\modules\shipping\uspsr.php
 - includes\modules\shipping\uspsr.php
-- includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.0\manifest.php
-- \zc_plugins\USPSRestful\v1.3.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.0\Installer\ScriptedInstaller.php
+- includes\templates\template_default\images\icons\shipping_usps.gif (should be included in both encapsulated and unencapsulated)
+- \zc_plugins\USPSRestful\v0.0.0\manifest.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author

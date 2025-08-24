@@ -5,7 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons.
+- Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
+- Create an uninstall script for non-encapsulated installations. [#61](https://github.com/retched/ZC-USPSRestful/issues/61)
+
+## [1.3.1] - 2025-08-24
+
+### Changed in 1.3.1
+
+- Changed the logic of how upgrade tests and actions are performed. Instead of looking at the newer, more recent versions first, the module will now start with the oldest and go forward.
+
+### Fixed in 1.3.1
+
+- Fixed an issue where unencapsulated installs could potentially leave out necessary configuration keys. [#59](https://github.com/retched/ZC-USPSRestful/issues/59)
+- Fixed an issue where the retrieved First Class Mail Letters quote would be short by $0.04. [#57](https://github.com/retched/ZC-USPSRestful/issues/57)
 
 ## [1.3.0] - 2025-08-16
 
@@ -21,7 +33,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - As part of the AuthToken request, the module will now send of the vversion of the module and the ZenCart version as the USERAGENT portion of the CURL request.
 - Running the `v0.0.0` version from the Repository will now have a warning banner appear in the admin backend. That warning uses the `messageStack` system and will link to the ZenCart thread and this repository on GitHub.
 
-### Breaking in 1.3.0
+### Fixed in 1.3.0
+
+- Fixed an issue that could potentially cause a blank or dead API return call to break an install. [#56](https://github.com/retched/ZC-USPSRestful/issues/56)
+- Fixed an issue that would generate error debug messages when trying to revoke tokens. [#51](https://github.com/retched/ZC-USPSRestful/issues/51)
+- Fixed an issue that would cause the entered number of handling days to not be saved. (Side note: This will cause validation to not be performed on older variations of ZenCart as that functionality is not present.) [#52](https://github.com/retched/ZC-USPSRestful/issues/52)
+
+### Removed in 1.3.0
 
 - Removed the modules ability to revoke AuthTokens in the module. (USPS API Support Team reported that there is a breaking fault on their side. To avoid the headaches, just removed the revokeToken command and procedure. Will likely add in again later.)
 
@@ -121,7 +139,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed in 1.0.0
 
-- Deleted old versions from repository files. The old versions will live in the releases section of the GitHub and ZenCart Release. (This makes it easier to version track.) Going forward, the main directory of the module on repository will be renamed to 0.0.0 and then each release will have a separate branch with any necessary changes. The "tags" will be based off that targeted branch.
+- Deleted old versions from repository files. The old versions will live in the releases section of the GitHub and ZenCart Plugin database. (This makes it easier to version track.) Going forward, the main directory of the module on repository will be renamed to 0.0.0 and then each release will have a separate branch with any necessary changes. The "tags" will be based off that targeted branch.
 
 ## [0.2.0] - 2025-01-17
 

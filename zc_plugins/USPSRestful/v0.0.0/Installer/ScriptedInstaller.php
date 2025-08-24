@@ -269,8 +269,8 @@ class ScriptedInstaller extends ScriptedInstallBase
                         'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
                     ]);
 
-                case "v1.2.0":
-                case "v1.3.0":
+                case "v1.2.0": // Released 2025-03-15
+                case "v1.3.0": // Released 2025-08-24
                     // No need to check for ZenCart version, if you're running encapsulated... this MUST be 2.x.x+
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [ 
                         'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',

@@ -2,7 +2,7 @@
 
 First off, thanks for taking the time to contribute! ❤️
 
-All types of contributions are encouraged and valued. See the [Table of Contents](#table-of-contents) for different ways to help and details about how this project handles them. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The community looks forward to your contributions. 🎉
+All types of contributions are encouraged and valued. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The community looks forward to your contributions. 🎉
 
 ## "I Have a Question!"
 
@@ -12,36 +12,32 @@ If you then still feel the need to ask a question and need clarification, we rec
 
 - Open an [Issue](https://github.com/retched/ZC-USPSRestful/issues/new).
 - Provide as much context as you can about what you're running into.
-
+- Make a post on the [ZenCart thread](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)) for the USPSRestful module
 
 **Great Bug Reports** tend to have:
 
 - A quick summary and/or background
 - Steps to reproduce
   - Be specific! If you have any other modules or non-standard changes to your ZenCart, you should list them too.
-- What you expected would happen
-- What happens
+- What you expected would happen versus what happens?
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-- What is the environment that the script is running from? (What version of PHP? What version of the script? What version of ZenCart?)
+- What is the environment that the script is running from? (What version of PHP? What version of the script? What version of ZenCart? In this an encapsulated install or non-encapsulated install?)
 
-The more details available, the easier the problem is to track down and start issuing bug fixes.
-
-I will then take care of the issue as soon as possible.
-
-Additionally, you can use Discord (@retched) in addition to reaching out via this form as well as through the ZenCart support forums..
+The more details available, the easier the problem is to track down and start issuing bug fixes. I will then take care of the issue as soon as possible.
 
 ## Develop with Github
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests. All submissions should be presented through the "GitHub Flow" (as discussed below). If you don't want to go through the hassle of making a GitHub account, you can submit suggestions through the [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) for the module.
+We use GitHub to host code, to track issues and feature requests, as well as accept pull requests. All submissions should be presented through the "GitHub Flow" (as discussed below). If you don't want to go through the hassle of making a GitHub account, you can submit suggestions through the [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) for the module or via DMs on Discord to @retched.
 
 ## [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow) is the preferred process of suggesting changes
 
 Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow)). We actively welcome your pull requests:
 
-1. Fork the repo and create your branch from `main` (do not use any of the version side branches UNLESS necessary). Do not worry about changing the version number, all changes should be made in the 0.0.0 directory.
+1. Fork the repo and create your branch from `main` (do not use any of the version side branches UNLESS you mean to contribute to that branch). Do not worry about changing the version number, all changes should be made in the 0.0.0 directory.
+   - Sometimes a branch will be made for the sole purpose of resolving an issue or series of issues. If you're making a code change related to an open issue, check to see if there is a branch made for that purpose.
 2. Make the changes you wish to suggest.
 3. Issue that pull request!
-   - Be as descriptive as you can in your Pull Request notes. (What's being changed? Why is it being changed? Is it a benefit or boon to the project as a whole? What issue does your code solve?)
+   - Be as descriptive as you can in your Pull Request notes. (What's being changed? Why is it being changed? Is it a benefit or boon to the project as a whole? What issue does your code solve?) Be sure to complete the details in the template of the Bug Request. Do not worry about performing the tests or completing the tasks checklist. That is for me to check before creating a pull.
 
 ## Coding Style
 
@@ -56,6 +52,9 @@ In summary, your submitted code should be (at a minimum):
   function uspsr_someFunctionName($variables_if_needed = '', $some_boolean = TRUE)
   {
     // Code here
+    if ($some_logic_test) {
+      // More code here
+    }
   }
   ```
 
