@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed in 1.3.1
 
 - Changed the logic of how upgrade tests and actions are performed. Instead of looking at the newer, more recent versions first, the module will now start with the oldest and go forward.
+- Changed the logic in checking for newer versions of the module. (It should NOT be trying to compare the ZenCart stored version versus 0.0.0, there will ALWAYS be a "newer" version than 0.0.0 there.)
 
 ### Fixed in 1.3.1
 
