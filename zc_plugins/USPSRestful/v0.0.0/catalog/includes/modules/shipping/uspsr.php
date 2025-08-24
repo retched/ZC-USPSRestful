@@ -1360,7 +1360,7 @@ class uspsr extends base
             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                 'configuration_title' => 'Shipping Methods (Domestic and International)',
                 'configuration_value' => '0, 0.0992233, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 0.0992233, 0.00, 0, 1.8143, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00',
-                'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered. (Can also click on the service name in certain browsers.)<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                 'configuration_group_id' => 6,
                 'sort_order' => 0,
                 'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
@@ -1371,7 +1371,7 @@ class uspsr extends base
             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                 'configuration_title' => 'Shipping Methods (Domestic and International)',
                 'configuration_value' => '0, 0.21875, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 0.21875, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
-                'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered (Can also click on the service name in certain browsers.)<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                 'configuration_group_id' => 6,
                 'sort_order' => 0,
                 'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
@@ -1901,7 +1901,7 @@ class uspsr extends base
 
                     }
 
-                
+
                 // Next group of changes
                 case "v1.0.0": // Released 2025-02-18
                 case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
@@ -1925,16 +1925,21 @@ class uspsr extends base
                     ]);
 
                 case "v1.2.0": // Released 2025-03-15
-                case "v1.3.0": // Released 2025-08-23 (Had an issue with this one, some installs saw some keys get skipped... )
-
-                    // Get rid of the numeric updown function
-                    $update_handling_time['set_function'] = '';
-                    if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
-                        $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
-                    }
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $update_handling_time);
+                case "v1.3.0": // Released 2025-08-24 (Had an issue with this one, some installs saw some keys get skipped... )
 
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) { // Only should be run if the module is already installed.
+                        // Changing the description
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                            'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered. (Can also click on the service name in certain browsers.)<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                        ]);
+
+                        // Get rid of the numeric updown function
+                        $update_handling_time['set_function'] = '';
+                        if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
+                            $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
+                        }
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $update_handling_time);
+
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
                             'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
                             'set_function' => '',
@@ -2037,7 +2042,7 @@ class uspsr extends base
                  * This is done by adding the value at the front for US First Class Mail Letter then splicing it into the datatable.
                  */
                 // Regardless of the version, we need to update the data field for MODULE_SHIPPING_USPSR_TYPES.
-                
+
                 if (defined('MODULE_SHIPPING_USPSR_TYPES')) {
 
                     $original_methods = MODULE_SHIPPING_USPSR_TYPES;
@@ -2961,6 +2966,8 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
 
     $name = ($key) ? ('configuration[' . $key . '][]') : 'configuration_value';
 
+
+
     $w20pxl = 'width:20px;float:left;text-align:center;';
     $w60pxl = 'width:60px;float:left;text-align:center;';
     $frc = 'float:right;text-align:center;';
@@ -2978,37 +2985,7 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
     $string_spacing_international = 0;
     $string = '<div><br><b>&nbsp;Domestic Rates:</b><br></div>' . $string;
     for ($i = 0, $n = count($select_array); $i < $n; $i++) {
-        if (stripos($select_array[$i], 'international') !== false) {
-            $string_spacing_international++;
-        }
-        if ($string_spacing_international === 1) {
-            $string .= $string_spacing;
-        }
-
-        $string .= '<div id="' . $key . $i . '">';
-        $string .=
-            '<div style="' . $w20pxl . '">' .
-            zen_draw_checkbox_field($name, $select_array[$i], (in_array($select_array[$i], $key_values) ? 'CHECKED' : '')) .
-            '</div>';
-        if (in_array($select_array[$i], $key_values)) {
-            next($key_values);
-        }
-
-        $string .=
-            '<div style="' . $w60pxl . '">' .
-            zen_draw_input_field($name, current($key_values), 'size="5"') .
-            '</div>';
-        next($key_values);
-
-        $string .=
-            '<div style="' . $w60pxl . '">' .
-            zen_draw_input_field($name, current($key_values), 'size="5"') .
-            '</div>';
-        next($key_values);
-
-        $string .=
-            '<div style="float:left;">&nbsp;&nbsp;&nbsp;' .
-            trim(preg_replace(
+            $servicename =  trim(preg_replace(
                 [
                     '/International/',
                     '/Envelope/',
@@ -3050,8 +3027,42 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
                     ''
                 ],
                 $select_array[$i]
-            )) .
+            ));
+
+        $stripped_servicename = str_replace(' ', '', $servicename);
+        if (stripos($select_array[$i], 'international') !== false) {
+            $string_spacing_international++;
+        }
+        if ($string_spacing_international === 1) {
+            $string .= $string_spacing;
+        }
+
+        $string .= '<div id="' . $key . $i . '">';
+        $string .=
+            '<div style="' . $w20pxl . '">' .
+            zen_draw_checkbox_field($name, $select_array[$i], (in_array($select_array[$i], $key_values) ? 'CHECKED' : ''), '', 'id="'. $stripped_servicename . '"') .
             '</div>';
+        if (in_array($select_array[$i], $key_values)) {
+            next($key_values);
+        }
+
+        $string .=
+            '<div style="' . $w60pxl . '">' .
+            zen_draw_input_field($name, current($key_values), 'size="5"') .
+            '</div>';
+        next($key_values);
+
+        $string .=
+            '<div style="' . $w60pxl . '">' .
+            zen_draw_input_field($name, current($key_values), 'size="5"') .
+            '</div>';
+        next($key_values);
+
+        $string .=
+            '<div style="float:left;">&nbsp;&nbsp;&nbsp;<label style="font-weight: normal" for="'. $stripped_servicename .'">' .
+            $servicename
+            .
+            '</label></div>';
         $string .=
             '<div style="' . $frc . '">$' .
             zen_draw_input_field($name, current($key_values), 'size="4" style="text-align: right;"') .
