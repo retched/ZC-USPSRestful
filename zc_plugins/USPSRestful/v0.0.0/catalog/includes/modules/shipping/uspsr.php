@@ -1929,7 +1929,7 @@ class uspsr extends base
 
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) { // Only should be run if the module is already installed.
                         // Changing the description
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                             'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered. (Can also click on the service name in certain browsers.)<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                         ]);
 
