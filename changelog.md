@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [1.3.1] - 2025-08-24
 
+### Added in 1.3.1
+
+- Added a `<label>` field to the services list to give people a bigger "target" for selecting services.
+
 ### Changed in 1.3.1
 
 - Changed the logic of how upgrade tests and actions are performed. Instead of looking at the newer, more recent versions first, the module will now start with the oldest and go forward.
