@@ -3850,13 +3850,15 @@ body,
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Last Stable Release: 1.3.0<br>
+<li>Last Stable Release: 1.3.1<br>
 <em>Released August 16, 2025 for ZenCart 2.1.0.</em></li>
 <li>Next Version Number: ???</li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
-<li>1.3.0
+<li>1.3.1<br>
+Minor bug fix to readd the four cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.</li>
+<li>1.3.0<br>
 Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.</li>
 <li>1.2.0<br>
 Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.</li>
@@ -3873,13 +3875,13 @@ Various bugfixing including the reintroduction of First Class Mail Package Inter
 <li>0.1.0<br>
 First &quot;release&quot;.</li>
 <li>0.0.0<br>
-  <em>Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database <a href="https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin">was only a placeholder</a>. Pulling from the Repository is not recommended.</em></li>
+  <em>Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database <a href="https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin">was only a placeholder</a>. Pulling from the repository is not recommended. Use the <a href="https://github.com/retched/ZC-USPSRestful/releases">Releases</a> instead.</em></li>
 </ul>
 <h2 id="additional-links">Additional Links</h2>
 <ul>
 <li><a href="https://developers.usps.com/apis">USPS API Documentation</a> - This API takes advantage of four APIs: <em>Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0.</em></li>
 <li><a href="https://www.zen-cart.com/downloads.php?do=file&amp;id=2395">ZenCart Plugins Directory Listing</a> (or use the Releases function on the GitHub repository)</li>
-<li><a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module, for assistance with the original USPS module which uses the WebTools API, you should post it here in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a>.</li>
+<li><a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module. For assistance with the original USPS module which uses the WebTools API, you should post in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a> on the ZenCart forums.</li>
 </ul>
 <h2 id="setup-install-and-upgrading">Setup, Install, and Upgrading</h2>
 <p>Both versions (encapsulated and non-encapsualted) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separated file.)</p>
@@ -3894,7 +3896,11 @@ If you want to install the encapsulated version of the module, copy <strong>ONLY
 </li>
 </ul>
 <p>You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository.</p>
-<p>Upgrading the non-encapsulated version? <strong>Overwrite ALL files of the old version.</strong> (If you're using the encapsulated version, it is safe to upload the new version into the matching <code>USPSRestful/</code> which exists in a separate folder.)</p>
+<h3 id="upgradingupdating">Upgrading/updating</h3>
+<ul>
+<li>Non-encapsulated version: <strong>Overwrite ALL files of the old version.</strong></li>
+<li>Encapsulated version: Simply upload the new release into the same <code>zc_plugins/</code> directory. Each release will have a separate folder containing that new version. (Example: Version <code>v1.0.0</code> will be uploaded into a folder named <code>v1.0.0</code>.) Once uploaded, visit the Plugin Manager in your admin area, selected the USPSRestful line in the table, and hit the &quot;Upgrade Available&quot; button and follow the prompts. When done, you can choose to delete the older versions.</li>
+</ul>
 <h2 id="uninstallation">Uninstallation</h2>
 <ul>
 <li>
@@ -3906,6 +3912,8 @@ To uninstall the non-encapsulated version, first uninstall the module from your 
 To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click &quot;Uninstall&quot;. If desired, you can clean up the installation to have ZenCart delete the files for you.</p>
 </li>
 </ul>
+<h2 id="contributions">Contributions</h2>
+<p>Contributions are welcomed. I try to follow the GitHub flow with regards to the process of resolving issues. For more details, you should check out the <a href=".github/CONTRIBUTING.html">CONTRIBUTING.md</a> document before making the contribution..</p>
 <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <p>This won't answer all the questions you may have, but it may answer some that I thought of.</p>
 <h3 id="what-version-of-zencart-does-this-module-support">What version of ZenCart does this module support?</h3>
@@ -3964,13 +3972,13 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <h3 id="what-is-the-difference-between-this-version-and-the-original-usps-module">What is the difference between this version and the original USPS module?</h3>
 <p>The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based API which this codebase uses.</p>
 <h3 id="i-already-have-a-userid-and-password-from-webtools-but-im-getting-error-messages-while-i-try-to-retrieve-quotes-what-happened">I already have a <code>USERID</code> and <code>PASSWORD</code> from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?</h3>
-<p>The older <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">here</a> and on the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.</p>
+<p>The older <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">on the USPS Developers website</a> and on the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.</p>
 <h3 id="why-should-i-use-this-version-versus-the-one-thats-out-there-now">Why should I use this version versus the one that's out there now?</h3>
 <p>The USPS created an &quot;in-before-the-lock&quot; situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access but they will read you the &quot;riot act&quot; with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using them, continue to use them. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward.</p>
 <h3 id="what-is-this-oauth-token-do-i-need-to-get-one">What is this OAuth Token? Do I need to get one?</h3>
 <p>An OAuth token is effectively a (temporary) password meant to provide access to the OAuth API. (Similar to the WebTools API USERID and PASSWORD.)  You do not need to do anything to get one, this script will instead create the token for you (or at least your customer) as their cart requests the estimations of the costs of the USPS services. During checkout, using your API Key and Secret, the cart will request a token for use and then revoke it when it's done with the API call.</p>
 <h3 id="im-not-seeing-the-usps-connect-rate-even-though-i-selected-it-whats-going-on">I'm not seeing the USPS Connect rate even though I selected it, what's going on?</h3>
-<p>USPS Connect rates are only available to retailers who have specifically signed up for it at <a href="https://www.uspsconnect.com">https://www.uspsconnect.com</a> and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the &quot;Commercial&quot; rates (formerly called &quot;Online&quot; in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)</p>
+<p>USPS Connect rates are only available to retailers who have specifically signed up for it at the <a href="https://www.uspsconnect.com">USPS Connect website</a> and have their USPS Business Accounts activated to enable USPS Connect. Additionally, you must select and choose to display the &quot;Commercial&quot; rates (formerly called &quot;Online&quot; in the WebTools module) to see the rates while providing a list of Zip Codes that can use Connect Local. If any of these details are missing, you will not see the rate pop up in the quote. Currently, these rates are only available when you're dropping off the packages at the DESTINATION Zip Code. (There is a USPS Connect Regional which does allow you to drop off packages at REGIONAL centers but it is not present here.)</p>
 <h3 id="the-module-is-not-showing-at-all-even-though-i-made-my-choices">&quot;The module is not showing at all even though I made my choices&quot;</h3>
 <p>Make sure that your store is configured to ship out of the United States and that you made sure to enter a five-digit (or nine-digit) Zip Code where your orders are originating from. Additionally, make sure that you have chosen at least one shipping method to display. (This is part of the quotation process. Without these details, the module will fail and self-disable itself.)</p>
 <h3 id="i-clicked-the-box-to-offer-usps-large-flat-rate-boxes-apofpodpo-but-i-dont-see-it-as-an-option-during-checkout-what-gives">&quot;I clicked the box to offer USPS Large Flat Rate Boxes APO/FPO/DPO but I don't see it as an option during checkout, what gives?&quot;</h3>
@@ -4019,13 +4027,13 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - includes\languages\english\modules\shipping\lang.uspsr.php
 - includes\languages\english\modules\shipping\uspsr.php
 - includes\modules\shipping\uspsr.php
-- includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.0\manifest.php
-- \zc_plugins\USPSRestful\v1.3.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.3.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.0\Installer\ScriptedInstaller.php
+- includes\templates\template_default\images\icons\shipping_usps.gif (should be included in both encapsulated and unencapsulated)
+- \zc_plugins\USPSRestful\v1.3.1\manifest.php
+- \zc_plugins\USPSRestful\v1.3.1\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.3.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.3.1\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.3.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.3.1\Installer\ScriptedInstaller.php
 </code></pre>
 <h2 id="support-the-author">Support the author</h2>
 <!-- Should this repository be forked, please remove this section -->
