@@ -389,8 +389,8 @@ class uspsr extends base
             $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING);
             $_letter['rates'][0]['productName'] = ($this->usps_countries == 'US' ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
-            
-            # Bug fix for letters since the metered rate is four cents less. 
+
+            # Bug fix for letters since the metered rate is four cents less.
             $_letter['rates'][0]['price'] += 0.04;
             $_letter['totalBasePrice'] += 0.04;
             $uspsQuote['rateOptions'][] = $_letter;
@@ -1271,10 +1271,7 @@ class uspsr extends base
         ];
 
         // If this is ZenCart 1.5.5, the val_function column doesn't exist. So in 1.5.6 and high, add:
-        if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
-            $insert_handling_array['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
-        }
-
+        if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) $insert_handling_array['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $insert_handling_array);
 
         /**
@@ -1769,72 +1766,46 @@ class uspsr extends base
         // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
         if ((MODULE_SHIPPING_USPSR_VERSION !== self::USPSR_CURRENT_VERSION) && MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0") {
 
+            // Add new versions to the bottom of this. Do not put a mitigating "break" in between.
             switch (MODULE_SHIPPING_USPSR_VERSION) {
-                case "v1.2.0": // Released 2025-03-15
-                case "v1.1.2": // Released 2025-03-07
-                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
-                case "v1.0.0": // Released 2025-02-18
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
-                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
-                        'set_function' => '',
-                    ]);
-
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
-
-                    ]);
-
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
-                        'configuration_title' => 'Shipping Add-ons (International Packages)',
-                    ]);
-
-                    if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">="))
-                        $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $update_handling_time);
-
-                        // New change, fixing a spelling error in the description of Debug Mode.
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
-                        ]);
-                    break;
 
                 // BREAKING CHANGE... The data table was changed!
-                case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
-                case "v0.2.0": // Released 2025-01-17
                 case "v0.1.0": // Released 2024-12-22
+                case "v0.2.0": // Released 2025-01-17
+                case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
                     // Any changes to the database from v1.0.0 should go here
                     // v0.3.0 and before didn't have the Min/Max table. Let's add it.
 
                     // Check to see if the module is active?
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
-                        // Add Squash alike methods together
-                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                            'configuration_title' => 'Squash Alike Methods Together',
-                            'configuration_value' => '--none--',
-                            'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
-                            'configuration_group_id' => 6,
-                            'sort_order' => 0,
-                            'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
-                        ]);
+                    // Add Squash alike methods together
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                        'configuration_title' => 'Squash Alike Methods Together',
+                        'configuration_value' => '--none--',
+                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                    ]);
 
-                        // Change the Debug Mode to be a split selection between showing logs or showing errors
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                            'configuration_title' => 'Debug Mode',
-                            'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
-                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file is at least 300KB big.',
-                            'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
-                            'date_added' => 'now()'
-                        ]);
+                    // Change the Debug Mode to be a split selection between showing logs or showing errors
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                        'configuration_title' => 'Debug Mode',
+                        'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
+                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file is at least 300KB big.',
+                        'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                        'date_added' => 'now()'
+                    ]);
 
-                        // Created a function to either show the value or to show none
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
-                            'use_function' => 'zen_cfg_uspsr_account_display',
-                        ]);
+                    // Created a function to either show the value or to show none
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                        'use_function' => 'zen_cfg_uspsr_account_display',
+                    ]);
                     }
 
                     // Changing this to be a more descriptive description.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT', [
-                        'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
+                    'set_function' => 'zen_cfg_select_option([\'No\', \'Estimate Delivery\', \'Estimate Transit Time\'], '
                     ]);
 
                     // If the Constant is set to "Estimate Time, we should update the value too.
@@ -1856,66 +1827,50 @@ class uspsr extends base
 
                     // Reset the module's selected shipping methods entirely.
                     if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
-                            'configuration_value' => '0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00',
-                            'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
-                            'configuration_title' => 'Shipping Methods (Domestic and International)',
-                        ]);
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                        'configuration_value' => '0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 11.3398, 0.00, 0, 31.7514, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 9.0718, 0.00, 0, 9.0718, 0.00, 0, 31.7514, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00, 0, 1.8143, 0.00',
+                        'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                        'configuration_title' => 'Shipping Methods (Domestic and International)',
+                    ]);
                     } else {
-                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
-                            'configuration_value' => '0, 0.21875, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 0.21875, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
-                            'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
-                            'configuration_title' => 'Shipping Methods (Domestic and International)',
-                        ]);
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                        'configuration_value' => '0, 0.21875, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 25, 0.00, 0, 70, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 70, 0.00, 0, 0.21875, 0.00, 0, 4, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 20, 0.00, 0, 20, 0.00, 0, 70, 0.00, 0, 4, 0.00, 0, 4, 0.00, 0, 4, 0.00',
+                        'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><b>Checkbox:</b> Select the services to be offered<br><br><b>Min/Max</b> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><b>Handling:</b> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
+                        'configuration_title' => 'Shipping Methods (Domestic and International)',
+                    ]);
                     }
                     $messageStack->add_session('<strong>USPSr Warning:</strong> Due to changes in configuration, if USPSr was enabled and already installed, you must now go to <a href="' . zen_href_link(FILENAME_DEFAULT, 'cmd=modules&set=shipping&module=uspsr') . '">Modules > Shipping > USPSr</a> and reselect your desired USPS Shipping Methods.', 'warning');
 
-                    // Rename MODULE_SHIPPING_USPSR_PROCESSING_CLASS to MODULE_SHIPPING_USPSR_MEDIA_CLASS
-                    $this->renameConfigurationKey('MODULE_SHIPPING_USPSR_PROCESSING_CLASS', 'MODULE_SHIPPING_USPSR_MEDIA_CLASS');
-
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS', [
+                        'configuration_key' => 'MODULE_SHIPPING_USPSR_MEDIA_CLASS'
+                    ]);
                     // The PROCESSING_CLASS, now MEDIA_CLASS, changed quite a bit.
-                    $this->updateConfigurationKey(
-                        'MODULE_SHIPPING_USPSR_MEDIA_CLASS',
-                        [
-                            'configuration_title' => 'Packaging Class - Media Mail',
-                            'configuration_description' => 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece designed and sized to be processed by automated postal equipment. Typically this is rigid mail, that fits a certain shape and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.',
-                            'set_function' => 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ',
-                        ]
-                    );
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_CLASS', [
+                        'configuration_title' => 'Packaging Class - Media Mail',
+                        'configuration_description' => 'For Media Mail only, are your packages typically machinable?<br><br>\"Machinable\" means a mail piece designed and sized to be processed by automated postal equipment. Typically this is rigid mail, that fits a certain shape and is within a certain weight (no more than 25 pounds for Media Mail). If your normal packages are within these guidelines, set this flag to \"Machinable\". Otherwise, set this to \"Nonstandard\". (If your customer order\'s total weight or package size falls outside this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) (If your customer order\'s total weight or package size falls outside of this limit, regardless of the setting, the module will set the package to \"Nonstandard\".) <br><br>This applies only to Media Mail. All other mail services will have their \"Machinability\" status determined by the weight of the cart and the size of the package entered below.',
+                        'set_function' => 'zen_cfg_select_option([\'Machinable\', \'Nonstandard\'], ',
+                    ]);
 
                     // Language error in the description of Exclusions from Media Mail
-                    $this->updateConfigurationKey(
-                        'MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE',
-                        [
-                            'configuration_title' => 'Categories to Excluded from Media Mail',
-                        ]
-                    );
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE', [
+                        'configuration_title' => 'Categories to Excluded from Media Mail',
+                    ]);
 
                     // The description Domestic and International Services changed
-                    $this->updateConfigurationKey(
-                        'MODULE_SHIPPING_USPSR_DMST_SERVICES',
-                        [
-                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
-                        ]
-                    );
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES',[
+                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                    ]);
 
-                    $this->updateConfigurationKey(
-                        'MODULE_SHIPPING_USPSR_INTL_SERVICES',
-                        [
-                            'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
-                        ]
-                    );
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
+                        'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international packages. (The USPS API will do the math as necessary.)<br><br><strong>CAUTION:</strong> Not all options apply to all services.<br>',
+                    ]);
 
                     // Language changed for USPSR
-                    $this->updateConfigurationKey(
-                        'MODULE_SHIPPING_USPSR_CONTRACT_TYPE',
-                        [
-                            'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
-                        ]
-                    );
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_CONTRACT_TYPE', [
+                        'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
+                    ]);
 
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
-
                         // NEW SETTINGS, Dispatch Cart Total, Dimensional Class Pricing, Cubic Class Pricing
                         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL', [
                             'configuration_title' => 'Send cart total as part of quote?',
@@ -1946,6 +1901,124 @@ class uspsr extends base
 
                     }
 
+                
+                // Next group of changes
+                case "v1.0.0": // Released 2025-02-18
+                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
+                case "v1.1.2": // Released 2025-03-07
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                        'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                        'set_function' => ''
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DMST_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (Domestic Packages)',
+                    ]);
+
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_INTL_SERVICES', [
+                        'configuration_title' => 'Shipping Add-ons (International Packages)',
+                    ]);
+
+                    // New change, fixing a spelling error in the description of Debug Mode.
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
+                    ]);
+
+                case "v1.2.0": // Released 2025-03-15
+                case "v1.3.0": // Released 2025-08-23 (Had an issue with this one, some installs saw some keys get skipped... )
+
+                    // Get rid of the numeric updown function
+                    $update_handling_time['set_function'] = '';
+                    if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '1.5.6', ">=")) {
+                        $update_handling_time['val_function'] = '{"error":"MODULE_SHIPPING_USPSR_HANDLING_DAYS","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range": 0, "max_range": 30}}}';
+                    }
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', $update_handling_time);
+
+                    if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) { // Only should be run if the module is already installed.
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
+                            'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
+                            'set_function' => '',
+                        ]);
+
+                        // Letter Dimmensions
+                        if (!defined('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS')) { // If the module is installed but the key isn't defined... install it.
+                            if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS == "centimeters") {
+                                $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
+                                    'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
+                                    'configuration_value' => '21.9075, 21.9075, 13.6525, 13.6525, 4.1275, 4.1275',
+                                    'configuration_description' => 'The Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported by this module at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br><br><em>These measurements will be converted to inches as part of the quoting process as your cart was set to centimeters when it was installed. If you change your cart setting, you will need to reenter these values.<br>',
+                                    'configuration_group_id' => 6,
+                                    'sort_order' => 0,
+                                    'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
+                                    'use_function' => 'zen_cfg_uspsr_showdimmensions',
+                                    'date_added' => 'now()'
+                                ]);
+                            } else {
+                                $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS', [
+                                    'configuration_title' => 'Typical Letter Dimensions (Domestic and International)',
+                                    'configuration_value' => '4.125, 4.125, 9.5, 9.5, 0.007, 0.007',
+                                    'configuration_description' => 'The Minimum Minimum Length, Height, and Thickness are used to determine shipping methods available for sending of letters.<br><br>While per-item dimensions are not supported at this time, the minimums listed below are sent to USPS for obtaining Rate Quotes.<br><br>In most cases, these Minimums should never have to be changed.<br>These measurements should be in inches.<br>',
+                                    'configuration_group_id' => 6,
+                                    'sort_order' => 0,
+                                    'set_function' => 'zen_cfg_uspsr_ltr_dimmensions(',
+                                    'use_function' => 'zen_cfg_uspsr_showdimmensions',
+                                    'date_added' => 'now()'
+                                ]);
+                            }
+                        }
+
+                        if (!defined(constant_name: 'MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES')) {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES', [
+                                'configuration_title' => 'Shipping Add-ons (Domestic Letters)',
+                                'configuration_value' => '',
+                                'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for domestic letters (First Class Mail Letters). (The USPS API will do the math as necessary.)<br>',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_uspsr_extraservices(\'domestic-letters\', ',
+                                'use_function' => 'zen_cfg_uspsr_extraservices_display',
+                                'date_added' => 'now()'
+                            ]);
+                        }
+
+                        if (!defined(constant_name: 'MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES')) {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES', [
+                                'configuration_title' => 'Shipping Add-ons (International Letters)',
+                                'configuration_value' => '',
+                                'configuration_description' => 'Pick which add-ons you wish to offer as a part of the shipping cost quote for international letters (First Class International Letters). (The USPS API will do the math as necessary.)<br>',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_uspsr_extraservices(\'intl-letters\', ',
+                                'use_function' => 'zen_cfg_uspsr_extraservices_display',
+                                'date_added' => 'now()'
+                            ]);
+                        }
+
+                        if (!defined('MODULE_SHIPPING_USPSR_LTR_PROCESSING')) {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_PROCESSING', [
+                                'configuration_title' => 'Packaging Class - Letters',
+                                'configuration_value' => 'Letters',
+                                'configuration_description' => 'How would you class the packaging of your letters?<br><br><em>\"Letters\"</em> refers to packaging that is rigid in shape and form, like a plain white envelope (#10). A letter is a rectangular piece no more than 6.125" by 11.5" with a thickness no greater than .25" inches. (Anything greater than this or smaller than the minimums will be treated as non-machineable.<br><br><em>\"Flats\"</em> typically refer to large envelopes, newsletters, and magazines. Flats must be no greater than 12 inches by 15 inches with a thickness no greater than .75 inches.<br><br><em>\"Cards\"</em> plainly mean simple postcards with specific measurements.<br><br>Choose the style that best fits how you (on average) ship out your packages.<br><em>This selection only applies to First Class Mail Letters and First Class Mail International Letters.</em><br>',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_select_option([\'Letters\', \'Flats\', \'Cards\'], ',
+                                'date_added' => 'now()'
+                            ]);
+                        }
+
+                        if (!defined('MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS')) {
+                            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS', [
+                                'configuration_title' => 'Machineability Flags (First-Class Mail Letter)',
+                                'configuration_value' => '--none--',
+                                'configuration_description' => 'When sending items via USPS First-Class Mail, check below if any applies to the typical method of how you send your orders.<br><br>- <em>Polybagged</em>: Is the letter/flat/card polybagged, polywrapped, enclosed in any plastic material, or has an exterior surface made of a material that is not paper. Windows in envelopes made of paper do not make mailpieces nonmachinable. Attachments allowable under applicable eligibility standards do not make mailpieces nonmachinable.<br><br>- <em>ClosureDevices</em>: Does the letter/flat/card have clasps, strings, buttons, or similar closure devices?<br><br>- <em>LooseItems</em>: Does the letter/flat/card contain items such as pens, pencils, keys, or coins that cause the thickness of the mailpiece to be uneven; or loose keys or coins or similar objects not affixed to the contents within the mailpiece. Loose items may cause a letter to be nonmailable when mailed in paper envelopes.<br><br>- <em>Rigid</em>: Is the letter/flat/card too rigid?<br><br>- <em>SelfMailer</em>: Is your item a folded self-mailer?<br><br>- <em>Booklet</em>: Is the letter/flat/card a booklet?',
+                                'configuration_group_id' => 6,
+                                'sort_order' => 0,
+                                'set_function' => 'zen_cfg_select_multioption([\'Polybagged\', \'ClosureDevices\', \'LooseItems\', \'Rigid\', \'SelfMailer\', \'Booklet\'], ',
+                                'use_function' => '',
+                                'date_added' => 'now()'
+                            ]);
+                        }
+                    }
+
                     break;
             }
 
@@ -1964,41 +2037,43 @@ class uspsr extends base
                  * This is done by adding the value at the front for US First Class Mail Letter then splicing it into the datatable.
                  */
                 // Regardless of the version, we need to update the data field for MODULE_SHIPPING_USPSR_TYPES.
-                $original_methods = MODULE_SHIPPING_USPSR_TYPES;
+                
+                if (defined('MODULE_SHIPPING_USPSR_TYPES')) {
 
-                // Add the line for US First Class Mail Letter.
-                if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
-                    $original_methods = "0, 0.099223, 0.00, " . $original_methods;
-                } else {
-                    $original_methods = "0, 0.21875, 0.00, " . $original_methods;
-                }
+                    $original_methods = MODULE_SHIPPING_USPSR_TYPES;
 
-                // Break apart the TYPES string into an array
-                $config_methods = preg_split("/,\s+/", $original_methods);
-                $method = 0; // Count how many methods
-                for ($i = 0; $i <= (count($config_methods) - 1); $i++) {
-                    $method += 1;
-
-                    if ($method == 22) { // On the 22nd method on the list, break and add data for the First-Class Mail International Letter
-                        array_splice($config_methods, $i, 0, [0, ((defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') ? 0.099223 : 0.21875), "0.00"]);
-                        break; // We're only adding ONE as the domestic method is already added. So one was already added, don't add anymore.
+                    // Add the line for US First Class Mail Letter.
+                    if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') {
+                        $original_methods = "0, 0.099223, 0.00, " . $original_methods;
+                    } else {
+                        $original_methods = "0, 0.21875, 0.00, " . $original_methods;
                     }
 
-                    if (!is_numeric($config_methods[$i]))
-                        $i += 3;
-                    else
-                        $i += 2;
+                    // Break apart the TYPES string into an array
+                    $config_methods = preg_split("/,\s+/", $original_methods);
+                    $method = 0; // Count how many methods
+                    for ($i = 0; $i <= (count($config_methods) - 1); $i++) {
+                        $method += 1;
+
+                        if ($method == 22) { // On the 22nd method on the list, break and add data for the First-Class Mail International Letter
+                            array_splice($config_methods, $i, 0, [0, ((defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === 'kgs') ? 0.099223 : 0.21875), "0.00"]);
+                            break; // We're only adding ONE as the domestic method is already added. So one was already added, don't add anymore.
+                        }
+
+                        if (!is_numeric($config_methods[$i]))
+                            $i += 3;
+                        else
+                            $i += 2;
+                    }
+
+                    // Rebuild the value and reinsert it into the database.
+                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                        'configuration_value' => implode(", ", $config_methods),
+                        'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\', \'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], '
+                    ]);
+
                 }
-
-                // Rebuild the value and reinsert it into the database.
-                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
-                    'configuration_value' => implode(", ", $config_methods),
-                    'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\', \'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], '
-                ]);
-
-                //
             }
-
 
             $messageStack->add_session(sprintf(MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS, self::USPSR_CURRENT_VERSION), 'success');
 
@@ -2765,15 +2840,6 @@ class uspsr extends base
         return $rows;
     }
 
-    // Renames a config key, should be used sparingly.
-    protected function renameConfigurationKey($old_name, $new_name)
-    {
-        global $db;
-        // Mimics the ScriptedInstallerBase addConfigurationKey, but uses the normal zen_db_perform instead.
-
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_key = '$new_name' WHERE configuration_key = '$old_name'");
-        zen_record_admin_activity("Renamed configuration key: Changed '$old_name' to '$new_name'", 'warning');
-    }
 }
 
 function zen_cfg_uspsr_dimmensions($key_value, $key = '')
@@ -3459,14 +3525,6 @@ function zen_uspsr_estimate_days($data)
 
 
     return $output;
-}
-
-function zen_cfg_uspsr_numericupdown($key_value, $key = '')
-{
-
-    $output_str = zen_draw_input_field($key, $key_value, 'class="form-control" min="0" step="1"', FALSE, 'number');
-
-    return $output_str;
 }
 
 // Compatibility for pre-ZC 1.5.8
