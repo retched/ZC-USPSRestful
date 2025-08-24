@@ -2092,14 +2092,14 @@ class uspsr extends base
          */
         $check_for_new_version = plugin_version_check_for_updates(self::ZEN_CART_PLUGIN_ID, MODULE_SHIPPING_USPSR_VERSION);
 
-        if ($check_for_new_version && MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0") {
+        if (MODULE_SHIPPING_USPSR_VERSION !== "v0.0.0" && $check_for_new_version) {
             $messageStack->add_session(MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE, 'caution');
         }
 
         /**
          * Are you using 0.0.0? Seriously, stop.
          */
-        if (MODULE_SHIPPING_USPSR_VERSION === "v0.0.0")
+        if (self::USPSR_CURRENT_VERSION === "v0.0.0")
             $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
     }
 
