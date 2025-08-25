@@ -1925,8 +1925,8 @@ class uspsr extends base
                     ]);
 
                 case "v1.2.0": // Released 2025-03-15
-                case "v1.3.0": // Released 2025-08-24 (Had an issue with this one, some installs saw some keys get skipped... )
-
+                case "v1.3.0": // Released 2025-08-17 (Had an issue with this one, some installs saw some keys get skipped... )
+                case "v1.3.1": // Released 2025-08-24 (There aren't any changes module was between 1.3.1 and 1.3.2 but it doesn't hurt to rerun)
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) { // Only should be run if the module is already installed.
                         // Changing the description
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [

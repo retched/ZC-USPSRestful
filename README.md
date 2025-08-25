@@ -10,12 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.3.1  
-_Released August 24, 2025 for ZenCart 2.1.0._
+- Last Stable Release: 1.3.2  
+_Released August 25, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
+- 1.3.2  
+  Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted. v1.3.2 replaces that.
 - 1.3.1  
   Minor bug fix to re-add the four-cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.
 - 1.3.0  
