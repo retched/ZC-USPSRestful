@@ -389,9 +389,13 @@ class uspsr extends base
             $_letter['rates'][0]['productName'] = ($this->usps_countries == 'US' ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
 
-            # Bug fix for letters since the metered rate is four cents less.
-            $_letter['rates'][0]['price'] += 0.04;
-            $_letter['totalBasePrice'] += 0.04;
+            # Bug fix for letters since the Domestic metered rate from the API is four cents off. (International seems to come through as normal.)
+            # @todo Maybe toggle if First Class Mail is metered or not?
+            if ($this->usps_countries == 'US') {
+                $_letter['rates'][0]['price'] += 0.04;
+                $_letter['totalBasePrice'] += 0.04;
+            }
+
             $uspsQuote['rateOptions'][] = $_letter;
         }
 
@@ -2752,9 +2756,6 @@ class uspsr extends base
         // If the order's tax-value isn't set (like when a quote is requested from
         // the shipping-estimator), set that value to 0 to prevent follow-on PHP
         // notices from this module's quote processing.
-        // @TODO
-        // reduce order value by products not shipped (Done here)
-
 
         $this->orders_tax = (!isset($order->info['tax'])) ? 0 : $order->info['tax'];
         $this->uninsured_value = (isset($uninsurable_value)) ? (float) $uninsurable_value : 0;
