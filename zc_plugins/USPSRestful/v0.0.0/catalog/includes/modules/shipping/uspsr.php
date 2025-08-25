@@ -3,7 +3,6 @@
  * USPS Shipping (RESTful) for Zen Cart
  * Version 0.0.0
  *
- * @package shippingMethod
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)

@@ -1,4 +1,4 @@
-# Change Log
+# USPS Shipping (RESTful) for Zen Cart
 
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
@@ -8,7 +8,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
 - Create an uninstall script for non-encapsulated installations. [#61](https://github.com/retched/ZC-USPSRestful/issues/61)
 
-## [1.3.1] - 2025-08-24
+## [1.3.2] - 2025-08-25 + ~~[1.3.1] - 2025-08-24~~
+
+_Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has been deleted from the ZenCart Module Directory and the repository releases tab._
+
+### Fixed in 1.3.2
+
+- Errant "hint code" somehow became a part of the build and was pushed out as part of 1.3.1, that bit has been removed.
 
 ### Added in 1.3.1
 
@@ -63,15 +69,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue where the originating JSON request wasn't being attached to the log. [#43](https://github.com/retched/ZC-USPSRestful/issues/43)
 - Fixed an issue that caused a crash when using the "Shipping Zones" function to limit where the module should be allowed. (This evidently was also an issue in lat9's USPS module as they were trying to move away from the legacy form of traversing `$db` output. Whenever the `MoveNext()` functionality is removed, that will cause a breaking change in the module as older ZC's will be left out.) [#44](https://github.com/retched/ZC-USPSRestful/issues/44)
 
-## [1.1.2] - 2025-03-07
+## [1.1.2] + ~~[1.1.1]~~ - 2025-03-07
 
 (Yes, it's released the same day as `1.1.1`. `1.1.1`'s release was deleted and replaced with 1.1.2 instead.)
 
 ### Fixed in 1.1.2
 
 - Resolved issue that users had with selecting a shipping method and having it "stick". (There was an unused method variable that was set by ZenCart that stored the selected method which is used to carry it forward.)
-
-## [1.1.1] - 2025-03-07
 
 ### Fixed in 1.1.1
 

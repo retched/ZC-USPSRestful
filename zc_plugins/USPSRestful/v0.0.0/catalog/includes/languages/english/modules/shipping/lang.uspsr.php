@@ -2,6 +2,7 @@
 /**
  * USPS Shipping (RESTful) for Zen Cart
  * Version 0.0.0
+ * 
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @author Paul Williams (retched)
  * @version $Id: lang.uspsr.php 0000-00-00 retched Version 0.0.0 $

@@ -17,7 +17,7 @@ _Released August 25, 2025 for ZenCart 2.1.0._
 ### Version/Release History
 
 - 1.3.2  
-  Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted. v1.3.2 replaces that.
+  Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted and v1.3.2 replaces that.
 - 1.3.1  
   Minor bug fix to re-add the four-cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.
 - 1.3.0  
@@ -174,16 +174,16 @@ For the update
 These are the file lists that should be included with this module, depending on which version you're running.
 
 ``` text
-- CONTRIBUTING.md
 - LICENSE
 - README.md (this file)
+- README.html
 - changelog.md
 - admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - admin\includes\languages\english\extra_definitions\uspsr.php
 - includes\languages\english\modules\shipping\lang.uspsr.php
 - includes\languages\english\modules\shipping\uspsr.php
 - includes\modules\shipping\uspsr.php
-- includes\templates\template_default\images\icons\shipping_usps.gif (should be included in both encapsulated and unencapsulated)
+- includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.0.0\manifest.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
