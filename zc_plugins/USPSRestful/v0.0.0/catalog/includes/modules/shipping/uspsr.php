@@ -1972,7 +1972,7 @@ class uspsr extends base
                             }
                         }
 
-                        if (!defined(constant_name: 'MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES')) {
+                        if (!defined('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES')) {
                             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES', [
                                 'configuration_title' => 'Shipping Add-ons (Domestic Letters)',
                                 'configuration_value' => '',
@@ -1985,7 +1985,7 @@ class uspsr extends base
                             ]);
                         }
 
-                        if (!defined(constant_name: 'MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES')) {
+                        if (!defined('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES')) {
                             $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES', [
                                 'configuration_title' => 'Shipping Add-ons (International Letters)',
                                 'configuration_value' => '',
