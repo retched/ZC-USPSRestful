@@ -15,6 +15,7 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 ### Fixed in 1.3.2
 
 - Errant "hint code" somehow became a part of the build and was pushed out as part of 1.3.1, that bit has been removed.
+- Made the four-cent change only apply to US destinations as international rates pulled by the API don't seem to be affected.
 
 ### Added in 1.3.1
 
