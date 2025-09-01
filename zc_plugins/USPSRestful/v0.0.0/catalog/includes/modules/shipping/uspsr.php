@@ -1718,25 +1718,67 @@ class uspsr extends base
 
         // This is the check to see if ZenCart should enable the module only for the GeoZone defined
         // in the back end.
-        if ($this->enabled === true && isset($order) && (int) MODULE_SHIPPING_USPSR_ZONE > 0) {
+        if ($this->enabled === true && isset($order) && (int)MODULE_SHIPPING_USPSR_ZONE > 0) {
             $check_flag = false;
             $check = $db->Execute(
                 "SELECT zone_id
-                FROM " . TABLE_ZONES_TO_GEO_ZONES . "
-                WHERE geo_zone_id = " . (int) MODULE_SHIPPING_USPSR_ZONE . "
-                    AND zone_country_id = " . (int) $order->delivery['country']['id'] . "
-                ORDER BY zone_id ASC"
+                   FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+                  WHERE geo_zone_id = " . (int)MODULE_SHIPPING_USPSR_ZONE . "
+                    AND zone_country_id = " . (int)$order->delivery['country']['id'] . "
+                  ORDER BY zone_id ASC"
             );
 
-            foreach ($check->fields['zone_id'] as $zone) {
-                if ($zone < 1 || $zone === $order->delivery['zone_id'])
+            // -----
+            // NOTE: Using the legacy form of traversing the $db output; will be updated once support
+            // is dropped for Zen Cart versions prior to v1.5.7!
+            while (!$check->EOF) {
+                if ($check->fields['zone_id'] < 1 || $check->fields['zone_id'] == $order->delivery['zone_id']) {
                     $check_flag = true;
+                    break;
+                }
+                $check->MoveNext();
             }
 
-            if ($check_flag == false) {
+            // Shipping Estimator fallback?
+            // If the order is being estimated, and the search above yielded something, run this anyway
+            if (!zen_is_logged_in() && ($_GET['main_page'] === 'shopping_cart' || $_GET['main_page'] === 'popup_shipping_estimator')) {
+
+                $selectedState = $_POST['state'];
+                $selected_state_id = $_POST['zone_id'] ?? 0;
+
+                if (!zen_not_null($selectedState) || $selected_state_id < 1) {
+                    // If there is no number
+                    $zone_id = $db->Execute(
+                        "SELECT zone_id
+                           FROM ". TABLE_ZONES . "
+                           WHERE
+                           zone_name LIKE '" . $_POST['state']  . "'
+                           OR
+                           zone_code LIKE '" . $_POST['state'] .  "'");
+
+                    $selected_state_id = $zone_id->fields['zone_id'];
+                }
+
+                if (zen_not_null($selected_state_id)) { // No $zone_id, don't check the result list.
+                    // Reset $check
+                    $check->rewind();
+                    while(!$check->EOF) {
+                        if ($selected_state_id == $check->fields['zone_id']) {
+                            $check_flag = true;
+                            break;
+                        }
+                        $check->MoveNext();
+                    }
+                }
+
+            }
+
+            if ($check_flag === false) {
                 $this->enabled = false;
             }
+
         }
+
 
         $this->notify('NOTIFY_SHIPPING_USPS_UPDATE_STATUS');
     }
