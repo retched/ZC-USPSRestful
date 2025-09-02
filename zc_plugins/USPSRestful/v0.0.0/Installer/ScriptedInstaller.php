@@ -370,14 +370,19 @@ class ScriptedInstaller extends ScriptedInstallBase
                             'date_added' => 'now()'
                         ]);
                     }
+
+                    case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.0. All changes were to the module itself.
                     break;
             }
         }
 
         // Update the version setting to match the new version. (This happens regardless of version, so this should sit outside version check.)
+        // 1.4.0+ change: Updated to display the correct "read_only" function.
         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
             'configuration_value' => $this->version,
-            'set_function' => "zen_cfg_select_option([\'$this->version\'], "
+            'set_function' => "zen_cfg_read_only([\'$this->version\'], ",
+            'use_function' => '',
+            'val_function' => '',
         ]);
 
         return true;

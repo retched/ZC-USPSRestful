@@ -2068,8 +2068,8 @@ class uspsr extends base
                             ]);
                         }
                     }
-
-                    break;
+                    case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.0. All changes were to the module itself.
+                        break;
             }
 
             // After all this, update the modules version number as necessary.

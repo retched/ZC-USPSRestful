@@ -12,10 +12,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 - Last Stable Release: 1.3.2  
 _Released August 25, 2025 for ZenCart 2.1.0._
-- Next Version Number: ???
+- Next Version Number: 1.4.0
 
 ### Version/Release History
 
+- 1.4.0  
+  Makes a change to the module to obey the selected shipping zone in the backend. In other words, if you choose to restrict the order to the continental US (all US states and territories except Alaska, Hawaii, Puerto Rico, Virgin Islands, Guam, etc.), using the shipping estimator (either version) will not return USPS quotes. Additionally made further bug fixes discovered in 1.3.2 (namely an errant comma in the old language file).
 - 1.3.2  
   Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted and v1.3.2 replaces that.
 - 1.3.1  

@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
 - Create an uninstall script for non-encapsulated installations. [#61](https://github.com/retched/ZC-USPSRestful/issues/61)
 
+## [1.4.0] - 2025-09-02
+
+### Fixed in 1.4.0
+
+- Fixed logic behind testing if the USPS module should be enabled for a group [#69](https://github.com/retched/ZC-USPSRestful/issues/69)
+- Fixed logic on the same for the shipping estimator
+- Removed extra comma from old style language file.
+- Changed the function being used to display the version to a read-only function instead of a radio select.
+
 ## [1.3.2] - 2025-08-25 + ~~[1.3.1] - 2025-08-24~~
 
 _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has been deleted from the ZenCart Module Directory and the repository releases tab._
