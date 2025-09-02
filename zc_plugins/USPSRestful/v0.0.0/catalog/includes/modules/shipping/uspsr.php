@@ -3146,7 +3146,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
 
     // Establish a list of codes.
     // Format: (API Code) => ['Name of Service', Bitfield (0 = Nope, 1 = Domestic Pkg, 2 = International Pkg, 4 = Domestic Letters, 8 = International Letters)]
-    $services = [
+    $options = [
         910 => ['Certified Mail', 1 + 4],
         930 => ['Insurance', 1 + 2 + 4],
         925 => ['Priority Mail Express Merchandise Insurance', 1],
@@ -3172,7 +3172,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         857 => ['Hazardous Materials', 1 + 2],
     ];
 
-    foreach ($services as $code => $service) {
+    foreach ($options as $code => $service) {
         if ($service[1] & $focus) { // Does the service pass the bit check? If so, add it.
             $output_str .= zen_draw_checkbox_field($name, $code, (in_array($code, $key_values) ? TRUE : FALSE), '', " id=\"$destination-$code\"") . "&nbsp;&nbsp;<label for=\"$destination-$code\" style=\"font-weight:normal;\">" .  $service[0] . "</label><br>" . "\n";
         }
@@ -3205,7 +3205,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
     }); // Quickly remove white space
 
     $output = '';
-    $services = [
+    $options = [
         -1 => '', // Hidden placeholder, should not be visible.
         910 => 'Certified Mail',
         930 => 'Insurance',
@@ -3234,8 +3234,8 @@ function zen_cfg_uspsr_extraservices_display($key_value)
 
     if (!empty($key_values)) {
         $end = end($key_values);
-        foreach ($key_values as $service) {
-            $output .= $services[$service] . ($service !== $end ? ", " : "");
+        foreach ($key_values as $code) {
+            $output .= $options[$code] . ($code !== $end ? ", " : "");
         }
     }
     if (!zen_not_null($output))
