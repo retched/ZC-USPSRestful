@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
 - Create an uninstall script for non-encapsulated installations. [#61](https://github.com/retched/ZC-USPSRestful/issues/61)
 
+## [1.4.1] - 2025-09-03
+
+### Fixed in 1.4.1
+
+- Fixed bug in ScriptedInstaller.php for Encapsulated installs. (Nothing changed between 1.4.0 and 1.4.1 otherwise. If you have a non-encapsulated install, you can skip this install if you have 1.4.0 installed already.)
+
 ## [1.4.0] - 2025-09-02
 
 ### Fixed in 1.4.0
