@@ -380,7 +380,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         // 1.4.0+ change: Updated to display the correct "read_only" function.
         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
             'configuration_value' => $this->version,
-            'set_function' => "zen_cfg_read_only([\'$this->version\'], ",
+            'set_function' => "zen_cfg_read_only( ",
             'use_function' => '',
             'val_function' => '',
         ]);
