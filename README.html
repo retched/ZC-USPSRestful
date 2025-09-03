@@ -3850,12 +3850,14 @@ body,
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Last Stable Release: 1.3.2<br>
-<em>Released August 25, 2025 for ZenCart 2.1.0.</em></li>
+<li>Last Stable Release: 1.4.0<br>
+<em>Released September 2, 2025 for ZenCart 2.1.0.</em></li>
 <li>Next Version Number: ???</li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.4.0<br>
+Makes a change to the module to obey the selected shipping zone in the backend. In other words, if you choose to restrict the order to the continental US (all US states and territories except Alaska, Hawaii, Puerto Rico, Virgin Islands, Guam, etc.), using the shipping estimator (either version) will not return USPS quotes. Additionally made further bug fixes discovered in 1.3.2 (namely an errant comma in the old language file).</li>
 <li>1.3.2<br>
 Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted and v1.3.2 replaces that.</li>
 <li>1.3.1<br>
@@ -4030,12 +4032,12 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - includes\languages\english\modules\shipping\uspsr.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.2\manifest.php
-- \zc_plugins\USPSRestful\v1.3.2\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.2\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.3.2\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.3.2\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.3.2\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.4.0\manifest.php
+- \zc_plugins\USPSRestful\v1.4.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.4.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.4.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.4.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.4.0\Installer\ScriptedInstaller.php
 </code></pre>
 <h2 id="support-the-author">Support the author</h2>
 <!-- Should this repository be forked, please remove this section -->
