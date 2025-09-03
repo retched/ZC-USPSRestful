@@ -10,12 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Latest Release: [1.4.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-_Released September 2, 2025 for ZenCart 2.1.0._
+- Latest Release: [1.4.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+_Released September 3, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
+- 1.4.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1)  
+  Minor bug fix to ScriptedInstaller.php (encapsulated only)
 - 1.4.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.0)  
   Makes a change to the module to obey the selected shipping zone in the backend. In other words, if you choose to restrict the order to the continental US (all US states and territories except Alaska, Hawaii, Puerto Rico, Virgin Islands, Guam, etc.), using the shipping estimator (either version) will not return USPS quotes. Additionally made further bug fixes discovered in 1.3.2 (namely an errant comma in the old language file).
 - 1.3.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.3.2)  
