@@ -11,7 +11,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Last Stable Release: 1.4.0  
-_Released September, 2025 for ZenCart 2.1.0._
+_Released September 2, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
