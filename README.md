@@ -10,33 +10,33 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Last Stable Release: 1.4.0  
+- Latest Release: [1.4.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
 _Released September 2, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
-- 1.4.0  
+- 1.4.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.0)  
   Makes a change to the module to obey the selected shipping zone in the backend. In other words, if you choose to restrict the order to the continental US (all US states and territories except Alaska, Hawaii, Puerto Rico, Virgin Islands, Guam, etc.), using the shipping estimator (either version) will not return USPS quotes. Additionally made further bug fixes discovered in 1.3.2 (namely an errant comma in the old language file).
-- 1.3.2  
+- 1.3.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.3.2)  
   Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted and v1.3.2 replaces that.
 - 1.3.1  
   Minor bug fix to re-add the four-cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.
-- 1.3.0  
+- 1.3.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.3.0)  
   Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.
-- 1.2.0  
+- 1.2.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.2.0)  
   Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.
-- 1.1.2  
+- 1.1.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.1.2)  
   Bugfix to mend the selection criteria being ignored during normal ZenCart checkout. (A shipping method would be selected, but would be ignored in favor of the "first" shipping method listed.)
 - 1.1.1  
   Minor bug fixes with regards to the selection of the cheapest shipping method. Also fixed a conflict with OPC that prevented any method from being selected. Additionally, fixed an issue with regards to shipping method squashing.
-- 1.1.0  
+- 1.1.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.1.0)  
   Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now, when you update the module, you no longer need to reset the module as a whole; the module will automatically handle whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.
-- 1.0.0  
+- 1.0.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.0.0)  
  A LOT of changes. Including re-adding the min/max weight boxes from USPS, fixing the display of rates and quotes, adding error messages in the backend, fixing bad API returns, cleaned up the repository as a whole. Changes to allow the module to work with PHP8 and PHP7-based ZenCarts. (At least ZenCart 1.5.x or ZenCart 2.x and newer.)
-- 0.2.0  
+- 0.2.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v0.2.0)  
  Various bugfixing, including the reintroduction of First Class Mail Package International Service to the quote pool.
-- 0.1.0  
+- 0.1.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v0.1.0)  
  First "release".
 - 0.0.0  
   _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database [was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the repository is not recommended. Use the [Releases](https://github.com/retched/ZC-USPSRestful/releases) instead._
