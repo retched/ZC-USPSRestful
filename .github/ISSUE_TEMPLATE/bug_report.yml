@@ -72,14 +72,8 @@ body:
     validations:
       required: true
   - type: textarea
-    id: zencart-logs
+    id: logs
     attributes:
-      label: Relevant ZenCart Log Output
-      description: Please copy and paste any relevant log output from ZenCart here. This would be the contents of any myDEBUG file that appeared in your logs directory from ZenCart.
-      render: shell
-  - type: textarea
-    id: uspsr-json-logs
-    attributes:
-      label: Relevant USPS Log Output
-      description: Please copy and paste any relevant log output from the USPSr module here. This would be the contents of any log file generated from the module itself. These are normally named SHIP_uspsr_Debug_.
+      label: Relevant Log Output
+      description: Please copy and paste any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart.
       render: shell
