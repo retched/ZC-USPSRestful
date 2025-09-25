@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Planned
 
 - Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
-- Create an uninstall script for non-encapsulated installations. [#61](https://github.com/retched/ZC-USPSRestful/issues/61)
+- Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
+
+## [UPCOMING: 1.5.0-dev] - ????-??-??
+
+### Fixed in UPCOMING: 1.5.0-dev
+
+- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. (Example: If the order is 85 pounds, ZenCart makes the order send a quote for 42.5 pounds instead.) The quote is supposed to be multiplied for each "box" in the order when configured for such. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)]
 
 ## [1.4.1] - 2025-09-03
 
@@ -18,7 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed in 1.4.0
 
-- Fixed logic behind testing if the USPS module should be enabled for a group [#69](https://github.com/retched/ZC-USPSRestful/issues/69)
+- Fixed logic behind testing if the USPS module should be enabled for a group [[#69](https://github.com/retched/ZC-USPSRestful/issues/69)]
 - Fixed logic on the same for the shipping estimator
 - Removed extra comma from old style language file.
 - Changed the function being used to display the version to a read-only function instead of a radio select.
@@ -43,8 +49,8 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Fixed in 1.3.1
 
-- Fixed an issue where unencapsulated installs could potentially leave out necessary configuration keys. [#59](https://github.com/retched/ZC-USPSRestful/issues/59)
-- Fixed an issue where the retrieved First Class Mail Letters quote would be short by $0.04. [#57](https://github.com/retched/ZC-USPSRestful/issues/57)
+- Fixed an issue where unencapsulated installs could potentially leave out necessary configuration keys. [[#59](https://github.com/retched/ZC-USPSRestful/issues/59)]
+- Fixed an issue where the retrieved First Class Mail Letters quote would be short by $0.04. [[#57](https://github.com/retched/ZC-USPSRestful/issues/57)]
 
 ## [1.3.0] - 2025-08-16
 
@@ -62,9 +68,9 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Fixed in 1.3.0
 
-- Fixed an issue that could potentially cause a blank or dead API return call to break an install. [#56](https://github.com/retched/ZC-USPSRestful/issues/56)
-- Fixed an issue that would generate error debug messages when trying to revoke tokens. [#51](https://github.com/retched/ZC-USPSRestful/issues/51)
-- Fixed an issue that would cause the entered number of handling days to not be saved. (Side note: This will cause validation to not be performed on older variations of ZenCart as that functionality is not present.) [#52](https://github.com/retched/ZC-USPSRestful/issues/52)
+- Fixed an issue that could potentially cause a blank or dead API return call to break an install. [[#56](https://github.com/retched/ZC-USPSRestful/issues/56)]
+- Fixed an issue that would generate error debug messages when trying to revoke tokens. [[#51](https://github.com/retched/ZC-USPSRestful/issues/51)]
+- Fixed an issue that would cause the entered number of handling days to not be saved. (Side note: This will cause validation to not be performed on older variations of ZenCart as that functionality is not present.) [[#52](https://github.com/retched/ZC-USPSRestful/issues/52)]
 
 ### Removed in 1.3.0
 
@@ -79,11 +85,11 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Fixed in 1.2.0
 
-- Fixed an issue where the estimated delivery and estimated day count would repeat twice. (Ex: "USPS (Priority Mail [est. delivery 03/09/2025] [est. delivery 03/09/2025])) Still not sure where it came from but it's resolved. [#36](https://github.com/retched/ZC-USPSRestful/issues/36)
-- Fixed an issue where an older version of ZenCart would try to invoke zen_db_perform with capitalized commands (`UPDATE` instead of `update`) and ZC just doesn't know what to do. [#40](https://github.com/retched/ZC-USPSRestful/issues/40)
-- Fixed an issue where after selecting add-ons, you couldn't clear all of them off in bulk. In short, you had to leave one up and deselect the others. [#42](https://github.com/retched/ZC-USPSRestful/issues/42)
-- Fixed an issue where the originating JSON request wasn't being attached to the log. [#43](https://github.com/retched/ZC-USPSRestful/issues/43)
-- Fixed an issue that caused a crash when using the "Shipping Zones" function to limit where the module should be allowed. (This evidently was also an issue in lat9's USPS module as they were trying to move away from the legacy form of traversing `$db` output. Whenever the `MoveNext()` functionality is removed, that will cause a breaking change in the module as older ZC's will be left out.) [#44](https://github.com/retched/ZC-USPSRestful/issues/44)
+- Fixed an issue where the estimated delivery and estimated day count would repeat twice. (Ex: "USPS (Priority Mail [est. delivery 03/09/2025] [est. delivery 03/09/2025])) Still not sure where it came from but it's resolved. [[#36](https://github.com/retched/ZC-USPSRestful/issues/36)]
+- Fixed an issue where an older version of ZenCart would try to invoke zen_db_perform with capitalized commands (`UPDATE` instead of `update`) and ZC just doesn't know what to do. [[#40](https://github.com/retched/ZC-USPSRestful/issues/40)]
+- Fixed an issue where after selecting add-ons, you couldn't clear all of them off in bulk. In short, you had to leave one up and deselect the others. [[#42](https://github.com/retched/ZC-USPSRestful/issues/42)]
+- Fixed an issue where the originating JSON request wasn't being attached to the log. [[#43](https://github.com/retched/ZC-USPSRestful/issues/43)]
+- Fixed an issue that caused a crash when using the "Shipping Zones" function to limit where the module should be allowed. (This evidently was also an issue in lat9's USPS module as they were trying to move away from the legacy form of traversing `$db` output. Whenever the `MoveNext()` functionality is removed, that will cause a breaking change in the module as older ZC's will be left out.) [[#44](https://github.com/retched/ZC-USPSRestful/issues/44)]
 
 ## [1.1.2] + ~~[1.1.1]~~ - 2025-03-07
 
@@ -95,15 +101,15 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Fixed in 1.1.1
 
-- Resolved all issues with regards to the selection of shipping methods during checkout. (Issues [#28](https://github.com/retched/ZC-USPSRestful/issues/28), [#29](https://github.com/retched/ZC-USPSRestful/issues/29), [#30](https://github.com/retched/ZC-USPSRestful/issues/30), [#31](https://github.com/retched/ZC-USPSRestful/issues/31)) (Long and short run, there was a problem with the counting of each module presented and it caused issues.)
-- Fixed an issue that came up when trying to squash options but you were also using estimated dates/times (the squashing was ignored and all options were presented anyway, bad regex matching). (Issue [#32](https://github.com/retched/ZC-USPSRestful/issues/32))
+- Resolved all issues with regards to the selection of shipping methods during checkout. (Issues [[#28](https://github.com/retched/ZC-USPSRestful/issues/28)], [[#29](https://github.com/retched/ZC-USPSRestful/issues/29)], [[#30](https://github.com/retched/ZC-USPSRestful/issues/30)], [[#31](https://github.com/retched/ZC-USPSRestful/issues/31)]) (Long and short run, there was a problem with the counting of each module presented and it caused issues.)
+- Fixed an issue that came up when trying to squash options but you were also using estimated dates/times (the squashing was ignored and all options were presented anyway, bad regex matching). (Issue [[#32](https://github.com/retched/ZC-USPSRestful/issues/32)])
 
 ## [1.1.0] - 2025-02-22
 
 ### Added in 1.1.0
 
-- The module will now call into the ZenCart Plugin database to see if a new version is available. If there is, you will see a banner on the top of the page alerting you. [#19](https://github.com/retched/ZC-USPSRestful/issues/19)
-- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [#23](https://github.com/retched/ZC-USPSRestful/issues/23). (In short, if you have both Priority Mail and Priority Mail Cubic quoted, with the toggle made for Priority Mail, the module will choose the cheaper of the two methods and display that.)
+- The module will now call into the ZenCart Plugin database to see if a new version is available. If there is, you will see a banner on the top of the page alerting you. [[#19](https://github.com/retched/ZC-USPSRestful/issues/19)]
+- Ground Advantage and Ground Advantage Cubic will now be squashed into the cheaper method being offered. Same with Priority Mail and Priority Mail Cubic. [[#23](https://github.com/retched/ZC-USPSRestful/issues/23)]. (In short, if you have both Priority Mail and Priority Mail Cubic quoted, with the toggle made for Priority Mail, the module will choose the cheaper of the two methods and display that.)
 
 ### Removed in 1.1.0
 
@@ -117,7 +123,7 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 ### Fixed in 1.1.0
 
 - There was a spelling error for "Priority Mail" which made "Priorty Mail". That was fixed.
-- Resolved [#25](https://github.com/retched/ZC-USPSRestful/issues/25): Some error messages still bled through even though there was a series of flags and checks to make sure not to bother with launching the quote. Now the logic is: If the order country is bound to the United States and there is no zip code, the module will not try to get a quote. If the quote is requested for an order going elsewhere, the Zip Code is less important.
+- Resolved [[#25](https://github.com/retched/ZC-USPSRestful/issues/25)]: Some error messages still bled through even though there was a series of flags and checks to make sure not to bother with launching the quote. Now the logic is: If the order country is bound to the United States and there is no zip code, the module will not try to get a quote. If the quote is requested for an order going elsewhere, the Zip Code is less important.
 
 ## [1.0.0] - 2025-02-18
 
@@ -148,7 +154,7 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 - Full compatibility with ZenCart 1.5.7 AND PHP7. (Technically speaking, the code base was compatible with PHP 7.3 and onward, but 7.1 still required Heredocs to end at the first column of the line. There was an extra indent involved.)
 - Added a catch all to prevent a bugged API response for Media Mail. In short, the values for Nonstandard Basic was being duplicated. USPS is aware of this but there's is no telling of when a fix will come. In the interim, the module will filter out the other response and proceed with just one. This does mean that your Machinable packages will be treated as Nonstandard. (In most cases, the price should still be the same.)
 - Filtered off the PMOD (Priority Mail Open and Distribute) responses as well as duplicated domestic Flat Rates.
-- Improved filtering from Media Mail, Ground Advantage Cubic, Priority Mail, and Priority Mail Express services. (Fixes [issue #13](https://github.com/retched/ZC-USPSRestful/issues/13) from the Github.)
+- Improved filtering from Media Mail, Ground Advantage Cubic, Priority Mail, and Priority Mail Express services. (Fixes [[#13](https://github.com/retched/ZC-USPSRestful/issues/13)] from the Github.)
 - More "industry" terms filtered out. (Open and Distribute methods are filtered out.)
 - Changed USPS Ground Advantage to just read Ground Advantage instead.
 - Fixed validation of zipcodes: module now tries to see if the order has a US destination. If so, disable the module if someone enters something that isn't a 5 or 9 digit zip code.
@@ -157,7 +163,7 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 - Error messages in the admin backend now use `$messageStack` instead of attaching it to the row of details.
 - Improved README to give directions on how to create an API credentials. (Wiki was also created and articles created there.)
-- The internal handling of some of the shipping methods has changed. (Namely USPS Ground Advantage, Priority Mail, Media, and Priority Mail Express. Each of these has a weird naming scheme in the API that was either causing rates to not appear or appear more than once in a non-descriptive way. Also see [issue #13](https://github.com/retched/ZC-USPSRestful/issues/13) and various comments on the repository.)
+- The internal handling of some of the shipping methods has changed. (Namely USPS Ground Advantage, Priority Mail, Media, and Priority Mail Express. Each of these has a weird naming scheme in the API that was either causing rates to not appear or appear more than once in a non-descriptive way. Also see [[#13](https://github.com/retched/ZC-USPSRestful/issues/13)] and various comments on the repository.)
 - Changed machinability flag to only apply with Media Mail. The USPS API will automatically determine if a package would be machinable or nonstandard, the term irregular has been retired for other services. How ever for Media Mail, the seller will need to provide a bit of details.
 - Renamed `MODULE_SHIPPING_USPSR_PROCESSING_CLASS` to `MODULE_SHIPPING_USPSR_MEDIA_CLASS`. This is an internal only change. Makes it easier to identify in the code.
 - Sanitized the debug logs by hiding the "client secret" from the JSON file that is saved in the log. (It's still dispatched but seeing the secret is not necessary.)
@@ -184,10 +190,10 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Fixed in 0.2.0
 
-- ~~[BUG] Resolved issue [#4](https://github.com/retched/ZC-USPSRestful/issues/4): (Loading the file via Plugin Manager generates a crash). This was resolved by an emergency patch to the release files but is being properly deployed now.~~ (This patch has been undone as the module is now active on the ZenCart Plugins Database.)
-- [BUG] Resolved issue [#5](https://github.com/retched/ZC-USPSRestful/issues/5): Stops error message complaining about a `NULL` value for `$order->delivery['street_address']` when searching if a delivery address is either a `PO_BOX` or `STREET` address. This normally happens when you try to use the module on something like the Shipping Estimator where there is no address set.
-- [BUG] Resolved issue [#7](https://github.com/retched/ZC-USPSRestful/issues/7):  First Class Mail International Service missing from quotes. This was apparently repaired by the USPS API Tech Team. The quote is now reinstated alongside other international quotes. Additionally, both quotes now will carry the estimated value of the cart alongside it. This is important as there are no limits on domestic shipments but there is a limit of \$400 for First Class Mail Package Service and a limit of about $600 for other services. If the request is too much, the quote will not return anything as it is outside of the range.
-- [BUG] Resolved issue [#8](https://github.com/retched/ZC-USPSRestful/issues/8): Shipping Modules listing crashes when module loads. This happens when the `TABLE_ORDERS` has a `shipping_method` column set to `TEXT` and is filled with larger data. Originally the module, during the `_check()` process, would see if the column was set to be a `VARCHAR(255)`. If it was set to anything but a `VARCHAR(255)`, the module would try to issue an `ALTER TABLE` SQL command and make it a `VARCHAR(255)`. This would backfire as ZenCart would catch a MYSQL error on the tune of "Data too big" and just crash the entire backend. This change will now ignore the column if it's set to anything bigger than a `VARCHAR`.
+- ~~[BUG] Resolved issue [[#4](https://github.com/retched/ZC-USPSRestful/issues/4)]: (Loading the file via Plugin Manager generates a crash). This was resolved by an emergency patch to the release files but is being properly deployed now.~~ (This patch has been undone as the module is now active on the ZenCart Plugins Database.)
+- [BUG] Resolved issue [[#5](https://github.com/retched/ZC-USPSRestful/issues/5)]: Stops error message complaining about a `NULL` value for `$order->delivery['street_address']` when searching if a delivery address is either a `PO_BOX` or `STREET` address. This normally happens when you try to use the module on something like the Shipping Estimator where there is no address set.
+- [BUG] Resolved issue [[#7](https://github.com/retched/ZC-USPSRestful/issues/7)]:  First Class Mail International Service missing from quotes. This was apparently repaired by the USPS API Tech Team. The quote is now reinstated alongside other international quotes. Additionally, both quotes now will carry the estimated value of the cart alongside it. This is important as there are no limits on domestic shipments but there is a limit of \$400 for First Class Mail Package Service and a limit of about $600 for other services. If the request is too much, the quote will not return anything as it is outside of the range.
+- [BUG] Resolved issue [[#8](https://github.com/retched/ZC-USPSRestful/issues/8)]: Shipping Modules listing crashes when module loads. This happens when the `TABLE_ORDERS` has a `shipping_method` column set to `TEXT` and is filled with larger data. Originally the module, during the `_check()` process, would see if the column was set to be a `VARCHAR(255)`. If it was set to anything but a `VARCHAR(255)`, the module would try to issue an `ALTER TABLE` SQL command and make it a `VARCHAR(255)`. This would backfire as ZenCart would catch a MYSQL error on the tune of "Data too big" and just crash the entire backend. This change will now ignore the column if it's set to anything bigger than a `VARCHAR`.
 - [BUG] Fixed double spacing present on all quoted process names. (These extra spaces weren't visible anywhere else other than the logfile and maybe the raw source code too if you looked hard enough for it.)
 
 ### Removed in 0.2.0
