@@ -521,7 +521,6 @@ class uspsr extends base
             $message = '';
             $message .= "\n" . '===============================================' . "\n";
             $message .= 'Building options...' . "\n";
-            $message .= 'Number of boxes: ' . $shipping_num_boxes . "\n";
             $this->uspsrDebug($message);
 
 
@@ -804,7 +803,7 @@ class uspsr extends base
 
                             $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
                             $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double) $rate['totalPrice']) : $currencies->format((double) $rate['totalBasePrice'])) . " , Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . "\n";
-                            $quote_message .= 'Final Price (Quote + Handling + Order Handling) * # of Boxes : ' . $currencies->format($price) . "\n";
+                            $quote_message .= "Final Price (Quote + Handling + Order Handling) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
 
                         } elseif (zen_not_null($method)) {
 
@@ -2802,8 +2801,8 @@ class uspsr extends base
         // notices from this module's quote processing.
 
         $this->orders_tax = (!isset($order->info['tax'])) ? 0 : $order->info['tax'];
-        $this->uninsured_value = (isset($uninsurable_value)) ? (float) $uninsurable_value : 0;
-        $this->shipment_value = ($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total;
+        $this->uninsured_value = (double)number_format((isset($uninsurable_value)) ? (float) $uninsurable_value : 0, 2);
+        $this->shipment_value = (double)number_format(($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total, 2);
         $this->insured_value = $this->shipment_value - $this->uninsured_value;
 
         // Breakout the category of exemptions for Media Mail
