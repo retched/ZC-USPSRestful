@@ -542,7 +542,6 @@ class uspsr extends base
             // Okay go through each quote and add in the appropriate amount for the handling.
 
             // Are we applying the cost per box or the whole order?
-            $handling_ext = $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
             $quote_message = '';
             $m = 0; // Index for making the quote id's with
 
@@ -561,13 +560,14 @@ class uspsr extends base
                         $method_to_add = TRUE;
                         $made_weight = TRUE;
 
-                        // Plainly, the final quote price is the quote + handling + order handling. Return that.
-                        $price = (isset($rate['totalPrice']) ? (double) $rate['totalPrice'] : (double) $rate['totalBasePrice']) + (double) $method_item['handling'] + (double) $handling_ext;
-
                         // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
                         // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
                         if (!$this->is_apo_dest && ($method_item['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO'))
                             continue;
+
+                        // Plainly, the final quote price is the (quote + handling + order handling fee) * number of boxes. Return that as the price.
+                        // @todo Change this to pull the selected services instead of dispatching the request and locking out services.
+                        $price = ((isset($rate['totalPrice']) ? (double) $rate['totalPrice'] : (double) $rate['totalBasePrice']) + (double) $method_item['handling'] + (double) $usps_handling_fee) * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
 
                         $rate_name = (!empty($rate['rates'][0]['productName']) ? trim($rate['rates'][0]['productName']) : $rate['rates'][0]['description']);
 
@@ -802,8 +802,8 @@ class uspsr extends base
                             $build_quotes[] = $quotes;
 
                             $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                            $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double) $rate['totalPrice']) : $currencies->format((double) $rate['totalBasePrice'])) . " , Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($handling_ext) . "\n";
-                            $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
+                            $quote_message .= 'Price From Quote : ' . (isset($rate['totalPrice']) ? $currencies->format((double) $rate['totalPrice']) : $currencies->format((double) $rate['totalBasePrice'])) . " , Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . "\n";
+                            $quote_message .= "Final Price (Quote + Handling + Order Handling) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
 
                         } elseif (zen_not_null($method)) {
 
@@ -811,7 +811,7 @@ class uspsr extends base
                             if ($quotes['id'] == $method) {
 
                                 $quote_message .= "\n" . 'Selected method : (' . $quotes['id'] . ") " . $quotes['title'] . "\n";
-                                $quote_message .= 'Final Price (Quote + Handling + Order Handling) : ' . $currencies->format($price) . "\n";
+                                $quote_message .= 'Final Price (Quote + Handling + Order Handling) * # of Boxes : ' . $currencies->format($price) . "\n";
 
                                 $build_quotes[] = $quotes;
                             } else {
@@ -1602,7 +1602,7 @@ class uspsr extends base
 
     protected function quoteLogConfiguration()
     {
-        global $order, $currencies;
+        global $order, $currencies, $shipping_num_boxes;
 
         if ($this->debug_enabled === false) {
             return;
@@ -1661,15 +1661,16 @@ class uspsr extends base
             $quote_ounces = ($this->quote_weight - $quote_pounds) * 16;
 
             $message .= 'Cart Weight: ' . $_SESSION['cart']->weight . " " . SHIPPING_WEIGHT_UNITS . " ( " . $cart_pounds . " lbs. , " . $cart_ounces . " oz. )" . "\n";
-            $message .= 'Total Quote Weight: ' . $this->quote_weight . ' lbs. ( Pounds: ' . $quote_pounds . ', Ounces: ' . $quote_ounces . " )\n";
+            $message .= 'Total Quote Weight: ' . $this->quote_weight . ' lbs. ( Pounds: ' . $quote_pounds . ', Ounces: ' . $quote_ounces . " , Number of Boxes : $shipping_num_boxes )\n";
 
         } else { // means it has to be kgs
             $message .= 'Cart Weight: ' . $_SESSION['cart']->weight . " " . SHIPPING_WEIGHT_UNITS . "\n";
-            $message .= 'Total Quote Weight: ' . $this->quote_weight . ' kgs.' . "\n";
+            $message .= 'Total Quote Weight: ' . $this->quote_weight . ' kgs.' . " ( Number of Boxes : $shipping_num_boxes )\n";
         }
 
         $message .= 'Maximum: ' . SHIPPING_MAX_WEIGHT . ' ' . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . (double) SHIPPING_MAX_WEIGHT * 0.453592 . " lbs)" : '') . ' , Tare Rates: Small/Medium: ' . SHIPPING_BOX_WEIGHT . ' Large: ' . SHIPPING_BOX_PADDING . "\n";
         $message .= 'Order Handling method: ' . MODULE_SHIPPING_USPSR_HANDLING_METHOD . ', Handling fee Domestic (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC) . ', Handling fee International (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_INTL) . "\n";
+
 
         $message .= "\n" . 'Services Selected: ' . "\n" . strip_tags(zen_cfg_uspsr_showservices(MODULE_SHIPPING_USPSR_TYPES)) . "\n";
         $message .= "Services being squashed: " . str_replace("Squash ", "", MODULE_SHIPPING_USPSR_SQUASH_OPTIONS) . "\n\n";
@@ -2800,8 +2801,8 @@ class uspsr extends base
         // notices from this module's quote processing.
 
         $this->orders_tax = (!isset($order->info['tax'])) ? 0 : $order->info['tax'];
-        $this->uninsured_value = (isset($uninsurable_value)) ? (float) $uninsurable_value : 0;
-        $this->shipment_value = ($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total;
+        $this->uninsured_value = (double)number_format((isset($uninsurable_value)) ? (float) $uninsurable_value : 0, 2);
+        $this->shipment_value = (double)number_format(($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total, 2);
         $this->insured_value = $this->shipment_value - $this->uninsured_value;
 
         // Breakout the category of exemptions for Media Mail

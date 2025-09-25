@@ -12,10 +12,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 - Latest Release: [1.4.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
 _Released September 3, 2025 for ZenCart 2.1.0._
-- Next Version Number: ???
+- Next Version Number: 1.5.0-dev
 
 ### Version/Release History
 
+- 1.5.0: [No Download]  
+  Fixed an issue with the quote when sending abnormally large boxes.
 - 1.4.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1)  
   Minor bug fix to ScriptedInstaller.php (encapsulated only)
 - 1.4.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.0)  
