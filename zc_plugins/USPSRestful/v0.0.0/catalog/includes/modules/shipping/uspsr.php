@@ -236,7 +236,7 @@ class uspsr extends base
          * Sourced from original ZC USPS Module
          */
         $contents_ok = true;
-        $this->notify('NOTIFY_SHIPPING_USPS_CHECK_CART', 'uspsr', $contents_ok);
+        $this->notify('NOTIFY_USPS_SHIPPING_CHECK_CART', 'uspsr', $contents_ok);
         if ($contents_ok === false) {
             $this->enabled = false;
             return;
@@ -2239,9 +2239,14 @@ class uspsr extends base
         // Are we looking up the time frames? If not, don't send the request for Standards
         if (defined('MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT') && MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT !== 'No' && $this->is_us_shipment) {
 
+            
             foreach (json_decode($this->_makeStandardsCall($standards_query), TRUE) as $item) {
                 $this->uspsStandards[$item['mailClass']] = $item;
             }
+            
+            // Holdover observer, instead of modifiying the request, you'll modify the result. Use a DEBUG file to see what is available to modify.
+            $this->notify('NOTIFY_SHIPPING_USPS_CUSTOM_TRANSIT_TIME', $this->uspsStandards);
+            
 
         }
 
