@@ -41,3 +41,14 @@ define('MODULE_SHIPPING_USPSR_UPGRADE_SUCCESS', MODULE_SHIPPING_USPSR_NOTICE . "
 define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE . 'There is a new version of the USPSr module available! To download it, visit the listing on the <a href="https://www.zen-cart.com/downloads.php?do=file&id=2395" target="_blank">ZenCart Plugins and Modules database</a>.');
 define('MODULE_SHIPPING_USPSR_DEVELOPMENTAL' , MODULE_SHIPPING_USPSR_NOTICE . "You are running a <strong>developmental</strong> version of the USPSr  module. Some things may not work as intended. Please be sure to report any problems on the <a href=\"https://github.com/retched/ZC-USPSRestful/issues\" target=\"_blank\">GitHub repository</a> or <a href=\"https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)\" target=\"_blank\">ZenCart support thread</a>.");
 define('MODULE_SHIPPING_USPSR_HANDLING_DAYS', MODULE_SHIPPING_USPSR_ERROR . 'The number of handling days must be a positive integer between 0 and 30! ');
+
+/**
+ * Adding for the backarea
+ */
+
+define('MODULE_SHIPPING_USPSR_TEXT_DAY' , 'day');
+define('MODULE_SHIPPING_USPSR_TEXT_DAYS' , 'days');
+define('MODULE_SHIPPING_USPSR_TEXT_WEEKS' , 'weeks');
+define('MODULE_SHIPPING_USPSR_TEXT_VARIES' , 'Varies');
+define('MODULE_SHIPPING_USPSR_TEXT_ESTIMATED' , 'est.');
+define('MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY' , 'est. delivery');

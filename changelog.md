@@ -9,9 +9,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [UPCOMING: 1.5.0-dev] - ????-??-??
 
+### Added in UPCOMING: 1.5.0-dev
+
+- Added the other notifiers (there was only one missing) from the original USPS WebTools module (one was changed due to differences between the code bases but their insertion points remain).
+
 ### Changed in UPCOMING: 1.5.0-dev
 
+- Changed the HTML code for the backend from `<b>` to `<strong>`. _(This is not going to be updated on current installs.)_
 - Improved the building of quotes. Broadly instead of the module doing a double iteration over the full list of selected methods and the entire resultant request from the USPS API, the module now indexes that pull and will hunt down the desired method by named key now. This should greatly help with the problem of slow API pulls. [[#50](https://github.com/retched/ZC-USPSRestful/issues/50)]
+- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend.)
 
 ### Fixed in UPCOMING: 1.5.0-dev
 
