@@ -5,14 +5,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- Improve the building of quotes. Right now the comparison method is a bit clunky and, supposedly, is a drain on some installations due to the iteration loops being used to make the comparisons. (This is a limitation of the way how the quotes are built from the API call.)
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 
 ## [UPCOMING: 1.5.0-dev] - ????-??-??
 
+### Added in UPCOMING: 1.5.0-dev
+
+- Added the other notifiers (there was only one missing) from the original USPS WebTools module (one was changed due to differences between the code bases but their insertion points remain).
+
+### Changed in UPCOMING: 1.5.0-dev
+
+- Changed the HTML code for the backend from `<b>` to `<strong>`. _(This is not going to be updated on current installs.)_
+- Improved the building of quotes. Broadly instead of the module doing a double iteration over the full list of selected methods and the entire resultant request from the USPS API, the module now indexes that pull and will hunt down the desired method by named key now. This should greatly help with the problem of slow API pulls. [[#50](https://github.com/retched/ZC-USPSRestful/issues/50)]
+- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend.)
+
 ### Fixed in UPCOMING: 1.5.0-dev
 
-- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. (Example: If the order is 85 pounds, ZenCart makes the order send a quote for 42.5 pounds instead.) The quote is supposed to be multiplied for each "box" in the order when configured for such. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)]
+- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. (Example: If the order is 85 pounds, ZenCart makes the order send a quote for 42.5 pounds instead.) The quote is supposed to be multiplied for each "box" in the order when configured for such. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)] Additionally, the "order" fee is also multiplied.
+- Fixed an issue that would generate a warning when the module would try to request standards for services that don't provide them. (ie. Connect Local and all international shipments.) That problem is now squelched as the module will check to see such a result exist first before trying to access it.
 
 ## [1.4.1] - 2025-09-03
 

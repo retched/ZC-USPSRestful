@@ -17,7 +17,7 @@ _Released September 3, 2025 for ZenCart 2.1.0._
 ### Version/Release History
 
 - 1.5.0: [No Download]  
-  Fixed an issue with the quote when sending abnormally large boxes.
+  Fixed an issue with the quote when sending abnormally large boxes. Fixed the MAJOR issue with regards to the speed of requesting quotes. (The module will no longer try to double iterate over the entire request and instead, indexes the resultant USPS calls and pulls them up as needed. Same with Standards calls.) Fixed an issue with the math of the quotes themselves.
 - 1.4.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1)  
   Minor bug fix to ScriptedInstaller.php (encapsulated only)
 - 1.4.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.0)  
@@ -50,6 +50,7 @@ _Released September 3, 2025 for ZenCart 2.1.0._
 - [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of four APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, and OAuth 3.0._
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
 - [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module. For assistance with the original USPS module, which uses the WebTools API, you should post in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread) on the ZenCart forums.
+- [Personal Discord Server](https://discord.gg/cZCJ8za7zg) - You can use this reach out to me via DMs or by commenting in the appropriate channel. Please be mindful of etiquette and rules.
 
 ## Setup, Install, and Upgrading
 
@@ -86,7 +87,9 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### What version of ZenCart does this module support?
 
-Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.)
+Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.) 
+
+**UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
 
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
@@ -97,9 +100,11 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 | ZenCart 2.0.0 |      :wrench:      | :white_check_mark: |
 | ZenCart 2.0.1 |      :wrench:      | :white_check_mark: |
 | ZenCart 2.1.0 | :white_check_mark: | :white_check_mark: |
+| ZenCart 2.2.0 |     :clipboard:    |     :clipboard:    |
 
 - :white_check_mark: = Fully supported
 - :x: = Not supported
+- :clipboard: = In testing, BUT it SHOULD work.
 - :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
 
 ### What is the difference between this version and the original USPS module?
@@ -113,6 +118,8 @@ The older `USERID` and `PASSWORD` from the WebTools API are not valid for the ne
 ### Why should I use this version versus the one that's out there now?
 
 The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access, but they will read you the "riot act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using it, continue to use it. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward.
+
+**UPDATE** USPS has begun forcing people off of WebTools if they believe your account is "inactive". Inactive can mean a bunch of things including not using the WebTools API to make a call in a long time, not acknowledging the deprecation changes, and more. If you're using WebTools currently, understand that USPS is set on forcing everyone to the OAuth version (which this module provides).
 
 ### What is this OAuth Token? Do I need to get one?
 
@@ -153,15 +160,13 @@ Those symbols don't appear within the new USPS API calls as they do on the origi
 SORT OF. You don't have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.
 
 - Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely "Shipping Weight Units" and "Shipping Dimension Units".
-- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 45 and 51, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is, you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, and no period at the end).)
+- Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 44 and 50, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is, you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, and no period at the end).)
 
 If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
 
 ## Known Limitations/Issues
 
 - As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.
-- Trying to visit `cmd=configuration&gID=6` while this module is active will cause the admin configurator to break. This is likely because the display functions use custom functions that are cooked directly into the module's file itself and not loaded separately into a separate functions file. This will likely be fixed in a future version by moving the functions being referenced to a separate functions file. If you do need to visit that particular view while this module is installed, it is recommended that you disable and remove the module (not via the plugin manager but the shipping modules manager) to view what you need and then when you're ready, reenable it.
-- Not all of the Observers/Notifier triggers made it here from the original USPS module. I eyeballed this and tried to place the original triggers and observers where I best guessed they fit in. But I'm not going to lie, I'm not too confident I got them all or even correctly applied them. If you are a developer/site owner and you used one or more of the notifiers/observers classes that I missed, please feel free to reach out to me via the ZenCart forums PM system or the ZenCart thread linked above. (I'm missing about six of them as of this release, but I'll pass through and re-add them as I can.)
 
 ## Credits
 
@@ -184,13 +189,16 @@ These are the file lists that should be included with this module, depending on 
 - README.md (this file)
 - README.html
 - changelog.md
+- admin\includes\functions\extra_functions\usps.extra_functions.php
 - admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - admin\includes\languages\english\extra_definitions\uspsr.php
 - includes\languages\english\modules\shipping\lang.uspsr.php
 - includes\languages\english\modules\shipping\uspsr.php
+- includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.0.0\manifest.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
