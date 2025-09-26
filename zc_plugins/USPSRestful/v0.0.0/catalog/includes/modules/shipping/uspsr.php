@@ -579,7 +579,12 @@ class uspsr extends base
                     $services = strpos($method_item['method'], "Letter") !== false ? $ltr_services : $pkg_services;
 
                     // For packages, cycle through and add the services. (For letters, the price is baked into the request and result. Don't do it.)
-                    if (strpos($method_item['method'], "First-Class") === FALSE) $services_total += array_sum(array_map(fn($s) => $lookup[$method_item['method']]['extraService'][$s]['price'] ?? 0, $services));
+                    if (strpos($method_item['method'], "First-Class") === false) {
+                        $services_total += array_sum(array_map(function ($s) use ($lookup, $method_item) {
+                            return isset($lookup[$method_item['method']]['extraService'][$s]['price'])
+                                ? $lookup[$method_item['method']]['extraService'][$s]['price']
+                                : 0;
+                    }, $services));
 
                     // Handling as defined by the method
                     $price += $method_item['handling'];
@@ -786,6 +791,9 @@ class uspsr extends base
 
             }
 
+            } 
+        $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
+        return $this->quotes;
         } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
 
             // Only show this during debugging
@@ -802,10 +810,8 @@ class uspsr extends base
                 $this->enabled = false;
             }
         }
-
-        $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
-        return $this->quotes;
     }
+    
 
     public function check()
     {
