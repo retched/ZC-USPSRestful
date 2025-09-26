@@ -27,6 +27,7 @@ Tested against ZenCart version: (A test passes if it generates no new warnings o
 - [ ] ZenCart 2.0.0
 - [ ] ZenCart 2.0.1
 - [ ] ZenCart 2.1.0
+- [ ] ZenCart 2.2.0-dev
 
 ## Checklist
 
