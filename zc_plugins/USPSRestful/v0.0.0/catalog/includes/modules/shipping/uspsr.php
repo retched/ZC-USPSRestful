@@ -707,8 +707,6 @@ class uspsr extends base
 
             // Build Estimates Attachment
             if (!empty($uspsStandards)) {
-                // Decode JSON into an associative array
-
                 switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
                     case "Estimate Transit Time":
                         foreach ($build_quotes as &$quote) {
@@ -1416,8 +1414,6 @@ class uspsr extends base
         $domm_ltr_height = (double) $ltr_dimmensions[4];
         $intl_ltr_height = (double) $ltr_dimmensions[5];
 
-
-
         $message = '' . "\n\n";
         $message .= "USPSRestful Configuration Report\n";
         $message .= "=========================================================\n";
@@ -1847,6 +1843,8 @@ class uspsr extends base
                         }
                     }
                     case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.1. All changes were to the module itself.
+                    case "v1.4.0": // Released 2025-09-02: No database changes
+                    case "v1.4.1": // Released 2025-09-03: No database changes
                         break;
             }
 
