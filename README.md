@@ -11,12 +11,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Latest Release: [1.4.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-_Released September 3, 2025 for ZenCart 2.1.0._
-- Next Version Number: 1.5.0-dev
+  _Released September 3, 2025 for ZenCart 2.1.0._
+- Next Version Number: [1.5.0-dev](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+  _Release candidate being sent out for testing._
 
 ### Version/Release History
 
-- 1.5.0: [No Download]  
+- 1.5.0-dev: [Download](https://github.com/retched/ZC-USPSRestful/releases/latest)  
   Fixed an issue with the quote when sending abnormally large boxes. Fixed the MAJOR issue with regards to the speed of requesting quotes. (The module will no longer try to double iterate over the entire request and instead, indexes the resultant USPS calls and pulls them up as needed. Same with Standards calls.) Fixed an issue with the math of the quotes themselves.
 - 1.4.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1)  
   Minor bug fix to ScriptedInstaller.php (encapsulated only)
@@ -197,13 +198,13 @@ These are the file lists that should be included with this module, depending on 
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\manifest.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0-dev\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.5.0-dev\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author
