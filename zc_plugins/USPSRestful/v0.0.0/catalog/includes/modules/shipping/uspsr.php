@@ -540,7 +540,7 @@ class uspsr extends base
             $message .= 'Lookup lists' . "\n";
             $message .= print_r($lookup, TRUE) . "\n";
             $message .= '===============================================' . "\n";
-            $this->uspsrDebug($message);
+            // $this->uspsrDebug($message); // Hiding to reduce log file size
 
             $m = 0; //Index for quote
             // Extra Services
@@ -768,7 +768,6 @@ class uspsr extends base
                     'module' => $this->title,
                     'methods' => $build_quotes,
                     'tax' => ($this->tax_class > 0) ? zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']) : null,
-
                 ];
                 // Should there be a warning that the dates are estimations?
 
@@ -781,7 +780,7 @@ class uspsr extends base
                         'icon' => zen_image($this->icon),
                         'methods' => [],
                         'module' => $this->title,
-                        'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR
+                        'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
                     ];
                 } else {
                     $this->enabled = false;
