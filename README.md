@@ -17,7 +17,7 @@ _Released September 3, 2025 for ZenCart 2.1.0._
 ### Version/Release History
 
 - 1.5.0: [No Download]  
-  Fixed an issue with the quote when sending abnormally large boxes.
+  Fixed an issue with the quote when sending abnormally large boxes. Fixed the MAJOR issue with regards to the speed of requesting quotes. (The module will no longer try to double iterate over the entire request and instead, indexes the resultant USPS calls and pulls them up as needed. Same with Standards calls.) Fixed an issue with the math of the quotes themselves.
 - 1.4.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1)  
   Minor bug fix to ScriptedInstaller.php (encapsulated only)
 - 1.4.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.0)  
