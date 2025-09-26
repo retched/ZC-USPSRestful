@@ -189,13 +189,16 @@ These are the file lists that should be included with this module, depending on 
 - README.md (this file)
 - README.html
 - changelog.md
+- admin\includes\functions\extra_functions\usps.extra_functions.php
 - admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - admin\includes\languages\english\extra_definitions\uspsr.php
 - includes\languages\english\modules\shipping\lang.uspsr.php
 - includes\languages\english\modules\shipping\uspsr.php
+- includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.0.0\manifest.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
