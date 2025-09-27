@@ -57,6 +57,15 @@ body:
       default: 0
     validations:
       required: true
+  - type: dropdown
+    id: install-style
+    attributes:
+      label: Installation Method
+      description: Which version of the module are you using? Encapsulated (you install via the plugin manager) or Standard (you install the files directly into the necessary directories)
+      multiple: false
+      options:
+        - Encapsulated
+        - Standard
   - type: input
     id: related-thread
     attributes:
