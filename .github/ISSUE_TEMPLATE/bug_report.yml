@@ -66,6 +66,9 @@ body:
       options:
         - Encapsulated
         - Standard
+      default: 0
+    validations:
+      required: true
   - type: input
     id: related-thread
     attributes:
