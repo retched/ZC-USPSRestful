@@ -5,7 +5,7 @@
  *
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @author Paul Williams (retched)
- * @version $Id: ScriptedInstaller.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: ScriptedInstaller.php 2025-10-02 retched Version 0.0.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -50,6 +50,8 @@ class ScriptedInstaller extends ScriptedInstallBase
          * [0.2.0 and onward] We need to change one of the ZenCart setting descriptions to remove the mention of inches from it.
          * Generally speaking, the cart will automatically be converted to inches one way or the other. So going forward,
          * change the dialog to indicate as such.
+         * 
+         * @todo This whole section needs a revamp.
          *
          */
 
@@ -373,7 +375,10 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                     case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.1. All changes were to the module itself.
                     case "v1.4.0": // Released 2025-09-02: No database changes
-                    case "v1.4.1": // Released 2025-09-03: No database changes
+                    case "v1.4.1": // Released 2025-09-03: Minor database change. (Have to rename 'Priority Mail Large Flat Rate Box APO/FPO/DPO' to 'Priority Mail Large Flat Rate APO/FPO/DPO')
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                            'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
+                        ]);
                         break;
             }
         }

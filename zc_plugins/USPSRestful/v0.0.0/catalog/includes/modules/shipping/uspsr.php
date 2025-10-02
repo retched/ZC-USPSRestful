@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @copyright Portions adapted from 2012 osCbyJetta
  * @author Paul Williams (retched)
- * @version $Id: uspsr.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: uspsr.php 2025-10-02 retched Version 0.0.0 $
  ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -387,7 +387,7 @@ class uspsr extends base
         // If there isn't a quote in letters don't bother.
         if (isset($_letter['rates'])) {
             // Force the details of the Letter Request to match the other pieces from packages (adding a Mail Class to match Standards result, productName, and processingCategory)
-            $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING);
+            $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING); // This should yield something: FIRST-CLASS_MAIL_FLATS
             $_letter['rates'][0]['productName'] = ($this->usps_countries == 'US' ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
 
@@ -475,65 +475,143 @@ class uspsr extends base
                 // Main rates
                 foreach ($opt['rates'] as $rate) {
 
-                    //Skip OPEN_AND_DISTRIBUTE rates, we don't use those.
+                    // ---------------------------------------------
+                    // Skip OPEN_AND_DISTRIBUTE rates, we don't use those.
+                    // ---------------------------------------------
                     if ($rate['processingCategory'] === 'OPEN_AND_DISTRIBUTE') continue;
 
+                    // ---------------------------------------------
                     // Setup the key (if productName is blank, use description instead)
+                    // ---------------------------------------------
                     if (!empty($rate['productName'])) $name = $rate['productName'];
                     else {
                         $name = $rate['description'];
                         $rate['productName'] = $rate['description'];
                     }
 
+                    // ---------------------------------------------
                     // Trim the extra characters off (looking at you 'Connect Local Machinable DDU ')
+                    // ---------------------------------------------
                     $name = trim($name);
                     
-                    // Test to see what the 
-                    $rate['totalBasePrice'] = $totalBasePrice ?? $rate['price']; // default to price if null
+                    // ---------------------------------------------
+                    // Test to see what the totalBasePrice 
+                    // For Packages: This will be the base fee plus any special fees. Will not include any services.
+                    // For Letters: This will automatically add any special fees but will NOT add services
+                    // ---------------------------------------------
+                    $rate['totalBasePrice'] = $totalBasePrice ?? $rate['price']; // default to price if null/unset
 
-                    // If the rate has a processingCategory of "NONSTANDARD" and a rateIndicator of "DN" or "DR", we need to chceck the constant for Dimmensional Class
-                    // If it matches, add the rate... else, skip it.
-                    // Media Mail also sometimes catches Nonstandard, so skip it.
-                    if ($rate['processingCategory'] === 'NONSTANDARD' && strpos($name, "Media Mail") === FALSE) {
-                        if (MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular' && $rate['rateIndicator'] !== 'DR') continue 2;
-                        if (MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular' && $rate['rateIndicator'] !== 'DN') continue 2;
-                    } elseif (strpos($name, "Media Mail") !== FALSE && $rate['rateIndicator'] == "SP") { // We only want the Single Piece quote
-                        if (((MODULE_SHIPPING_USPSR_MEDIA_CLASS == 'Nonstandard') && strpos($name, "Nonstandard") !== FALSE) ||
-                        ((MODULE_SHIPPING_USPSR_MEDIA_CLASS == 'Machinable') && strpos($name, "Machinable") !== FALSE)) {
-                            $name = "Media Mail"; // Force the name to be Media Mail
-                            $rate['productName'] = "Media Mail";
-                        } else continue 2; // Skip the other one
-                    }
-
-                    // For Connect Local, the "Product Names" do not appear in the API, force them in to match.
-                    if (strpos($name, "Connect Local") !== FALSE) $rate['productName'] = $rate['description'];
-
-                    if (isset($rate['rateIndicator'])) {
-                        // If the rate has a rateIndicator of "CP"/"C#" or "P#"/"Q#", check the constant for Cubic Class
-                        // If it matches, add the rate... else, skip it.
-                        if (preg_match('/^(CP|[CPQ]\d)$/', $rate['rateIndicator'])) {
-                            // Matches "CP", "C0"-"C9", "P0"-"P9", "Q0"-"Q9"
-                            
-                            // CP is Non-Soft Pack
-                            if (MODULE_SHIPPING_USPSR_CUBIC_CLASS == "Non-Soft" && $rate['rateIndicator'] !== "CP") continue 2;
-                            
-                            // Qx and Px is Soft Pack
-                            if (MODULE_SHIPPING_USPSR_CUBIC_CLASS === "Soft" && !preg_match('/^([PQ]\d)$/', $rate['rateIndicator'])) continue 2;
+                    // ---------------------------------------------
+                    // Possible outcomes from the rate listings
+                    // Possible outcomes:
+                    // Priority Mail: Machinable + SP or Nonstandard + SP/DR/DN
+                    // Priority Mail Express: Machinable + SP or Nonstandard + PA/DR/DN
+                    // Ground Advantage: Machinable + SP or Nonstandard + SP/DR/DN/LO
+                    // Media Mail: Machinable / Nonstandard, both with SP
+                    // Priority Mail Cubic: Machinable , CP or Px/Qx
+                    // Ground Advantage Cubic: Machinable , CP or Px/Qx
+                    // Connect Local: LC/LF/LL/LS/LO
+                    //
+                    // International shipments only have one class, regardless. So in total, this will ignore everything.
+                    // ---------------------------------------------
+                    
+                    // ---------------------------------------------
+                    // Media Mail
+                    // ---------------------------------------------
+                    if (strpos($name, "Media Mail") !== FALSE) {
+                        // Only allow Single Piece (SP)
+                        if ($rate['rateIndicator'] === "SP") {
+                            if ((MODULE_SHIPPING_USPSR_MEDIA_CLASS == 'Nonstandard' && strpos($name, "Nonstandard") !== FALSE) ||
+                                (MODULE_SHIPPING_USPSR_MEDIA_CLASS == 'Machinable' && strpos($name, "Machinable") !== FALSE)) {
+                                $name = "Media Mail"; 
+                                $rate['productName'] = "Media Mail"; // Have to add "Media Mail" as productName is otherwise blank.
+                            } else {
+                                continue 2;
+                            }
+                        } else {
+                            continue 2;
                         }
                     }
+
+                    // ---------------------------------------------
+                    // Cubic Options (Priority Mail Cubic / Ground Advantage Cubic)
+                    // ---------------------------------------------
+                    elseif (strpos($name, "Priority Mail Cubic") !== FALSE || strpos($name, "Ground Advantage Cubic") !== FALSE) {
+                        if (preg_match('/^(CP|[CPQ]\d)$/', $rate['rateIndicator'])) {
+                            if (MODULE_SHIPPING_USPSR_CUBIC_CLASS == "Non-Soft" && $rate['rateIndicator'] !== "CP") continue 2;
+                            if (MODULE_SHIPPING_USPSR_CUBIC_CLASS == "Soft" && !preg_match('/^([PQ]\d)$/', $rate['rateIndicator'])) continue 2;
+                        } else {
+                            continue 2;
+                        }
+                    }
+
+                    // ---------------------------------------------
+                    // Nonstandard cases (Priority / Express / Ground / Connect Local)
+                    // ---------------------------------------------
+                    elseif ($rate['processingCategory'] === 'NONSTANDARD') {
+                        // Priority Mail
+                        if (strpos($name, "Priority Mail") !== FALSE && $rate['rateIndicator'] === "SP") {
+                            // allow
+                        }
+                        // Priority Mail Express
+                        elseif (strpos($name, "Priority Mail Express") !== FALSE && $rate['rateIndicator'] === "PA") {
+                            // allow
+                        }
+                        // Ground Advantage
+                        elseif (strpos($name, "Ground Advantage") !== FALSE && $rate['rateIndicator'] === "SP") {
+                            // allow
+                        }
+                        // Ground Advantage OS
+                        elseif (strpos($name, "Ground Advantage") !== FALSE && $rate['rateIndicator'] === "OS") {
+                            // allow
+                        }
+                        // Connect Local LO
+                        elseif (strpos($name, "Connect Local") !== FALSE && $rate['rateIndicator'] === "LO") {
+                            $rate['productName'] = $rate['description'];
+                            // otherwise allow
+                        }
+                        // Dimensional Class fallback (DR / DN)
+                        elseif (MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Rectangular' && $rate['rateIndicator'] !== 'DR') {
+                            continue 2;
+                        } elseif (MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS == 'Nonrectangular' && $rate['rateIndicator'] !== 'DN') {
+                            continue 2;
+                        }
+                    }
+
+                    // ---------------------------------------------
+                    // Machinable cases (Priority / Express / Ground)
+                    // ---------------------------------------------
+                    elseif ($rate['processingCategory'] === 'Machinable') {
+                        // Priority Mail, Express, Ground → must be SP
+                        if (($rate['rateIndicator'] !== "SP") &&
+                            (strpos($name, "Priority Mail") !== FALSE ||
+                            strpos($name, "Priority Mail Express") !== FALSE ||
+                            strpos($name, "Ground Advantage") !== FALSE)) {
+                            continue 2;
+                        }
+                    }
+
+                    // ---------------------------------------------
+                    // Connect Local: the "Product Names" do not appear in the API, force them in to match.
+                    // ---------------------------------------------
+                    if (strpos($name, "Connect Local") !== FALSE) $rate['productName'] = $rate['description'];
+
+                    // ---------------------------------------------
+                    // Default: All is OK, add it to the list
+                    // ---------------------------------------------
                     $lookup[$name] = $rate;
                 }
 
-                // Extra services
+                // ---------------------------------------------
+                // Extra services: Tack that onto the main roster of returns.
+                // ---------------------------------------------
                 if (isset($opt['extraServices'])) {
                     foreach ($opt['extraServices'] as $svc) {
                         $lookup[$name]['extraService'][$svc['extraService']] = $svc;
                     }
                 }
 
-                //$totalBasePrice = $opt['totalBasePrice'] ?? null; // get totalBasePrice if it exists
-
-            }
+            } // Done with iterating the returned rates
 
             $message = "\n";
             $message .= '===============================================' . "\n";
@@ -542,7 +620,8 @@ class uspsr extends base
             $message .= '===============================================' . "\n";
             // $this->uspsrDebug($message); // Hiding to reduce log file size
 
-            $m = 0; //Index for quote
+            $m = 0; //Index for ZenCart quote builder (ie. "usps0")
+
             // Extra Services
             if ($this->is_us_shipment) {
                 $ltr_services = array_map('intval', explode(',', MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES));
@@ -556,8 +635,9 @@ class uspsr extends base
             if (in_array(930, $ltr_services)) $ltr_services[] = 931;
             if (in_array(930, $pkg_services)) $pkg_services[] = 931;
             
-            // Now go through the list of SELECTED services and do the work on THOSE
+            // Now go through the list of SELECTED services from the configurator and do the work on THOSE
             foreach ($selected_methods as $method_item) {
+
                 // If the $method_item['method'] is it the lookup, continue, otherwise, pass
                 if (isset($lookup[$method_item['method']])) {
                     
@@ -570,8 +650,8 @@ class uspsr extends base
 
                     // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
                     // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
-                    //if (!$this->is_apo_dest && ($method_item['method'] === 'Priority Mail Machinable Large Flat Rate Box APO/FPO/DPO'))
-                        //continue;
+                    if (!$this->is_apo_dest && ($method_item['method'] === 'Priority Mail Large Flat Rate APO/FPO/DPO'))
+                        continue;
 
                     $price = $lookup[$method_item['method']]['totalBasePrice'];
                     
@@ -579,18 +659,39 @@ class uspsr extends base
                     $services = strpos($method_item['method'], "Letter") !== false ? $ltr_services : $pkg_services;
 
                     // For packages, cycle through and add the services. (For letters, the price is baked into the request and result. Don't do it.)
+                    $servicesList = '';
+                    $extraServices = 0;
                     if (strpos($method_item['method'], "First-Class") === FALSE) {
-                        $services_total += array_sum(array_map(function ($s) use ($lookup, $method_item) {
-                            return isset($lookup[$method_item['method']]['extraService'][$s]['price'])
-                            ? $lookup[$method_item['method']]['extraService'][$s]['price']
-                            : 0;
-                        }, $services));
+                        $method_name   = $method_item['method'];
+                        $method_extra_services  = 0;         // tracks price total for this method
+                        $method_labels = [];        // tracks names of extra services
+
+                        foreach ($services as $s) {
+                            if (isset($lookup[$method_name]['extraService'][$s]['price'])) {
+                                $method_price = $lookup[$method_name]['extraService'][$s]['price'];
+                                $extraServices += $price;
+
+                                // Add service name if available, otherwise fall back to the code
+                                $label = $lookup[$method_name]['extraService'][$s]['name'] ?? $s;
+                                $method_labels[] = $label . " (" . $currencies->format($method_price) . ")";
+                            }
+                        }
+
+                        // Add this method’s service total into the running total
+                        $services_total += $method_extra_services;
+
+                        // Convert collected labels into a comma-separated string
+                        $servicesList = implode(", ", $method_labels);
                     }
+
+                    // Extra Services for method
+                    $price += $extraServices;
 
                     // Handling as defined by the method
                     $price += $method_item['handling'];
 
                     // Handling for the USPS as a whole.
+                    // @todo: Should this be multiplied per order or per box?
                     $price += $usps_handling_fee;
 
                     // Final math (Final Quote = (Quoted Price + Handling Fee be Method + Handling Fee Overall + any surcharges/services) * number of boxes)
@@ -601,7 +702,8 @@ class uspsr extends base
                         'id' => 'usps'.$m,
                         'title' => uspsr_filter_gibberish($lookup[$method_item['method']]['productName']),
                         'cost' => $price,
-                        'mailClass' => $lookup[$method_item['method']]['mailClass']
+                        'mailClass' => $lookup[$method_item['method']]['mailClass'],
+                        'servicesAdded' => $servicesList, // For debugging
                     ];
                     $m++;
                     
@@ -625,8 +727,8 @@ class uspsr extends base
                         // If everything checks out... Add it to the 
                         $build_quotes[] = $quotes;
                         $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                        $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . "\n";
-                        $quote_message .= "Final Price (Quote + Handling + Order Handling) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
+                        $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Method Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . " , Extra Services: " . $currencies->format($extraServices) . "\n";
+                        $quote_message .= "Final Price (Quote + Handling + Order Handling + Services) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
                     } elseif (!$match) {
                         // Order failed to match
                         $quote_message .= "\n" . 'Skipping the method :"' . $quotes['title'] . '" because it did not match the target.' . "\n";
@@ -642,16 +744,12 @@ class uspsr extends base
 
                     if (!empty($quote_message)) $this->uspsrDebug($quote_message);
                 } 
-                
-                
-
             }
 
-            
             // Squash Ground Advantage
             if (strpos(MODULE_SHIPPING_USPSR_SQUASH_OPTIONS, "Ground Advantage") !== FALSE) {
                 $groundOptions = [];
-                $pattern = '/Ground Advantage/'; // There is no flat rate Ground Advantage, so just leave it alone.
+                $pattern = '/Ground Advantage/'; // There is no flat rate Ground Advantage, so you're dealing with the only two outcomes.
 
                 // Loop through the array to collect priority mail options
                 foreach ($build_quotes as $key => $option) {
@@ -1147,7 +1245,7 @@ class uspsr extends base
                 'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><strong>Checkbox:</strong> Select the services to be offered. (Can also click on the service name in certain browsers.)<br><br><strong>Min/Max</strong> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><strong>Handling:</strong> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                 'configuration_group_id' => 6,
                 'sort_order' => 0,
-                'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
+                'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
                 'use_function' => 'zen_cfg_uspsr_showservices',
                 'date_added' => 'now()'
             ]);
@@ -1158,7 +1256,7 @@ class uspsr extends base
                 'configuration_description' => 'Choose the services that you want to offer to your customers.<br><br><strong>Checkbox:</strong> Select the services to be offered (Can also click on the service name in certain browsers.)<br><br><strong>Min/Max</strong> Choose a custom minimum/maximum for the selected service. If the cart as a whole (the items plus any tare settings) fail to make weight, the method will be skipped. Keep in mind that each service also has its own maximums that will be controlled regardless of what was set here. (Example: entering 5 lbs for International First-Class Mail will be ignored since the International First-Class Mail has a hard limit of 4 lbs.)<br><br><strong>Handling:</strong> A handling charge for that particular method (will be added on to the quote plus any services charges that are applicable).<br><br>USPS returns methods based on cart weights. Enter the weights in your site\'s configured standard. (The cart will handle conversions as necessary.)',
                 'configuration_group_id' => 6,
                 'sort_order' => 0,
-                'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
+                'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
                 'use_function' => 'zen_cfg_uspsr_showservices',
                 'date_added' => 'now()'
             ]);
@@ -1586,6 +1684,8 @@ class uspsr extends base
          *
          * If this is encapsulated, the upgrader already ran. (Any missing keys would have been added and any values would be updated. More importantly, the versions would already match.)
          * If this is not encapsulated, the version in the database would fall short. So check that.
+         * 
+         * @todo This whole section needs a revamp.
          */
 
         // The versions don't match. So upgrade what we have to. This only applies to version 1.0.0 and forward.
@@ -1603,29 +1703,29 @@ class uspsr extends base
 
                     // Check to see if the module is active?
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) {
-                    // Add Squash alike methods together
-                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
-                        'configuration_title' => 'Squash Alike Methods Together',
-                        'configuration_value' => '--none--',
-                        'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
-                        'configuration_group_id' => 6,
-                        'sort_order' => 0,
-                        'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
-                    ]);
+                        // Add Squash alike methods together
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_SQUASH_OPTIONS', [
+                            'configuration_title' => 'Squash Alike Methods Together',
+                            'configuration_value' => '--none--',
+                            'configuration_description' => 'If you are offering Priority Mail and Priority Mail Cubic or Ground Advantage and Ground Advantage Cubic in the same quote, do you want to "squash" them together and offer the lower of each pair?<br><br>This will only work if the quote returned from USPS has BOTH options (Cubic and Normal) in it, otherwise it will be ignored.',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'set_function' => 'zen_cfg_select_multioption([\'Squash Ground Advantage\', \'Squash Priority Mail\'], '
+                        ]);
 
-                    // Change the Debug Mode to be a split selection between showing logs or showing errors
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
-                        'configuration_title' => 'Debug Mode',
-                        'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
-                        'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file is at least 300KB big.',
-                        'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
-                        'date_added' => 'now()'
-                    ]);
+                        // Change the Debug Mode to be a split selection between showing logs or showing errors
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_DEBUG_MODE', [
+                            'configuration_title' => 'Debug Mode',
+                            'configuration_value' => (MODULE_SHIPPING_USPSR_DEBUG_MODE === 'Logs' ? "Generate Logs" : "--none--"),
+                            'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file is at least 300KB big.',
+                            'set_function' => 'zen_cfg_select_multioption([\'Generate Logs\', \'Show Errors\'], ',
+                            'date_added' => 'now()'
+                        ]);
 
-                    // Created a function to either show the value or to show none
-                    $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
-                        'use_function' => 'zen_cfg_uspsr_account_display',
-                    ]);
+                        // Created a function to either show the value or to show none
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_ACCT_NUMBER', [
+                            'use_function' => 'zen_cfg_uspsr_account_display',
+                        ]);
                     }
 
                     // Changing this to be a more descriptive description.
@@ -1851,6 +1951,9 @@ class uspsr extends base
                     case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.1. All changes were to the module itself.
                     case "v1.4.0": // Released 2025-09-02: No database changes
                     case "v1.4.1": // Released 2025-09-03: No database changes
+                        $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
+                            'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
+                        ]);
                         break;
             }
 
@@ -1901,7 +2004,7 @@ class uspsr extends base
                     // Rebuild the value and reinsert it into the database.
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                         'configuration_value' => implode(", ", $config_methods),
-                        'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\', \'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate Box APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], '
+                        'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
                     ]);
 
                 }
@@ -1925,8 +2028,10 @@ class uspsr extends base
 
         /**
          * Are you using 0.0.0? Seriously, stop.
+         * Starting in 1.5.0, -rc version will designate the release as a release candidate... Should be prepared for stuff to not work.
          */
-        if (self::USPSR_CURRENT_VERSION === "v0.0.0")
+        if (self::USPSR_CURRENT_VERSION === "v0.0.0" || strpos(self::USPSR_CURRENT_VERSION, "-rc") !== FALSE)
+            // If this version is v0.0.0 or contains -dev, this is a developmental release. Proceed with caution.
             $messageStack->add_session(MODULE_SHIPPING_USPSR_DEVELOPMENTAL, 'warning');
     }
 
@@ -2109,7 +2214,7 @@ class uspsr extends base
                 'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
             ];
 
-            // Have to keep these close to the body request, USPS API handles it weird.
+            // USPS Letters Services (still need to be attached to the Letter Request, Packages will be processed separately)
             $services_ltr_dmst = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DMST_LETTER_SERVICES));
             $services_ltr_intl = array_filter(explode(', ', MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES));
             
