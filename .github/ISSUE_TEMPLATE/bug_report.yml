@@ -84,9 +84,9 @@ body:
       placeholder: What's going on?
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: logs
     attributes:
       label: Relevant Log Output
-      description: Please copy and paste any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart.
+      description: Please link to an **UNLISTED** Pastebin, Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart.
       render: shell
