@@ -11,7 +11,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Latest Release: [1.5.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released September 3, 2025 for ZenCart 2.1.0._
+  _Released October 3, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
@@ -197,13 +197,13 @@ These are the file lists that should be included with this module, depending on 
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.5.0\manifest.php
+- \zc_plugins\USPSRestful\v1.5.0\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.5.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.5.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.5.0\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author

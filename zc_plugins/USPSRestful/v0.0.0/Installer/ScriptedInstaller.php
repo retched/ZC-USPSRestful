@@ -1,11 +1,11 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.0.0
+ * Version 1.5.0
  *
  * @copyright Portions Copyright 2004-2025 Zen Cart Team
  * @author Paul Williams (retched)
- * @version $Id: ScriptedInstaller.php 0000-00-00 retched Version 0.0.0 $
+ * @version $Id: ScriptedInstaller.php 2025-10-03 retched Version 1.5.0 $
 ****************************************************************************
     USPS Shipping (RESTful) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
@@ -388,8 +388,6 @@ class ScriptedInstaller extends ScriptedInstallBase
         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
             'configuration_value' => $this->version,
             'set_function' => "zen_cfg_read_only( ",
-            'use_function' => '',
-            'val_function' => '',
         ]);
 
         return true;

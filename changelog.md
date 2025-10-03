@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - Refactor the version checker and updater
 
-## 1.5.0 - 0000-00-00
+## 1.5.0 - 2025-10-03
 
 ### Added in 1.5.0
 
@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed in 1.5.0
 
-- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)] 
+- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)]
 - Fixed an issue that would generate a warning when the module would try to request standards for services that don't provide them. (ie. Connect Local and all international shipments.) That problem is now squelched as the module will check to see such a result exist first before trying to access it.
 - Fixed an issue where Priority Mail APO/FPO/DPO Flat Rate Box rates wouldn't appear (the rate name was changed from the API pull)
 - Fixed an issue where some Priority Mail rates were missing under certain circumstances. [[#79](https://github.com/retched/ZC-USPSRestful/issues/79)]
