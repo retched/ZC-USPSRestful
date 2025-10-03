@@ -11,7 +11,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Latest Release: [1.5.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released September 3, 2025 for ZenCart 2.1.0._
+  _Released October 3, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
