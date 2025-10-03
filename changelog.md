@@ -6,9 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Planned
 
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
+- Add support for the Shipping Boxes Manager plugin OR figure out what the Length, Width, and Height boxes all do
 - Refactor the version checker and updater
 
-## 1.5.0 - 0000-00-00
+## 1.5.0 - 2025-10-03
 
 ### Added in 1.5.0
 
@@ -17,13 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed in 1.5.0
 
 - Changed the HTML code for the backend from `<b>` to `<strong>`. _(This is not going to be updated on current installs.)_
-- Improved the building of quotes. Broadly instead of the module doing a double iteration over the full list of selected methods and the entire resultant request from the USPS API, the module now indexes that pull and will hunt down the desired method by named key now. This should greatly help with the problem of slow API pulls. [[#50](https://github.com/retched/ZC-USPSRestful/issues/50)]
-- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend. Will also need to be improved later to avoid possible )
+- Improved the building of quotes. Broadly, instead of the module doing a double iteration over the full list of selected methods and the entire resultant request from the USPS API, the module now indexes that pull and will hunt down the desired method by named key. This should greatly help with the problem of slow API pulls. [[#50](https://github.com/retched/ZC-USPSRestful/issues/50)]
+- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend. It will also need to be improved later to avoid possible errors.
 
 ### Fixed in 1.5.0
 
-- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)] 
-- Fixed an issue that would generate a warning when the module would try to request standards for services that don't provide them. (ie. Connect Local and all international shipments.) That problem is now squelched as the module will check to see such a result exist first before trying to access it.
+- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set to 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)] 
+- Fixed an issue that would generate a warning when the module would try to request standards for services that don't provide them. (ie. Connect Local and all international shipments.) That problem is now squelched as the module will check to see if such a result exists first before trying to access it.
 - Fixed an issue where Priority Mail APO/FPO/DPO Flat Rate Box rates wouldn't appear (the rate name was changed from the API pull)
 - Fixed an issue where some Priority Mail rates were missing under certain circumstances. [[#79](https://github.com/retched/ZC-USPSRestful/issues/79)]
 
@@ -39,17 +40,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fixed logic behind testing if the USPS module should be enabled for a group [[#69](https://github.com/retched/ZC-USPSRestful/issues/69)]
 - Fixed logic on the same for the shipping estimator
-- Removed extra comma from old style language file.
+- Removed extra comma from the old-style language file.
 - Changed the function being used to display the version to a read-only function instead of a radio select.
 
 ## [1.3.2] - 2025-08-25 + ~~[1.3.1] - 2025-08-24~~
 
-_Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has been deleted from the ZenCart Module Directory and the repository releases tab._
+_Version 1.3.1 is considered superseded by 1.3.2 and should not be used. It has been deleted from the ZenCart Module Directory and the repository releases tab._
 
 ### Fixed in 1.3.2
 
 - Errant "hint code" somehow became a part of the build and was pushed out as part of 1.3.1, that bit has been removed.
-- Made the four-cent change only apply to US destinations as international rates pulled by the API don't seem to be affected.
+- Made the four-cent change only apply to US destinations, as international rates pulled by the API don't seem to be affected.
 
 ### Added in 1.3.1
 
@@ -69,25 +70,25 @@ _Version 1.3.1 is considered superceded by 1.3.2 and should not be used. It has 
 
 ### Added in 1.3.0
 
-- Added support for First Class Mail and First Class Mail International to the module. Both will be automagically added to the table of services upon upgrading to 1.3.0. Additionally added processing class flags: Letters, Flats (or Large Envelopes) and Cards (like Postcards).
+- Added support for First Class Mail and First Class Mail International to the module. Both will be automatically added to the table of services upon upgrading to 1.3.0. Additionally, added processing class flags: Letters, Flats (or Large Envelopes), and Cards (like Postcards).
 - Added a toggle to determine which API endpoint to use (the apis\.usps\.com endpoints should be used as the USPS API team is nudging everyone to that).
 - Added new `<label>` tag to checkboxes as needed.
 
 ### Changed in 1.3.0
 
-- AuthTokens are now stored in the `$_SESSION` in PHP. Rather than generate a new AuthToken on every page visit, the module will check if there is already an AuthToken already made and if there is not, THEN make a new AuthToken at that point. (AuthTokens last for roughly eight hours. So long as there isn't more than 60 requests per hour. If there is a chance you might go above that, no problem... simply request the API Team to provision you more requests.)
-- As part of the AuthToken request, the module will now send of the vversion of the module and the ZenCart version as the USERAGENT portion of the CURL request.
+- AuthTokens are now stored in the `$_SESSION` in PHP. Rather than generate a new AuthToken on every page visit, the module will check if there is already an AuthToken made, and if there is not, THEN make a new AuthToken at that point. (AuthTokens last for roughly eight hours. So long as there aren't more than 60 requests per hour. If there is a chance you might go above that, no problem... simply request the API Team to provision you more requests.)
+- As part of the AuthToken request, the module will now send the version of the module and the ZenCart version as the USERAGENT portion of the CURL request.
 - Running the `v0.0.0` version from the Repository will now have a warning banner appear in the admin backend. That warning uses the `messageStack` system and will link to the ZenCart thread and this repository on GitHub.
 
 ### Fixed in 1.3.0
 
 - Fixed an issue that could potentially cause a blank or dead API return call to break an install. [[#56](https://github.com/retched/ZC-USPSRestful/issues/56)]
 - Fixed an issue that would generate error debug messages when trying to revoke tokens. [[#51](https://github.com/retched/ZC-USPSRestful/issues/51)]
-- Fixed an issue that would cause the entered number of handling days to not be saved. (Side note: This will cause validation to not be performed on older variations of ZenCart as that functionality is not present.) [[#52](https://github.com/retched/ZC-USPSRestful/issues/52)]
+- Fixed an issue that would cause the entered number of handling days not to be saved. (Side note: This will cause validation to not be performed on older versions of ZenCart, as that functionality is not present.) [[#52](https://github.com/retched/ZC-USPSRestful/issues/52)]
 
 ### Removed in 1.3.0
 
-- Removed the modules ability to revoke AuthTokens in the module. (USPS API Support Team reported that there is a breaking fault on their side. To avoid the headaches, just removed the revokeToken command and procedure. Will likely add in again later.)
+- Removed the module's ability to revoke AuthTokens in the module. (USPS API Support Team reported that there is a breaking fault on their side. To avoid the headaches, just removed the revokeToken command and procedure. Will likely add in again later.)
 
 ## [1.2.0] - 2025-03-15
 
