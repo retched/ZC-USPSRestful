@@ -88,5 +88,5 @@ body:
     id: logs
     attributes:
       label: Relevant Log Output
-      description: Please link to an **UNLISTED** Pastebin, Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart.
+      description: Please link to an **UNLISTED** Pastebin, **SECRET** Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart. **__NOTE:__** Please keep in mind, this repo is NOT private. Anyone will be able to see this link and review the gist.
       
