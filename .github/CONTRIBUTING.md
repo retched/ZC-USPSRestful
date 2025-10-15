@@ -8,7 +8,7 @@ All types of contributions are encouraged and valued. Please make sure to read t
 
 Before you ask a question, it is best to search for existing [Issues](https://github.com/retched/ZC-USPSRestful/issues) that might help you. If you have found a suitable issue and still need clarification, you can write your question about this issue. I would also suggest that you search the Internet for answers first.
 
-If you then still feel the need to ask a question and need clarification, we recommend the following:
+If you then still feel the need to ask a question and need clarification, I recommend the following:
 
 - Open an [Issue](https://github.com/retched/ZC-USPSRestful/issues/new).
 - Provide as much context as you can about what you're running into.
@@ -27,11 +27,11 @@ The more details available, the easier the problem is to track down and start is
 
 ## Develop with Github
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests. All submissions should be presented through the "GitHub Flow" (as discussed below). If you don't want to go through the hassle of making a GitHub account, you can submit suggestions through the [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) for the module or via DMs on Discord to @retched.
+I use GitHub to host code, to track issues and feature requests, as well as accept pull requests. All submissions should be presented through the "GitHub Flow" (as discussed below). If you don't want to go through the hassle of making a GitHub account, you can submit suggestions through the [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) for the module or via DMs on Discord to @retched.
 
 ## [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow) is the preferred process of suggesting changes
 
-Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow)). We actively welcome your pull requests:
+Pull requests are the best way to propose changes to the codebase (I use [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow)). I actively welcome your pull requests:
 
 1. Fork the repo and create your branch from `main` (do not use any of the version side branches UNLESS you mean to contribute to that branch). Do not worry about changing the version number, all changes should be made in the 0.0.0 directory.
    - Sometimes a branch will be made for the sole purpose of resolving an issue or series of issues. If you're making a code change related to an open issue, check to see if there is a branch made for that purpose.
@@ -48,15 +48,15 @@ In summary, your submitted code should be (at a minimum):
 - Using four spaces for indentation rather than tabs.
 - Functions' opening brace should be on the next line after the declaration. See below for an example:
 
-  ``` php
-  function uspsr_someFunctionName($variables_if_needed = '', $some_boolean = TRUE)
-  {
+``` php
+function uspsr_someFunctionName($variables_if_needed = '', $some_boolean = TRUE)
+{
     // Code here
     if ($some_logic_test) {
-      // More code here
+        // More code here
     }
-  }
-  ```
+}
+```
 
 - When inserting comments, try to use the PHPDocumentor coding standard (also known as the [PHP DocBlock](https://docs.phpdoc.org/guide/getting-started/what-is-a-docblock.html) syntax). Otherwise, be as descriptive as you feel you need to be.
 

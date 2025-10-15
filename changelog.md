@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add support for the Shipping Boxes Manager plugin OR figure out what the Length, Width, and Height boxes all do
 - Refactor the version checker and updater
 
+## [UNRELEASED]
+
+### Fixed in [UNRELEASED]
+
+- Fixed the admin area functions file to search out for the catalog area file and include that one instead of duplicating it. (Continuing the change from 1.5.0.)
+
 ## 1.5.0 - 2025-10-03
 
 ### Added in 1.5.0
@@ -19,7 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Changed the HTML code for the backend from `<b>` to `<strong>`. _(This is not going to be updated on current installs.)_
 - Improved the building of quotes. Broadly, instead of the module doing a double iteration over the full list of selected methods and the entire resultant request from the USPS API, the module now indexes that pull and will hunt down the desired method by named key. This should greatly help with the problem of slow API pulls. [[#50](https://github.com/retched/ZC-USPSRestful/issues/50)]
-- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend. It will also need to be improved later to avoid possible errors.
+- Moved some helper functions and language files from the main module to a new extra_functions file. (This resolves the "can't visit the `cmd=configuration&gID=6` page" error in the backend. It will also need to be improved later to avoid possible errors.)
 
 ### Fixed in 1.5.0
 

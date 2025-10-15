@@ -179,6 +179,7 @@ For the original module
 For the update
 
 - retched (me)
+- lat9 and scottcwilson for their help with the inclusion of the functions file
 
 ## File Listing
 
