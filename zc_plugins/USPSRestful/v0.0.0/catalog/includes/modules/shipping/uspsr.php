@@ -2334,7 +2334,8 @@ class uspsr extends base
         $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-intl');
         $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
 
-            $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
+        $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
+        
         }
 
         // If the Pricing is Contract, add the Contract Type and AccountNumber
@@ -2392,7 +2393,7 @@ class uspsr extends base
             CURLOPT_VERBOSE => 0,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_TIMEOUT => 15,
-            CURLOPT_USERAGENT => 'ZenCart',
+            CURLOPT_USERAGENT => 'ZenCart v' . PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR . " + USPSr Module " . MODULE_SHIPPING_USPSR_VERSION,
         ];
 
         if (CURL_PROXY_REQUIRED === 'True') {
@@ -2422,7 +2423,11 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        curl_close($ch);
+        // Deprecated in PHP 8.5
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
+        
 
         // -----
         // Log the CURL response (will also capture the time the response was received) to capture any
@@ -2548,7 +2553,11 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        curl_close($ch);
+        // Deprecated in PHP 8.5
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
+        
 
         // -----
         // Log the CURL response (will also capture the time the response was received) to capture any
@@ -2626,7 +2635,11 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        curl_close($ch);
+        // Deprecated in PHP 8.5
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($ch);
+        }
+        
 
         // -----
         // Log the CURL response (will also capture the time the response was received) to capture any
