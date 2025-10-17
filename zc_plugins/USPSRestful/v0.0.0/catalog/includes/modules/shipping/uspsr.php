@@ -381,6 +381,12 @@ class uspsr extends base
         // Start with package quote
         $uspsQuote = json_decode($this->pkgQuote, TRUE);
 
+        if (!empty($uspsQuote['error']) && is_array($uspsQuote['error']['errors'])) {
+            foreach ($uspsQuote['error']['errors'] as &$pkg_error) {
+                $pkg_error['title'] = "Packages: " . $pkg_error['title'];
+            }
+        }
+
         // Take the Letters Quote and add it to a temp holder
         $_letter = json_decode($this->ltrQuote, TRUE);
 
@@ -399,9 +405,17 @@ class uspsr extends base
             }
 
             $uspsQuote['rateOptions'][] = $_letter;
+        } else { // We likely have an error, so add that error to the list of errors.
+            foreach ($_letter['error']['errors'] as $error_letter) {
+                $uspsQuote['error']['errors'][] = [
+                    'title' => "Letters: ". $error_letter['title'],
+                    'code' => $error_letter['code'],
+                    'detail' => $error_letter['detail']
+                ];
+            }
         }
 
-        if (!empty($uspsQuote)) {
+        if (isset($uspsQuote['rateOptions']) && is_array($uspsQuote['rateOptions'])) {
 
             // Was a standards call made? If so, load it up.
             if (zen_not_null($this->uspsStandards)) {
@@ -873,34 +887,26 @@ class uspsr extends base
                 ];
                 // Should there be a warning that the dates are estimations?
 
-            } else { // This means nothing was built. Report it back as such.
+            }  // If we made it this far, there is no point in outputting an error message of any kind.
 
-                // Only show this during debugging
-                if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
-                    $this->quotes = [
-                        'id' => $this->code,
-                        'icon' => zen_image($this->icon),
-                        'methods' => [],
-                        'module' => $this->title,
-                        'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
-                    ];
-                } else {
-                    $this->enabled = false;
-                }
-
-            }
-
-        } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message.
+        } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message, if desired.
 
             // Only show this during debugging
             if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
+
+                // We have an error. Errors are normally kept in $uspsQuote['error']['errors'], so iterate over it.
+
+                $error_str = '';
+                foreach ($uspsQuote['error']['errors'] as $error) {
+                    $error_str .= $error['title'] . (!empty($error['detail']) ? " : " . $error['detail'] : "") . " (" . $error['code'] . ")<br>";
+                }
 
                 $this->quotes = [
                     'id' => $this->code,
                     'icon' => zen_image($this->icon),
                     'methods' => [],
                     'module' => $this->title,
-                    'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $uspsQuote['error']['message'] . "</pre>"
+                    'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>"
                 ];
 
                 $this->enabled = false;

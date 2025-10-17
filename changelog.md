@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed in [UNRELEASED]
 
 - Fixed the admin area functions file to search out for the catalog area file and include that one instead of duplicating it. (Continuing the change from 1.5.0.)
+- Fixed an issue that would generate a PHP warning when errors are generated. [[#83](https://github.com/retched/ZC-USPSRestful/issues/83)]
 
 ## 1.5.0 - 2025-10-03
 
