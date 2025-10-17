@@ -1657,9 +1657,9 @@ class uspsr extends base
                         "SELECT zone_id
                            FROM ". TABLE_ZONES . "
                            WHERE
-                           zone_name LIKE '" . $_POST['state']  . "'
+                           zone_name LIKE '" . $selectedState  . "'
                            OR
-                           zone_code LIKE '" . $_POST['state'] .  "'");
+                           zone_code LIKE '" . $selectedState .  "'");
 
                     $selected_state_id = $zone_id->fields['zone_id'] ?? 0;
                 }
