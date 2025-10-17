@@ -340,12 +340,12 @@ class uspsr extends base
         // Rebuild the dimmensions array
         $pkg_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
         array_walk($pkg_dimensions, function (&$value) {
-            $value = trim($value);
+            $value = floatval(trim($value));
         }); // Quickly remove white space
 
         $ltr_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS));
         array_walk($ltr_dimensions, function (&$value) {
-            $value = trim($value);
+            $value = floatval(trim($value));
         }); // Quickly remove white space
 
         // Set the weight back 
