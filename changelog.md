@@ -6,15 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Planned
 
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
-- Add support for the Shipping Boxes Manager plugin OR figure out what the Length, Width, and Height boxes all do
+- ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater
 
 ## [UNRELEASED]
 
+### Added in [UNRELEASED]
+
+- Added a field to the notifier `NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE` to handle the dimmensions of the package. This allows modules to cut in and modify the number of boxes and the average package size sent as part of the cart quote request. (Shipping Boxes Manager can now use this notifier. I'm not hard coding in the older code from USPS WebTools.)
+
+### Changed in [UNRELEASED]
+
+- Dropped the override machineability flag, internally. Instead, the module will retrieve the appropriate quote as requested. (Leave it up to the shop owner to figure out if it's machineable or not.) Does not affect "`NONSTANDARD`". (In other words, this does not remove any field but instead of having the module do the work in selecting the machineability status, the module will just pull up the matching rate from the configuration.)
+
 ### Fixed in [UNRELEASED]
 
 - Fixed the admin area functions file to search out for the catalog area file and include that one instead of duplicating it. (Continuing the change from 1.5.0.)
-- Fixed an issue that would generate a PHP warning when errors are generated. [[#83](https://github.com/retched/ZC-USPSRestful/issues/83)]
+- Fixed an issue that would generate a PHP warning when errors are generated and a key was not found. [[#83](https://github.com/retched/ZC-USPSRestful/issues/83)]
 
 ## 1.5.0 - 2025-10-03
 
