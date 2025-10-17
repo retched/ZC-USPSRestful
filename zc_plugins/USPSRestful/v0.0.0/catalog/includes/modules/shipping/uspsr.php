@@ -61,7 +61,7 @@ class uspsr extends base
 
     protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
     protected $api_base = 'https://apis.usps.com/';
-    protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter;
+    protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter, $dimensions = [];
 
 
     protected $commError, $commErrNo, $commInfo;
@@ -316,10 +316,9 @@ class uspsr extends base
                 // Additionally, this API doesn't want the weight in ounces and pounds, it only wants pounds and parts there of. So no changing.
                 $this->quote_weight = $shipping_weight;
                 break;
-
         }
 
-        // Set the weight back 
+
 
         /**
          * Determine if package is machinable or not - Media Mail Only
@@ -339,12 +338,55 @@ class uspsr extends base
          */
 
         // Rebuild the dimmensions array
+        $pkg_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
+        array_walk($pkg_dimensions, function (&$value) {
             $value = trim($value);
         }); // Quickly remove white space
 
+        $ltr_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS));
+        array_walk($ltr_dimensions, function (&$value) {
+            $value = trim($value);
+        }); // Quickly remove white space
 
+        // Set the weight back 
+        if ($this->is_us_shipment) {
+            $this->dimensions['pkg_length'] = $pkg_dimensions[0];
+            $this->dimensions['pkg_width'] = $pkg_dimensions[2];
+            $this->dimensions['pkg_height'] = $pkg_dimensions[4];
 
+            $this->dimensions['ltr_length'] = $ltr_dimensions[0];
+            $this->dimensions['ltr_height'] = $ltr_dimensions[2];
+            $this->dimensions['ltr_thickness'] = $ltr_dimensions[4];
+        } else {
+            $this->dimensions['pkg_length'] = $pkg_dimensions[1];
+            $this->dimensions['pkg_width'] = $pkg_dimensions[3];
+            $this->dimensions['pkg_height'] = $pkg_dimensions[5];
+
+            $this->dimensions['ltr_length'] = $ltr_dimensions[1];
+            $this->dimensions['ltr_height'] = $ltr_dimensions[3];
+            $this->dimensions['ltr_thickness'] = $ltr_dimensions[5];
         }
+
+        // Notifier: before request quotes
+        // -----
+        /**
+         * Note for this notifier.
+         * 
+         * $order = Main order details. (Either an actual order in progress or the shipping estimator.)
+         * $this->quote_weight = The main weight of the order (in pounds). If ZenCart is calculating boxes, this is the "box weight".
+         * $shipping_num_boxes = The calculated number of boxes
+         * $this->dimensions an array containing the measurements: pkg is for packages, ltr is for letters.
+         * -----------
+         * $this->dimensions['pkg_length']
+         * $this->dimensions['pkg_width']
+         * $this->dimensions['pkg_height']
+         *
+         * $this->dimensions['ltr_length']
+         * $this->dimensions['ltr_height']
+         * $this->dimensions['ltr_thickness']
+         * 
+         */
+        $this->notify('NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $this->dimensions);
 
         // -----
         // Log, if enabled, the base USPS configuration for this quote request.
@@ -352,11 +394,11 @@ class uspsr extends base
         $this->_calcCart();
         $this->quoteLogConfiguration();
 
-        // request quotes
-        $this->notify('NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes);
-
         // Create the main quotes (both letters and packages)
         $this->_getQuote();
+
+        // Notifier brought forward
+        $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $this->dimensions, $uspsQuote);
 
         // There are two quote fields being used a package
 
@@ -376,12 +418,12 @@ class uspsr extends base
         if (isset($_letter['rates'])) {
             // Force the details of the Letter Request to match the other pieces from packages (adding a Mail Class to match Standards result, productName, and processingCategory)
             $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING); // This should yield something: FIRST-CLASS_MAIL_FLATS
-            $_letter['rates'][0]['productName'] = ($this->usps_countries == 'US' ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
+            $_letter['rates'][0]['productName'] = ($this->is_us_shipment ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
 
             # Bug fix for letters since the Domestic metered rate from the API is four cents off. (International seems to come through as normal.)
             # @todo Maybe toggle if First Class Mail is metered or not?
-            if ($this->usps_countries == 'US') {
+            if ($this->is_us_shipment) {
                 $_letter['rates'][0]['price'] += 0.04;
                 $_letter['totalBasePrice'] += 0.04;
             }
@@ -406,9 +448,6 @@ class uspsr extends base
 
             // ----
             // Selected Methods Builder
-
-            // Notifier brought forward
-            $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $uspsQuote);
 
             // Go through each of the $this->typeCheckboxesSelected and build a list.
             $selected_methods = [];
@@ -1554,6 +1593,7 @@ class uspsr extends base
         $message .= 'Assumed Domestic Letter Size - Length: ' . $domm_ltr_length . ', Height: ' . $domm_ltr_width . ', Thickness: ' . $domm_ltr_height . "\n";
         $message .= 'Assumed International Letter Size - Length: ' . $intl_ltr_length . ', Height: ' . $intl_ltr_width . ', Thickness: ' . $intl_ltr_height . "\n\n";
 
+        $message .= 'Media Mail Pricing Class : ' . MODULE_SHIPPING_USPSR_MEDIA_CLASS . "\n";
         $message .= 'Dimensional Pricing Class : ' . MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS . "\n";
         $message .= 'Cubic Pricing Class : ' . MODULE_SHIPPING_USPSR_CUBIC_CLASS . "\n";
         $message .= 'First-Class Mail Machineable Flags : ' . MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS . "\n\n";
@@ -1608,7 +1648,7 @@ class uspsr extends base
             // If the order is being estimated, and the search above yielded something, run this anyway
             if (!zen_is_logged_in() && ($_GET['main_page'] === 'shopping_cart' || $_GET['main_page'] === 'popup_shipping_estimator')) {
 
-                $selectedState = $_POST['state'];
+                $selectedState = $_POST['state'] ?? "";
                 $selected_state_id = $_POST['zone_id'] ?? 0;
 
                 if (!zen_not_null($selectedState) || $selected_state_id < 1) {
@@ -1621,7 +1661,7 @@ class uspsr extends base
                            OR
                            zone_code LIKE '" . $_POST['state'] .  "'");
 
-                    $selected_state_id = $zone_id->fields['zone_id'];
+                    $selected_state_id = $zone_id->fields['zone_id'] ?? 0;
                 }
 
                 if (zen_not_null($selected_state_id)) { // No $zone_id, don't check the result list.
@@ -2112,42 +2152,16 @@ class uspsr extends base
         /**
          * Build array of shipping values
          */
-        $pkg_dimmensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
-        array_walk($pkg_dimmensions, function (&$value) {
-            $value = trim($value);
-        }); // Quickly remove white space
-
-        $ltr_dimmensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS));
-        array_walk($ltr_dimmensions, function (&$value) {
-            $value = trim($value);
-        }); // Quickly remove white space
-
+        
         // Check if the measurement setting exists and if it does, check that it's in inches.
         // If it doesn't or if it is set to inches, do nothing.
         if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS !== "inches") {
-            foreach ($pkg_dimmensions as &$dimmension) {
-                $dimmension = (double) $dimmension / 2.54;
-            }
-
-            foreach ($ltr_dimmensions as &$dimmension) {
+            foreach ($this->dimensions as &$dimmension) {
                 $dimmension = (double) $dimmension / 2.54;
             }
         }
 
-        // The order won't matter as the USPS considers the biggest measurement to the length, then the width, then the height.
-        $pkg_domm_length = max((double) $pkg_dimmensions[0], 8.625);
-        $pkg_intl_length = max((double) $pkg_dimmensions[1], 8.625);
-        $pkg_domm_width = max((double) $pkg_dimmensions[2], 5.375);
-        $pkg_intl_width = max((double) $pkg_dimmensions[3], 5.375);
-        $pkg_domm_height = max((double) $pkg_dimmensions[4], 1.625);
-        $pkg_intl_height = max((double) $pkg_dimmensions[5], 1.625);
-
-        $ltr_domm_length = max((double) $ltr_dimmensions[0], 6.125);
-        $ltr_intl_length = max((double) $ltr_dimmensions[1], 6.125);
-        $ltr_domm_height = max((double) $ltr_dimmensions[2], 11.5);
-        $ltr_intl_height = max((double) $ltr_dimmensions[3], 11.5);
-        $ltr_domm_thickness = max((double) $ltr_dimmensions[4], .25);
-        $ltr_intl_thickness = max((double) $ltr_dimmensions[5], .25);
+        // Sort out each of the dimmensions as necessary.
 
         /**
          * Build the JSON Call to the server
@@ -2161,7 +2175,7 @@ class uspsr extends base
         // Prepare a Letters Query
         $ltr_body = [];
 
-        if ($this->usps_countries == 'US') {
+        if ($this->is_us_shipment) {
 
             // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
             $mailClasses = [
@@ -2193,9 +2207,9 @@ class uspsr extends base
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 'destinationZIPCode' => $destination_zip,
                 'weight' => $shipping_weight,
-                'length' => $pkg_domm_length,
-                'width' => $pkg_domm_width,
-                'height' => $pkg_domm_height,
+                'length' => $this->dimensions['pkg_length'],
+                'width' => $this->dimensions['pkg_width'],
+                'height' => $this->dimensions['pkg_height'],
                 'mailClasses' => $mailClasses,
                 'priceType' => strtoupper(MODULE_SHIPPING_USPSR_PRICING),
                 'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
@@ -2227,9 +2241,9 @@ class uspsr extends base
             // Letter Request Body
             $ltr_body = [
                 "weight" => $shipping_weight * 16, // The cart weight is in pounds, the letters API takes the request in ounces
-                "length" => $ltr_domm_length,
-                "height" => $ltr_domm_height,
-                "thickness" => $ltr_domm_thickness,
+                "length" => $this->dimensions['ltr_length'],
+                "height" => $this->dimensions['ltr_height'],
+                "thickness" => $this->dimensions['ltr_thickness'],
                 "processingCategory" => strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING),
                 "nonMachinableIndicators" =>
                 [
@@ -2692,7 +2706,7 @@ class uspsr extends base
 
         }
 
-        if ($order->delivery['country']['iso_code_2'] !== 'US')
+        if (!$this->is_us_shipment)
             $this->enable_media_mail = false;
     }
 
