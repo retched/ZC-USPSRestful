@@ -150,7 +150,6 @@ class uspsr extends base
         global $template, $current_page_base, $current_page;
 
         $this->bearerToken = $_SESSION['usps_token'] ?? NULL;
-        $this->machinable = (defined('MODULE_SHIPPING_USPSR_MACHINABLE') ? MODULE_SHIPPING_USPSR_MACHINABLE : 'Machinable');
         $this->_standard = (defined('SHIPPING_WEIGHT_UNITS') ? SHIPPING_WEIGHT_UNITS : 'lbs');
 
         $this->code = 'uspsr';
@@ -340,28 +339,11 @@ class uspsr extends base
          */
 
         // Rebuild the dimmensions array
-        $pkg_dimmensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
-        $pkg_dimmensions = [$pkg_dimmensions[0], $pkg_dimmensions[2], $pkg_dimmensions[4]]; // Media Mail is only a US only service, so we'll only use those three.
-        array_walk($pkg_dimmensions, function (&$value) {
             $value = trim($value);
         }); // Quickly remove white space
-        rsort($pkg_dimmensions);
 
-        switch (true) {
-            case ($this->quote_weight > 25):
-                // override admin choice, too heavy, 25 lbs is the limit.
-                $this->machinable = 'Nonstandard';
-                break;
 
-            // override admin choice, package cannot be more than 22 inches at it's longest side, 18 inches wide, 15 inches tall
-            case ($pkg_dimmensions[0] > 22 || $pkg_dimmensions[1] > 18 || $pkg_dimmensions[2] > 15):
-                $this->machinable = 'Nonstandard';
-                break;
 
-            default:
-                // admin choice on what to use
-                $this->machinable = MODULE_SHIPPING_USPSR_MEDIA_CLASS;
-                break;
         }
 
         // -----
@@ -1572,7 +1554,6 @@ class uspsr extends base
         $message .= 'Assumed Domestic Letter Size - Length: ' . $domm_ltr_length . ', Height: ' . $domm_ltr_width . ', Thickness: ' . $domm_ltr_height . "\n";
         $message .= 'Assumed International Letter Size - Length: ' . $intl_ltr_length . ', Height: ' . $intl_ltr_width . ', Thickness: ' . $intl_ltr_height . "\n\n";
 
-        $message .= 'Media Mail Pricing Class : ' . $this->machinable . (MODULE_SHIPPING_USPSR_MEDIA_CLASS !== $this->machinable ? " Overriden!!" : "") . "\n";
         $message .= 'Dimensional Pricing Class : ' . MODULE_SHIPPING_USPSR_DIMENSIONAL_CLASS . "\n";
         $message .= 'Cubic Pricing Class : ' . MODULE_SHIPPING_USPSR_CUBIC_CLASS . "\n";
         $message .= 'First-Class Mail Machineable Flags : ' . MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS . "\n\n";
