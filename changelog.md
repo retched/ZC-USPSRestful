@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added in [UNRELEASED]
 
-- Added a field to the notifier `NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE` to handle the dimmensions of the package. This allows modules to cut in and modify the number of boxes and the average package size sent as part of the cart quote request. (Shipping Boxes Manager can now use this notifier. I'm not hard coding in the older code from USPS WebTools.)
+- Added a parameter to the notifier `NOTIFY_SHIPPING_USPS_BEFORE_GETQUOTE` to handle the dimmensions of the package. This allows modules to cut in and modify the number of boxes and the average package size sent as part of the cart quote request. (Shipping Boxes Manager can now use this notifier. I'm not hard coding in the older code from USPS WebTools.)
 
 ### Changed in [UNRELEASED]
 
@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed in [UNRELEASED]
 
-- Fixed the admin area functions file to search out for the catalog area file and include that one instead of duplicating it. (Continuing the change from 1.5.0.)
+- Fixed the admin area functions file to search out for the catalog area functions file and `include` that one instead of duplicating it. (Continuing the change from 1.5.0.)
 - Fixed an issue that would generate a PHP warning when errors are generated and a key was not found. [[#83](https://github.com/retched/ZC-USPSRestful/issues/83)]
 
 ## 1.5.0 - 2025-10-03
@@ -38,7 +38,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed in 1.5.0
 
-- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set to 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)] 
+- Fixed an issue where the cart would reduce the weight of the quote if it reached ZenCart's maximum weight. Example: If the order is 85 pounds and ZenCart's "maximum weight" is set to 70, ZenCart makes the order count as two boxes and sends a quote for 42.5 pounds instead. The quote is supposed to be multiplied for each "box" in the order when configured for such. Additionally, the "order" fee is also multiplied. [[#74](https://github.com/retched/ZC-USPSRestful/issues/74)]
 - Fixed an issue that would generate a warning when the module would try to request standards for services that don't provide them. (ie. Connect Local and all international shipments.) That problem is now squelched as the module will check to see if such a result exists first before trying to access it.
 - Fixed an issue where Priority Mail APO/FPO/DPO Flat Rate Box rates wouldn't appear (the rate name was changed from the API pull)
 - Fixed an issue where some Priority Mail rates were missing under certain circumstances. [[#79](https://github.com/retched/ZC-USPSRestful/issues/79)]
