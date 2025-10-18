@@ -26,8 +26,9 @@ body:
         - 1.4.0
         - 1.4.1
         - 1.5.0
+        - 1.5.1
         - 0.0.0 (pulled off of repo)
-      default: 12
+      default: 13
     validations:
       required: true
   - type: dropdown
@@ -85,8 +86,20 @@ body:
     validations:
       required: true
   - type: input
-    id: logs
+    id: usps-logs
     attributes:
       label: Relevant Log Output
-      description: Please link to an **UNLISTED** Pastebin, **SECRET** Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of any myDEBUG or the USPSr log file that appeared in your logs directory from ZenCart. **__NOTE:__** Please keep in mind, this repo is NOT private. Anyone will be able to see this link and review the gist.
+      description: Please link to an **UNLISTED** Pastebin, **SECRET** Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of the USPSr log file that appeared in your logs directory from ZenCart. **__NOTE:__** Please keep in mind, this repo is NOT private. Anyone will be able to see this link and review the gist.
+  - type: textarea
+    id: zen-logs
+    attributes:
+      label: Relevant ZenCart Log Output
+      description: If there are any relevant log entries from ZenCart's logs (system or error logs), please include that below. Obfuscate any sensitive information (like directory names, etc.) before posting.
+      render: shell
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Is there any other information you think would be helpful in diagnosing the problem?
+      placeholder: Anything else to add?
       
