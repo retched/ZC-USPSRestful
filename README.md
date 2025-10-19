@@ -91,7 +91,7 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 ### What version of ZenCart does this module support?
 
-Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.) 
+Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.)
 
 **UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
 
