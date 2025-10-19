@@ -9,6 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater
 
+## 1.5.2 - 2025-10-19
+
+### Fixed in 1.5.2
+
+- Fixed an issue that prevented international shipping rates from being displayed due to a deleted variable instead of the class property set up in 1.5.1. [[#86](https://github.com/retched/ZC-USPSRestful/issues/86)]
+- Fixed an issue that disadvantaged some users of First Class Mail International unnecessarily. Adjusted the default value of First Class Mail International to compensate. (If you're using First Class Mail International, this value will not be automatically adjusted on existed installs. For pounds, you can safely change the value to 0.999625 as First Class Mail International's maximum. For kilograms, you can safely change the maximum value to 0.4534228 as its maximum instead.)
+
 ## 1.5.1 - 2025-10-17
 
 ### Added in 1.5.1

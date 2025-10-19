@@ -3850,12 +3850,17 @@ body,
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.5.0</a><br>
-<em>Released October 3, 2025 for ZenCart 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.5.2</a><br>
+<em>Released October 19, 2025 for ZenCart 2.1.0.</em></li>
+<li>Next Version Number: ???</li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
-<li>1.5.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">Download</a><br>
+<li>1.5.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2">Download</a><br>
+Resolved issues regarding international packages and letters being missing from quotes.</li>
+<li>1.5.1: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1">Download</a><br>
+Various bug fixes on the backside. Added support for the Shipping Boxes Manager module by way of observer. Dropped the machinability override (it's more or less moot). Refactored the inclusion of the functions file. Fixed an issue where the module wouldn't try to proceed on an empty return from the API.</li>
+<li>1.5.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.0">Download</a><br>
 Fixed an issue with the quote when sending abnormally large boxes. Fixed the MAJOR issue with regards to the speed of requesting quotes. (The module will no longer try to double iterate over the entire request and instead, indexes the resultant USPS calls and pulls them up as needed. Same with Standards calls.) Fixed an issue with the math of the quotes themselves.</li>
 <li>1.4.1: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.4.1">Download</a><br>
 Minor bug fix to ScriptedInstaller.php (encapsulated only)</li>
