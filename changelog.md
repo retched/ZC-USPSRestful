@@ -9,6 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater
 
+## [UNRELEASED]
+
+### Fixed in [UNRELEASED]
+
+- Expanded the list of APO/DPO/FPO Zip Codes.
+- Fixed the values of the services to match the newer options that were added on upgrade. (They didn't align from the changes in 1.5.2.)
+
 ## 1.5.2 - 2025-10-19
 
 ### Fixed in 1.5.2
