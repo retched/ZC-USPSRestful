@@ -725,7 +725,7 @@ class uspsr extends base
                         foreach ($services as $s) {
                             if (isset($lookup[$method_name]['extraService'][$s]['price'])) {
                                 $method_price = $lookup[$method_name]['extraService'][$s]['price'];
-                                $extraServices += $price;
+                                $extraServices += $method_price;
 
                                 // Add service name if available, otherwise fall back to the code
                                 $label = $lookup[$method_name]['extraService'][$s]['name'] ?? $s;
@@ -2326,7 +2326,7 @@ class uspsr extends base
                 'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
             ];
 
-                        // Letter Request Body
+            // Letter Request Body
             $ltr_body = [
                 "weight" => $shipping_weight,
                 "length" => $this->dimensions['ltr_length'],
@@ -2355,12 +2355,12 @@ class uspsr extends base
             }
 
 
-        // Send pkg_body to make pkgQuote.
-        $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-intl');
-        $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
+			// Send pkg_body to make pkgQuote.
+			$this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-intl');
+			$this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
 
-        $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
-        
+			$this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
+			
         }
 
         // If the Pricing is Contract, add the Contract Type and AccountNumber
@@ -2386,9 +2386,6 @@ class uspsr extends base
             
 
         }
-
-        // If there is a request for either version of letter, send that request.
-
     }
 
     protected function _makeStandardsCall($query)
