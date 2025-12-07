@@ -705,14 +705,28 @@ function uspsr_get_connect_zipcodes($data)
 function zen_uspsr_estimate_days($data)
 {
     $output = '';
+
+    if (!defined('MODULE_SHIPPING_USPSR_HANDLING_TIME')) {
+        return $data;
+    }
+
+    $daystoadd = (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
+
     // Simply put, put the number before the word.
     if (preg_match("/\d+\-\d+/", $data)) {
+        // Split the range of days off and add the handling time to each end.
+        $days = explode('-', $data);
+        foreach ($days as &$day) {
+            $day = (int)$day + $daystoadd;
+        }
+        $data = implode('-', $days); // Collapse the array back into a - string. (This should still only have two values)
         $output = $data . " " . MODULE_SHIPPING_USPSR_TEXT_DAYS;
-    } elseif (is_numeric($data) && ($data > 1 || $data == 0))
-        $output = $data . " " . MODULE_SHIPPING_USPSR_TEXT_DAYS;
-    else
-        $output = "~" . $data . " " . MODULE_SHIPPING_USPSR_TEXT_DAY;
-
+    } elseif (is_numeric($data) && ($data > 1 || $data == 0)) {
+        $output = (int)$data + $daystoadd . " " . MODULE_SHIPPING_USPSR_TEXT_DAYS;
+    } else {
+        $days = (int)$data + $daystoadd;
+        $output = "~" . $days . " " . ($days == 1 ? MODULE_SHIPPING_USPSR_TEXT_DAY : MODULE_SHIPPING_USPSR_TEXT_DAYS);
+    }
 
     return $output;
 }
