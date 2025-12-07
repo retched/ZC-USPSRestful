@@ -784,6 +784,25 @@ class uspsr extends base
                         $build_quotes[] = $quotes;
                         $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
                         $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Method Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . " , Extra Services: " . $currencies->format($extraServices) . "\n";
+
+                        if ($this->is_us_shipment && isset($uspsStandards[$quotes['mailClass']])) { // Only do this for domestic shipments
+                            // If there is a standards request, add that line:
+                            switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) 
+                            {
+                                case "Estimate Transit Time": 
+                                    $total_days = (int)$uspsStandards[$quotes['mailClass']]['serviceStandard'] + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
+                                    $quote_message .= "Estimated Transit Time per Standards: " . (int)$uspsStandards[$quotes['mailClass']]['serviceStandard']  . " day(s) + Handling Days: " . (int) MODULE_SHIPPING_USPSR_HANDLING_TIME . " day(s) = Total Days: " . $total_days . " day(s)" . "\n";
+                                    break;
+                                case "Estimate Delivery":
+                                    $est_delivery_raw = new DateTime($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime']);
+                                    $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
+
+                                    $quote_message .= "Estimated Delivery Date per Standards:" . $est_delivery . "\n";
+                                    break;
+                            }
+
+                        }
+                        
                         $quote_message .= "Final Price (Quote + Handling + Order Handling + Services) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
                     } elseif (!$match) {
                         // Order failed to match
