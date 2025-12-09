@@ -476,7 +476,7 @@ class uspsr extends base
             for ($i = 0; $i <= count($this->typeCheckboxesSelected) - 1; $i++) {
                 if (!is_numeric($this->typeCheckboxesSelected[$i]) && zen_not_null($this->typeCheckboxesSelected[$i])) {
                     // Fool proofing the entry of the two values.
-                    $limits = [(double) $this->typeCheckboxesSelected[$i + 1], (double) $this->typeCheckboxesSelected[$i + 2]];
+                    $limits = [(float) $this->typeCheckboxesSelected[$i + 1], (float) $this->typeCheckboxesSelected[$i + 2]];
 
                     // Does this need to be converted into pounds?
                     if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS == 'kgs') {
@@ -506,10 +506,10 @@ class uspsr extends base
             // Order Handling Costs
             if ($order->delivery['country']['id'] === SHIPPING_ORIGIN_COUNTRY || $this->is_us_shipment === true) {
                 // domestic/national
-                $usps_handling_fee = (double) MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC;
+                $usps_handling_fee = (float) MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC;
             } else {
                 // international
-                $usps_handling_fee = (double) MODULE_SHIPPING_USPSR_HANDLING_INTL;
+                $usps_handling_fee = (float) MODULE_SHIPPING_USPSR_HANDLING_INTL;
             }
 
             // -----
@@ -783,7 +783,7 @@ class uspsr extends base
                         // If everything checks out... Add it to the 
                         $build_quotes[] = $quotes;
                         $quote_message .= "\n" . 'Adding option : ' . $quotes['title'] . "\n";
-                        $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Method Handling : " . $currencies->format((double) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . " , Extra Services: " . $currencies->format($extraServices) . "\n";
+                        $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Method Handling : " . $currencies->format((float) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . " , Extra Services: " . $currencies->format($extraServices) . "\n";
                         $quote_message .= "Final Price (Quote + Handling + Order Handling + Services) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
 
                         if ($this->is_us_shipment && isset($uspsStandards[$quotes['mailClass']])) { // Only do this for domestic shipments
@@ -1566,23 +1566,23 @@ class uspsr extends base
             $value = trim($value);
         });
 
-        $domm_pkg_length = (double) $pkg_dimmensions[0];
-        $intl_pkg_length = (double) $pkg_dimmensions[1];
+        $domm_pkg_length = (float) $pkg_dimmensions[0];
+        $intl_pkg_length = (float) $pkg_dimmensions[1];
 
-        $domm_pkg_width = (double) $pkg_dimmensions[2];
-        $intl_pkg_width = (double) $pkg_dimmensions[3];
+        $domm_pkg_width = (float) $pkg_dimmensions[2];
+        $intl_pkg_width = (float) $pkg_dimmensions[3];
 
-        $domm_pkg_height = (double) $pkg_dimmensions[4];
-        $intl_pkg_height = (double) $pkg_dimmensions[5];
+        $domm_pkg_height = (float) $pkg_dimmensions[4];
+        $intl_pkg_height = (float) $pkg_dimmensions[5];
 
-        $domm_ltr_length = (double) $ltr_dimmensions[0];
-        $intl_ltr_length = (double) $ltr_dimmensions[1];
+        $domm_ltr_length = (float) $ltr_dimmensions[0];
+        $intl_ltr_length = (float) $ltr_dimmensions[1];
 
-        $domm_ltr_width = (double) $ltr_dimmensions[2];
-        $intl_ltr_width = (double) $ltr_dimmensions[3];
+        $domm_ltr_width = (float) $ltr_dimmensions[2];
+        $intl_ltr_width = (float) $ltr_dimmensions[3];
 
-        $domm_ltr_height = (double) $ltr_dimmensions[4];
-        $intl_ltr_height = (double) $ltr_dimmensions[5];
+        $domm_ltr_height = (float) $ltr_dimmensions[4];
+        $intl_ltr_height = (float) $ltr_dimmensions[5];
 
         $message = '' . "\n\n";
         $message .= "USPSRestful Configuration Report\n";
@@ -1611,7 +1611,7 @@ class uspsr extends base
             $message .= 'Total Quote Weight: ' . $this->quote_weight . ' kgs.' . " ( Number of Boxes : $shipping_num_boxes )\n";
         }
 
-        $message .= 'Maximum: ' . SHIPPING_MAX_WEIGHT . ' ' . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . (double) SHIPPING_MAX_WEIGHT * 0.453592 . " lbs)" : '') . ' , Tare Rates: Small/Medium: ' . SHIPPING_BOX_WEIGHT . ' Large: ' . SHIPPING_BOX_PADDING . "\n";
+        $message .= 'Maximum: ' . SHIPPING_MAX_WEIGHT . ' ' . SHIPPING_WEIGHT_UNITS . (SHIPPING_WEIGHT_UNITS == 'kgs' ? " (" . (float) SHIPPING_MAX_WEIGHT * 0.453592 . " lbs)" : '') . ' , Tare Rates: Small/Medium: ' . SHIPPING_BOX_WEIGHT . ' Large: ' . SHIPPING_BOX_PADDING . "\n";
         $message .= 'Order Handling method: ' . MODULE_SHIPPING_USPSR_HANDLING_METHOD . ', Handling fee Domestic (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_DOMESTIC) . ', Handling fee International (Order): ' . $currencies->format(MODULE_SHIPPING_USPSR_HANDLING_INTL) . "\n";
 
 
@@ -2199,7 +2199,7 @@ class uspsr extends base
         // If it doesn't or if it is set to inches, do nothing.
         if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS !== "inches") {
             foreach ($this->dimensions as &$dimmension) {
-                $dimmension = (double) $dimmension / 2.54;
+                $dimmension = (float) $dimmension / 2.54;
             }
         }
 
@@ -2727,8 +2727,8 @@ class uspsr extends base
         // notices from this module's quote processing.
 
         $this->orders_tax = (!isset($order->info['tax'])) ? 0 : $order->info['tax'];
-        $this->uninsured_value = (double)number_format((isset($uninsurable_value)) ? (float) $uninsurable_value : 0, 2);
-        $this->shipment_value = (double)number_format(($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total, 2);
+        $this->uninsured_value = (float)number_format((isset($uninsurable_value)) ? (float) $uninsurable_value : 0, 2);
+        $this->shipment_value = (float)number_format(($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total, 2);
         $this->insured_value = $this->shipment_value - $this->uninsured_value;
 
         // Breakout the category of exemptions for Media Mail
