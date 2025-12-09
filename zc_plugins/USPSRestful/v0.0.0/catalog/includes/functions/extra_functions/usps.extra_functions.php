@@ -523,7 +523,7 @@ function zen_cfg_uspsr_showdimmensions($key_value)
     // If it doesn't or if it is set to inches, do nothing.
     if (defined('SHIPPING_DIMENSION_UNITS') && SHIPPING_DIMENSION_UNITS !== "inches") {
         foreach ($key_values as &$dimmension) {
-            $dimmension = (double) $dimmension / 2.54;
+            $dimmension = (float) $dimmension / 2.54;
         }
     }
 
