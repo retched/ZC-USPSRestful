@@ -8,13 +8,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater
+- Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 
 ## [UNRELEASED]
+
+### Changed in [UNRELEASED]
+
+- Replaced all switch statements to use a semi-colon with its `case` and `default` statements per 8.5. (Change is compatible with PHP 7.x, and PHP 8.x).
+- Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
 
 ### Fixed in [UNRELEASED]
 
 - Expanded the list of APO/DPO/FPO Zip Codes.
 - Fixed the values of the services to match the newer options that were added on upgrade. (They didn't align from the changes in 1.5.2.)
+- Fixed an issue involving the calculation of services and add-ons. Values are now additive and not multiplicative. [[#91](https://github.com/retched/ZC-USPSRestful/issues/91)]
+- Fixed a potential issue when making service standards requests and the resultant JSON file isn't in the proper form. [[#93](https://github.com/retched/ZC-USPSRestful/issues/93)]
 
 ## 1.5.2 - 2025-10-19
 
