@@ -290,16 +290,16 @@ class uspsr extends base
         $delivery_country = 'US';
         if (SHIPPING_ORIGIN_COUNTRY === '223') {
             switch ($order->delivery['country']['iso_code_2']) {
-                case 'AS'; // Samoa American
-                case 'GU'; // Guam
-                case 'MP'; // Northern Mariana Islands
-                case 'PW'; // Palau
-                case 'PR'; // Puerto Rico
-                case 'VI'; // Virgin Islands US
+                case 'AS': // Samoa American
+                case 'GU': // Guam
+                case 'MP': // Northern Mariana Islands
+                case 'PW': // Palau
+                case 'PR': // Puerto Rico
+                case 'VI': // Virgin Islands US
                 // which is right
-                case 'FM'; // Micronesia, Federated States of
+                case 'FM': // Micronesia, Federated States of
                     break;
-                default;
+                default:
                     $delivery_country = $order->delivery['country']['iso_code_2'];
                     break;
             }
@@ -327,12 +327,12 @@ class uspsr extends base
 
         // What unit are we working with?
         switch ($this->_standard) {
-            case 'kgs';
+            case 'kgs':
                 // 1 kgs = 2.2046226218487758 lbs
                 $this->quote_weight = $shipping_weight * 2.2046226218487758;
                 break;
-            case 'lbs';
-            default;
+            case 'lbs':
+            default:
                 // Since this is in pounds, no conversion is necessary.
                 // Additionally, this API doesn't want the weight in ounces and pounds, it only wants pounds and parts there of. So no changing.
                 $this->quote_weight = $shipping_weight;
@@ -790,11 +790,11 @@ class uspsr extends base
                             // If there is a standards request, add that line:
                             switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) 
                             {
-                                case "Estimate Transit Time";
+                                case "Estimate Transit Time":
                                     $total_days = (int)$uspsStandards[$quotes['mailClass']]['serviceStandard'] + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
                                     $quote_message .= "Estimated Transit Time per Standards: " . (int)$uspsStandards[$quotes['mailClass']]['serviceStandard']  . " day(s) + Handling Days: " . (int) MODULE_SHIPPING_USPSR_HANDLING_TIME . " day(s) = Total Days: " . $total_days . " day(s)" . "\n";
                                     break;
-                                case "Estimate Delivery";
+                                case "Estimate Delivery":
                                     $est_delivery_raw = new DateTime($uspsStandards[$quotes['mailClass']]['delivery']['scheduledDeliveryDateTime']);
                                     $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
 
@@ -886,12 +886,12 @@ class uspsr extends base
             // Build Estimates Attachment
             if (!empty($uspsStandards)) {
                 switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
-                    case "Estimate Transit Time";
+                    case "Estimate Transit Time":
                         foreach ($build_quotes as &$quote) {
                             if (isset($uspsStandards[$quote['mailClass']]['serviceStandard'])) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($uspsStandards[$quote['mailClass']]['serviceStandard']) . "]";
                         }
                         break;
-                    case "Estimate Delivery";
+                    case "Estimate Delivery":
                         foreach ($build_quotes as &$quote) {
 
                             if (isset($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime'])) {
@@ -907,22 +907,22 @@ class uspsr extends base
 
             // Okay we have our list of Build Quotes, so now... we need to sort pursurant to options
             switch (MODULE_SHIPPING_USPSR_QUOTE_SORT) {
-                case 'Alphabetical';
+                case 'Alphabetical':
                     usort($build_quotes, function ($a, $b) {
                         return $a['title'] <=> $b['title'];
                     });
                     break;
-                case 'Price-LowToHigh';
+                case 'Price-LowToHigh':
                     usort($build_quotes, function ($a, $b) {
                         return $a['cost'] <=> $b['cost'];
                     });
                     break;
-                case 'Price-HighToLow';
+                case 'Price-HighToLow':
                     usort($build_quotes, function ($a, $b) {
                         return $b['cost'] <=> $a['cost'];
                     });
                     break;
-                case 'Unsorted';
+                case 'Unsorted':
                     // Do nothing, leave it as is
                     break;
             }
@@ -1761,9 +1761,9 @@ class uspsr extends base
             switch (MODULE_SHIPPING_USPSR_VERSION) {
 
                 // BREAKING CHANGE... The data table was changed!
-                case "v0.1.0"; // Released 2024-12-22
-                case "v0.2.0"; // Released 2025-01-17
-                case "v0.3.0"; // This version didn't officially get released but was the old format of the repository before the directory rename
+                case "v0.1.0": // Released 2024-12-22
+                case "v0.2.0": // Released 2025-01-17
+                case "v0.3.0": // This version didn't officially get released but was the old format of the repository before the directory rename
                     // Any changes to the database from v1.0.0 should go here
                     // v0.3.0 and before didn't have the Min/Max table. Let's add it.
 
@@ -1894,9 +1894,9 @@ class uspsr extends base
 
 
                 // Next group of changes
-                case "v1.0.0"; // Released 2025-02-18
-                case "v1.1.1"; // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
-                case "v1.1.2"; // Released 2025-03-07
+                case "v1.0.0": // Released 2025-02-18
+                case "v1.1.1": // Released 2025-03-07, subsequently deleted and replaced with 1.1.2
+                case "v1.1.2": // Released 2025-03-07
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_HANDLING_TIME', [
                         'configuration_description' => 'In whole numbers, how many days does it take for you to dispatch your packages to the USPS. (Enter as a whole number only. Between 0 and 30. This will be added to the estimated delivery date or time as needed.)',
                         'set_function' => ''
@@ -1915,9 +1915,9 @@ class uspsr extends base
                         'configuration_description' => 'Would you like to enable debug modes?<br><br><em>"Generate Logs"</em> - This module will generate log files for each and every call to the USPS API Server (including the admin side viability check).<br><br>"<em>Display errors</em>" - If set, this means that any API errors that are caught will be displayed in the storefront.<br><br><em>CAUTION:</em> Each log file can be as big as 300KB in size.',
                     ]);
 
-                case "v1.2.0"; // Released 2025-03-15
-                case "v1.3.0"; // Released 2025-08-17 (Had an issue with this one, some installs saw some keys get skipped... )
-                case "v1.3.1"; // Released 2025-08-24 (There aren't any changes module was between 1.3.1 and 1.3.2 but it doesn't hurt to rerun)
+                case "v1.2.0": // Released 2025-03-15
+                case "v1.3.0": // Released 2025-08-17 (Had an issue with this one, some installs saw some keys get skipped... )
+                case "v1.3.1": // Released 2025-08-24 (There aren't any changes module was between 1.3.1 and 1.3.2 but it doesn't hurt to rerun)
                     if (preg_match("/uspsr.php/", MODULE_SHIPPING_INSTALLED)) { // Only should be run if the module is already installed.
                         // Changing the description
                         $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
@@ -2014,14 +2014,14 @@ class uspsr extends base
                             ]);
                         }
                     }
-                case "v1.3.2"; // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.1. All changes were to the module itself.
-                case "v1.4.0"; // Released 2025-09-02: No database changes
-                case "v1.4.1"; // Released 2025-09-03: Minor database change. (Have to rename 'Priority Mail Large Flat Rate Box APO/FPO/DPO' to 'Priority Mail Large Flat Rate APO/FPO/DPO')
+                case "v1.3.2": // Released 2025-08-25: No database changes made from 1.3.2 to 1.4.1. All changes were to the module itself.
+                case "v1.4.0": // Released 2025-09-02: No database changes
+                case "v1.4.1": // Released 2025-09-03: Minor database change. (Have to rename 'Priority Mail Large Flat Rate Box APO/FPO/DPO' to 'Priority Mail Large Flat Rate APO/FPO/DPO')
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                         'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
                     ]);
-                case "v1.5.0"; // Released 2025-10-17: No database changes
-                case "v1.5.1"; // Released 2025-10-20: No database changes
+                case "v1.5.0": // Released 2025-10-17: No database changes
+                case "v1.5.1": // Released 2025-10-20: No database changes
                     // There is a database change to the minimum value of the First Class Mail international letter weight limit, but that shouldn't be blindly applied to existing installs.
                     break;
             }

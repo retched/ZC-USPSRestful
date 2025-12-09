@@ -17,7 +17,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ### Version/Release History
 
 - 1.5.3: _In Development_  
-  Resolved an issue with the calculation of services and add-ons. Changed internal code to be ready for PHP 8.5.
+  Resolved an issue with the calculation of services and add-ons.
 - 1.5.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2)  
   Resolved issues regarding international packages and letters being missing from quotes.
 - 1.5.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1)  

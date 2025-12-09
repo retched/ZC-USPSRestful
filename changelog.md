@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed in [UNRELEASED]
 
-- Replaced all switch statements to use a semi-colon with its `case` and `default` statements per 8.5. (Change is compatible with PHP 7.x, and PHP 8.x).
 - Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
 
 ### Fixed in [UNRELEASED]
