@@ -170,7 +170,6 @@ class uspsr extends base
     {
         global $template, $current_page_base, $current_page;
 
-        $this->bearerToken = $_SESSION['usps_token'] ?? NULL;
         $this->_standard = (defined('SHIPPING_WEIGHT_UNITS') ? SHIPPING_WEIGHT_UNITS : 'lbs');
 
         $this->code = 'uspsr';
@@ -320,11 +319,6 @@ class uspsr extends base
     {
         global $order, $shipping_weight, $shipping_num_boxes, $currencies;
 
-        // Make a token for the API
-        // If the Bearer Token is empty, make it.
-        if (!zen_not_null($this->bearerToken))
-            $this->getBearerToken();
-
         // What unit are we working with?
         switch ($this->_standard) {
             case 'kgs':
@@ -338,8 +332,6 @@ class uspsr extends base
                 $this->quote_weight = $shipping_weight;
                 break;
         }
-
-
 
         /**
          * Determine if package is machinable or not - Media Mail Only
@@ -969,8 +961,8 @@ class uspsr extends base
                     'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>"
                 ];
 
-                $this->enabled = false;
             }
+
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
@@ -1470,6 +1462,47 @@ class uspsr extends base
             'configuration_title' => 'Sort Order',
             'configuration_value' => '0',
             'configuration_description' => 'Sort order of the modules display. <small>(where do you want this to be place along the other shipping modules)</small>',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'date_added' => 'now()'
+        ]);
+
+
+        /**
+         * NEW TO 1.5.3: Bearer Tokens Configuration Values
+         */
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN', [
+            'configuration_title' => 'USPS Active Bearer Token',
+            'configuration_value' => '',
+            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'date_added' => 'now()'
+        ]);
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
+            'configuration_title' => 'USPS Active Bearer Token Expiration',
+            'configuration_value' => '',
+            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'date_added' => 'now()'
+        ]);
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN', [
+            'configuration_title' => 'USPS Refresh Token',
+            'configuration_value' => '',
+            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'date_added' => 'now()'
+        ]);
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION', [
+            'configuration_title' => 'USPS Refresh Token Expiration',
+            'configuration_value' => '',
+            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
             'configuration_group_id' => 6,
             'sort_order' => 0,
             'date_added' => 'now()'
@@ -2020,9 +2053,51 @@ class uspsr extends base
                     $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_TYPES', [
                         'set_function' => 'zen_cfg_uspsr_services([\'First-Class Mail Letter\',\'USPS Ground Advantage\', \'USPS Ground Advantage Cubic\', \'Media Mail\', \'Connect Local Machinable DDU\', \'Connect Local Machinable DDU Flat Rate Box\', \'Connect Local Machinable DDU Small Flat Rate Bag\', \'Connect Local Machinable DDU Large Flat Rate Bag\', \'Priority Mail\', \'Priority Mail Cubic\', \'Priority Mail Flat Rate Envelope\', \'Priority Mail Padded Flat Rate Envelope\', \'Priority Mail Legal Flat Rate Envelope\', \'Priority Mail Small Flat Rate Box\', \'Priority Mail Medium Flat Rate Box\', \'Priority Mail Large Flat Rate Box\', \'Priority Mail Large Flat Rate APO/FPO/DPO\', \'Priority Mail Express\', \'Priority Mail Express Flat Rate Envelope\', \'Priority Mail Express Padded Flat Rate Envelope\', \'Priority Mail Express Legal Flat Rate Envelope\', \'First-Class Mail International Letter\', \'First-Class Package International Service Machinable ISC Single-piece\', \'Priority Mail International ISC Single-piece\', \'Priority Mail International ISC Flat Rate Envelope\', \'Priority Mail International Machinable ISC Padded Flat Rate Envelope\', \'Priority Mail International ISC Legal Flat Rate Envelope\', \'Priority Mail International Machinable ISC Small Flat Rate Box\', \'Priority Mail International Machinable ISC Medium Flat Rate Box\', \'Priority Mail International Machinable ISC Large Flat Rate Box\', \'Priority Mail Express International ISC Single-piece\', \'Priority Mail Express International ISC Flat Rate Envelope\', \'Priority Mail Express International ISC Legal Flat Rate Envelope\', \'Priority Mail Express International ISC Padded Flat Rate Envelope\'], ',
                     ]);
-                case "v1.5.0": // Released 2025-10-17: No database changes
-                case "v1.5.1": // Released 2025-10-20: No database changes
+                case "v1.5.0": // Released 2025-10-02: No database changes
+                case "v1.5.1": // Released 2025-10-17: No database changes
                     // There is a database change to the minimum value of the First Class Mail international letter weight limit, but that shouldn't be blindly applied to existing installs.
+                case "v1.5.2": // Released 2025-10-20: Adding new keys
+
+                    /**
+                     * NEW TO 1.5.3: Bearer Tokens Configuration Values
+                     */
+
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN', [
+                        'configuration_title' => 'USPS Active Bearer Token',
+                        'configuration_value' => '',
+                        'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'date_added' => 'now()'
+                    ]);
+
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
+                        'configuration_title' => 'USPS Active Bearer Token Expiration',
+                        'configuration_value' => '',
+                        'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'date_added' => 'now()'
+                    ]);
+
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN', [
+                        'configuration_title' => 'USPS Refresh Token',
+                        'configuration_value' => '',
+                        'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'date_added' => 'now()'
+                    ]);
+
+                    $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION', [
+                        'configuration_title' => 'USPS Refresh Token Expiration',
+                        'configuration_value' => '',
+                        'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
+                        'configuration_group_id' => 6,
+                        'sort_order' => 0,
+                        'date_added' => 'now()'
+                    ]);
+
                     break;
             }
 
@@ -2113,10 +2188,14 @@ class uspsr extends base
     {
         global $messageStack;
 
-        // Try to get a bearer token
-        if (!zen_not_null($this->bearerToken))
-            $this->getBearerToken();
 
+        //$this->bearerToken = $_SESSION['usps_token'] ?? NULL;
+        // Check if the token is still valid. If not, get a new one.
+        if ($this->checkToken(MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION)) {
+            $this->bearerToken = MODULE_SHIPPING_USPSR_BEARER_TOKEN;
+        } else {
+            $this->getBearerToken();
+        }
 
         // Need to have at least one method enabled
         $usps_shipping_methods_cnt = 0;
@@ -2466,10 +2545,8 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        // Deprecated in PHP 8.5
-        if (PHP_VERSION_ID < 80000) {
-            curl_close($ch);
-        }
+        // Deprecated in PHP 8.0
+        if (PHP_VERSION_ID < 80000) curl_close($ch);
         
 
         // -----
@@ -2544,16 +2621,37 @@ class uspsr extends base
         $this->uspsrDebug($message);
     }
 
+    protected function checkToken($expiration_time)
+    {
+        // Check to see if the Bearer Token is still valid.
+
+        return time() <= $expiration_time;
+    }
+    
     protected function getBearerToken()
     {
+
         global $request_type;
 
-        $call_body = json_encode([
-            "grant_type" => 'client_credentials',
-            'client_id' => MODULE_SHIPPING_USPSR_API_KEY,
+        $call_body = [
+            'client_id'     => MODULE_SHIPPING_USPSR_API_KEY,
             'client_secret' => MODULE_SHIPPING_USPSR_API_SECRET,
-            'scope' => 'domestic-prices addresses international-prices service-standards international-service-standard shipments'
-        ]);
+            'scope'       => 'domestic-prices addresses international-prices service-standards international-service-standard shipments'
+        ];
+        
+        // If there is a refresh token, check to see if it's still valid.
+        if (zen_not_null(MODULE_SHIPPING_USPSR_REFRESH_TOKEN) && $this->checkToken(MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION)) {
+            
+            // It's valid, so use it to get a refreshed bearer token.
+            $call_body['grant_type'] = 'refresh_token';
+            $call_body['refresh_token'] = MODULE_SHIPPING_USPSR_REFRESH_TOKEN;
+
+        } else {
+            // Otherwise, there is no refresh token, so get a new bearer token.
+            $call_body['grant_type'] = 'client_credentials';
+        }
+
+        $call_body = json_encode($call_body);
 
         $ch = curl_init();
         $curl_options = [
@@ -2615,11 +2713,39 @@ class uspsr extends base
         }
         // EOF CURL
 
-        // Return JUST the token
+        // Extract the token and expiration times
         $body = json_decode($body, TRUE);
 
-        if (is_array($body)) $_SESSION['usps_token'] = (array_key_exists('access_token', $body) ? $body['access_token'] : NULL);
-        $this->bearerToken = $_SESSION['usps_token'] ?? NULL;
+        if (is_array($body) && array_key_exists('access_token', $body)) {
+            
+            $expiration_time = $body['issued_at'] + ($body['expires_in'] * 1000) - 300000; // Subtract 5 minutes to be safe.
+            $expiration_time /= 1000; // Convert to seconds
+
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN', [
+                'configuration_value' => $body['access_token']
+            ]);
+
+            $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
+                'configuration_value' => (int)$expiration_time,
+            ]);
+            
+            if (isset($body['refresh_token'])) {
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN', [
+                    'configuration_value' => $body['refresh_token']
+                ]);
+
+                $refresh_expiration = $body['refresh_token_issued_at'] + ($body['refresh_token_expires_in'] * 1000) - 300000; // Subtract 5 minutes to be safe.
+                $refresh_expiration /= 1000; // Convert to seconds
+
+                $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION', [
+                    'configuration_value' => (int)$refresh_expiration, // Refresh tokens last 30 days longer than access tokens
+                ]);
+            }
+
+            $this->bearerToken = $body['access_token'];
+
+        }
+
         return;
     }
 
@@ -2776,7 +2902,9 @@ class uspsr extends base
         $sql_data_array['last_modified'] = "now()";
 
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
-        zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
+        
+        // Checking to see if the function exists to avoid errors in the customer section of ZenCart
+        if (function_exists('zen_record_admin_activity')) zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
 
     }
 
