@@ -382,6 +382,47 @@ class ScriptedInstaller extends ScriptedInstallBase
                     case "v1.5.0": // Released 2025-10-17: No database changes
                     case "v1.5.1": // Released 2025-10-20: No database changes
                         // There is a database change to the minimum value of the First Class Mail international letter weight limit, but that shouldn't be blindly applied to existing installs.
+                    case "v1.5.2": // Released 2025-10-19: Added keys since 1.5.2
+
+                        /**
+                         * NEW TO 1.5.3: Bearer Tokens Configuration Values
+                         */
+
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN', [
+                            'configuration_title' => 'USPS Active Bearer Token',
+                            'configuration_value' => '',
+                            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'date_added' => 'now()'
+                        ]);
+
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
+                            'configuration_title' => 'USPS Active Bearer Token Expiration',
+                            'configuration_value' => '',
+                            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'date_added' => 'now()'
+                        ]);
+
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN', [
+                            'configuration_title' => 'USPS Refresh Token',
+                            'configuration_value' => '',
+                            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The active Bearer Token used to authenticate API requests to the USPS API server. (Leave blank to have the module generate a new token as needed.)',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'date_added' => 'now()'
+                        ]);
+
+                        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION', [
+                            'configuration_title' => 'USPS Refresh Token Expiration',
+                            'configuration_value' => '',
+                            'configuration_description' => '<strong>FOR INTERNAL USE ONLY:</strong> The expiration time of the active Bearer Token used to authenticate API requests to the USPS API server.',
+                            'configuration_group_id' => 6,
+                            'sort_order' => 0,
+                            'date_added' => 'now()'
+                        ]);
                         break;
             }
         }
