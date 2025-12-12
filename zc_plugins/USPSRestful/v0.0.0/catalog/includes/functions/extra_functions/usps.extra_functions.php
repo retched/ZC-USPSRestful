@@ -336,10 +336,15 @@ function zen_cfg_uspsr_extraservices_display($key_value)
 {
     // Display the Values as a Comma-Separated List.
 
-    $key_values = array_filter(explode(', ', $key_value));
+    // Delete the -1 value (It's just a placeholder to keep the array intact)
+    $key_values = array_filter(explode(', ', $key_value), function ($value) {
+        return !empty($value) && $value != -1;
+    });
+
     array_walk($key_values, function (&$value) {
-        $value = trim($value);
+        $value = (int)trim($value);
     }); // Quickly remove white space
+
 
     $output = '';
     $options = [

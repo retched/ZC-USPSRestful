@@ -61,7 +61,7 @@ class uspsr extends base
 
     protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
     protected $api_base = 'https://apis.usps.com/';
-    protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter, $dimensions = [];
+    protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter, $dimensions = [], $errors = [];
 
 
     protected $commError, $commErrNo, $commInfo;
@@ -426,10 +426,12 @@ class uspsr extends base
         // Start with package quote
         $uspsQuote = json_decode($this->pkgQuote, TRUE);
 
-        if (!empty($uspsQuote['error']) && is_array($uspsQuote['error']['errors'])) {
-            foreach ($uspsQuote['error']['errors'] as &$pkg_error) {
-                $pkg_error['title'] = "Packages: " . $pkg_error['title'];
-            }
+        if (!empty($uspsQuote['error'])) {
+            // There was an error with the package quote, so prefix the title with "Packages: "
+            $this->errors[] = [
+                'message' => "Packages: " . $uspsQuote['error']['message'],
+                'code' => $uspsQuote['error']['code']
+            ];
         }
 
         // Take the Letters Quote and add it to a temp holder
@@ -451,13 +453,12 @@ class uspsr extends base
 
             $uspsQuote['rateOptions'][] = $_letter;
         } else { // We likely have an error, so add that error to the list of errors.
-            foreach ($_letter['error']['errors'] as $error_letter) {
-                $uspsQuote['error']['errors'][] = [
-                    'title' => "Letters: ". $error_letter['title'],
-                    'code' => $error_letter['code'],
-                    'detail' => $error_letter['detail']
-                ];
-            }
+
+            $this->errors[] = [
+                'message' => "Letters: " . $_letter['error']['message'],
+                'code' => $_letter['error']['code']
+            ];
+
         }
 
         if (isset($uspsQuote['rateOptions']) && is_array($uspsQuote['rateOptions'])) {
@@ -948,25 +949,23 @@ class uspsr extends base
                 // Should there be a warning that the dates are estimations?
 
             }  // If we made it this far, there is no point in outputting an error message of any kind.
+        } else {
+            if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE) && empty($build_quotes)) {
 
-        } else { // If there isn't a 'rateOptions' filed, that means we have an 'error' field. Output that along with an error message, if desired.
-
-            // Only show this during debugging
-            if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
-
-                // We have an error. Errors are normally kept in $uspsQuote['error']['errors'], so iterate over it.
+                // We have an error and error debugging is enabled, so output the error.
+                // (Can't show both errors and quotes at the same time.)
 
                 $error_str = '';
-                foreach ($uspsQuote['error']['errors'] as $error) {
-                    $error_str .= $error['title'] . (!empty($error['detail']) ? " : " . $error['detail'] : "") . " (" . $error['code'] . ")<br>";
+                foreach ($this->errors as $error) {
+                    $error_str .= $error['message'] . " (Code: " . $error['code'] . ")<br>";
                 }
-
+                
                 $this->quotes = [
                     'id' => $this->code,
                     'icon' => zen_image($this->icon),
-                    'methods' => [],
                     'module' => $this->title,
-                    'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>"
+                    'methods' => [],
+                    'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>",
                 ];
 
                 $this->enabled = false;
@@ -2323,6 +2322,11 @@ class uspsr extends base
                 $standards_query['destinationType'] = "STREET";
             }
 
+            // If the Pricing is Contract, add the Contract Type and AccountNumber
+            if (MODULE_SHIPPING_USPSR_PRICING == 'Contract') {
+                $pkg_body['accountType'] = $ltr_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
+                $pkg_body['accountNumber'] = $ltr_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
+            }
 
             // Send pkg_body to make pkgQuote.
             $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-domestic');
@@ -2366,10 +2370,8 @@ class uspsr extends base
 
             // If the Pricing is Contract, add the Contract Type and AccountNumber
             if (MODULE_SHIPPING_USPSR_PRICING == 'Contract') {
-                $pkg_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
-                $pkg_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
-                $ltr_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
-                $ltr_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
+                $pkg_body['accountType'] = $ltr_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
+                $pkg_body['accountNumber'] = $ltr_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
             }
 
 
@@ -2379,14 +2381,6 @@ class uspsr extends base
 
             $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
             
-        }
-
-        // If the Pricing is Contract, add the Contract Type and AccountNumber
-        if (MODULE_SHIPPING_USPSR_PRICING == 'Contract') {
-            $pkg_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
-            $pkg_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
-            $ltr_body['accountType'] = MODULE_SHIPPING_USPSR_CONTRACT_TYPE;
-            $ltr_body['accountNumber'] = MODULE_SHIPPING_USPSR_ACCT_NUMBER;
         }
 
         // Okay we have our request body ready.
@@ -2596,11 +2590,8 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        // Deprecated in PHP 8.5
-        if (PHP_VERSION_ID < 80000) {
-            curl_close($ch);
-        }
-        
+        // Deprecated in PHP 8.0
+        if (PHP_VERSION_ID < 80000) curl_close($ch);
 
         // -----
         // Log the CURL response (will also capture the time the response was received) to capture any
@@ -2678,11 +2669,8 @@ class uspsr extends base
         $this->commInfo = curl_getinfo($ch);
 
         // done with CURL, so close connection
-        // Deprecated in PHP 8.5
-        if (PHP_VERSION_ID < 80000) {
-            curl_close($ch);
-        }
-        
+        // Deprecated in PHP 8.0
+        if (PHP_VERSION_ID < 80000) curl_close($ch);
 
         // -----
         // Log the CURL response (will also capture the time the response was received) to capture any
