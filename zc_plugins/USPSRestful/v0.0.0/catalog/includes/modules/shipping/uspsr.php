@@ -59,7 +59,7 @@ class uspsr extends base
      * @var bool
      */
 
-    protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
+    protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $bearerExpiration = 0, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
     protected $api_base = 'https://apis.usps.com/';
     protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter, $dimensions = [], $errors = [];
 
@@ -198,6 +198,10 @@ class uspsr extends base
         $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
 
         $this->typeCheckboxesSelected = explode(', ', MODULE_SHIPPING_USPSR_TYPES);
+        
+        // Have to leave the defined check, just in case this is an upgrade and it's not yet defined.
+        if (defined('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION')) $this->bearerExpiration = (int)MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION;
+        
         $this->update_status();
 
         // -----
@@ -1564,7 +1568,7 @@ class uspsr extends base
     public function remove()
     {
         global $db;
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE\_SHIPPING\_USPSR\_%' ");
+        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_USPSR_%' ");
         $this->notify('NOTIFY_SHIPPING_USPS_UNINSTALLED');
     }
 
@@ -1756,7 +1760,6 @@ class uspsr extends base
             }
 
         }
-
 
         $this->notify('NOTIFY_SHIPPING_USPS_UPDATE_STATUS');
     }
@@ -2189,10 +2192,7 @@ class uspsr extends base
     {
         global $messageStack;
 
-
-        //$this->bearerToken = $_SESSION['usps_token'] ?? NULL;
-        // Check if the token is still valid. If not, get a new one.
-        if ($this->checkToken(MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION)) {
+        if ($this->checkToken($this->bearerExpiration)) {
             $this->bearerToken = MODULE_SHIPPING_USPSR_BEARER_TOKEN;
         } else {
             $this->getBearerToken();
@@ -2621,7 +2621,7 @@ class uspsr extends base
     {
         // Check to see if the Bearer Token is still valid.
 
-        return time() <= $expiration_time;
+        return time() <= ((int)$expiration_time);
     }
     
     protected function getBearerToken()
@@ -2718,6 +2718,8 @@ class uspsr extends base
                 'configuration_value' => $body['access_token']
             ]);
 
+
+
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
                 'configuration_value' => (int)$expiration_time,
             ]);
@@ -2736,7 +2738,7 @@ class uspsr extends base
             }
 
             $this->bearerToken = $body['access_token'];
-
+            $this->bearerExpiration = (int)$expiration_time;
         }
 
         return;
