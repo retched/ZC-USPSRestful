@@ -204,6 +204,15 @@ class uspsr extends base
         
         $this->update_status();
 
+
+        if ($this->checkToken($this->bearerExpiration) && zen_not_null(MODULE_SHIPPING_USPSR_BEARER_TOKEN)) {
+            $this->bearerToken = MODULE_SHIPPING_USPSR_BEARER_TOKEN;
+        } elseif (!empty($_SESSION['bearer_token'])) {
+            $this->bearerToken = $_SESSION['bearer_token'];
+        } else {
+            $this->getBearerToken();
+        }
+
         // -----
         // If the shipping module is enabled, some additional environment-specific checks are
         // needed to see if the module can remain enabled and/or to notify the current admin
@@ -232,7 +241,9 @@ class uspsr extends base
                     $this->icon = $template->get_template_dir('shipping_usps.gif', DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/shipping_usps.gif';
                 }
                 $this->storefrontInitialization();
+
             }
+            
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_CONSTRUCTOR_COMPLETED');
@@ -2192,12 +2203,6 @@ class uspsr extends base
     {
         global $messageStack;
 
-        if ($this->checkToken($this->bearerExpiration)) {
-            $this->bearerToken = MODULE_SHIPPING_USPSR_BEARER_TOKEN;
-        } else {
-            $this->getBearerToken();
-        }
-
         // Need to have at least one method enabled
         $usps_shipping_methods_cnt = 0;
         foreach ($this->typeCheckboxesSelected as $requested_type) {
@@ -2636,7 +2641,7 @@ class uspsr extends base
         ];
         
         // If there is a refresh token, check to see if it's still valid.
-        if (zen_not_null(MODULE_SHIPPING_USPSR_REFRESH_TOKEN) && $this->checkToken(MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION)) {
+        if (defined('MODULE_SHIPPING_USPSR_REFRESH_TOKEN') && zen_not_null(MODULE_SHIPPING_USPSR_REFRESH_TOKEN) && $this->checkToken(MODULE_SHIPPING_USPSR_REFRESH_TOKEN_EXPIRATION)) {
             
             // It's valid, so use it to get a refreshed bearer token.
             $call_body['grant_type'] = 'refresh_token';
@@ -2718,8 +2723,6 @@ class uspsr extends base
                 'configuration_value' => $body['access_token']
             ]);
 
-
-
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN_EXPIRATION', [
                 'configuration_value' => (int)$expiration_time,
             ]);
@@ -2738,6 +2741,7 @@ class uspsr extends base
             }
 
             $this->bearerToken = $body['access_token'];
+            $_SESSION['bearer_token'] = $this->bearerToken;
             $this->bearerExpiration = (int)$expiration_time;
         }
 
