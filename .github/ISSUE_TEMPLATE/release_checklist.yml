@@ -6,9 +6,9 @@ assignees:
   - retched
 body:
   - type: checkboxes
-    id: pre-release-checklist
+    id: pre-release-testing
     attributes:
-      label: "Pre-Release Verification"
+      label: "Pre-Release Testing"
       description: "Version has been tested for each of the following versions/environments:"
       options:
         - label: "Zencart 1.5.5 / PHP 7.1"
@@ -20,3 +20,19 @@ body:
         - label: "ZenCart 2.2.0-dev / PHP 8.4"
         - label: "ZenCart 2.1.0 / PHP 8.5"
         - label: "ZenCart 2.2.0-dev / PHP 8.5"
+  - type: checkboxes
+    id: release-checklist
+    attributes:
+      label: "Release Checklist"
+      description: "Please verify each of the following items have been completed before releasing:"
+      options:
+        - label: "Update documentation with new version and changes"
+        - label: "Checkout a branch with the new version number as the name (ie. v_x.y.z)"
+        - label: "Update version number in all file headers and the encapsulated installer"
+        - label: "Rename the plugin folder to match the new version number"
+        - label: "Tag the release in GitHub with the new version number"
+        - label: "Create a release in GitHub with release notes"
+        - label: "Create new zips file for distribution (encapsulated, standard, unified)"
+        - label: "Upload encapsulated and standard zip files to the repository's Releases section"
+        - label: "Upload unified zip file to the ZenCart Plugin Database"
+        - label: "Announce the new release on the ZenCart Forums and other relevant channels"
