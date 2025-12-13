@@ -2,7 +2,8 @@ name: Release Checklist
 description: A checklist of items to verify before releasing a new version.
 title: "[CHECKLIST]: "
 labels: ["checklist"]
-assignee: ["retched"]
+assignees:
+  - retched
 body:
   - type: checkboxes
     id: pre-release-checklist
