@@ -797,7 +797,7 @@ class uspsr extends base
                                     $est_delivery_raw = new DateTime($uspsStandards[$quotes['mailClass']]['delivery']['scheduledDeliveryDateTime']);
                                     $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
 
-                                    $quote_message .= "Estimated Delivery Date per Standards:" . $est_delivery . "\n";
+                                    $quote_message .= "Estimated Delivery Date per Standards: " . $est_delivery . "\n";
                                     break;
                             }
                         }
