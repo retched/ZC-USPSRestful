@@ -99,9 +99,9 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
-| ZenCart 1.5.5 |         :x:        | :white_check_mark: |
-| ZenCart 1.5.6 |         :x:        | :white_check_mark: |
-| ZenCart 1.5.7 |         :x:        | :white_check_mark: |
+| ZenCart 1.5.5* |         :x:        | :white_check_mark: |
+| ZenCart 1.5.6* |         :x:        | :white_check_mark: |
+| ZenCart 1.5.7* |         :x:        | :white_check_mark: |
 | ZenCart 1.5.8 |         :x:        | :white_check_mark: |
 | ZenCart 2.0.0 |      :wrench:      | :white_check_mark: |
 | ZenCart 2.0.1 |      :wrench:      | :white_check_mark: |
@@ -112,6 +112,7 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 - :x: = Not supported
 - :clipboard: = In testing, BUT it SHOULD work.
 - :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
+- \* = Needs define based language files.
 
 ### What is the difference between this version and the original USPS module?
 
@@ -169,6 +170,10 @@ SORT OF. You don't have the convert anything, but depending on the version of Ze
 - Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 44 and 50, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is, you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, and no period at the end).)
 
 If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
+
+### What is this "Language Files for ZC 1.5.7 and below" directory?
+
+As the name implies, they house the language define files for the admin and catalog area of the USPS module. Previously they were together in one directory however, one of the files started to cause conflicts because it was trying to create a define that was already "defined" by the language definition. Rather than try to come up with some overt way of having the files installed, I opted to move them away from the main module itself. If you are running ZenCart 1.5.7 or below: simply copy the directories from the "Language Files for ZC 1.5.7" directory into the root. The relevant directories have been mapped out to allow an easy copy/paste. (You will need to rename your admin directory to match your pathing.)
 
 ## Known Limitations/Issues
 

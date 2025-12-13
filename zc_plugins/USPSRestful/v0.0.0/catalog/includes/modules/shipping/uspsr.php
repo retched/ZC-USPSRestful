@@ -209,6 +209,7 @@ class uspsr extends base
             $this->bearerToken = MODULE_SHIPPING_USPSR_BEARER_TOKEN;
         } elseif (!empty($_SESSION['bearer_token'])) {
             $this->bearerToken = $_SESSION['bearer_token'];
+            unset($_SESSION['bearer_token']);
         } else {
             $this->getBearerToken();
         }
