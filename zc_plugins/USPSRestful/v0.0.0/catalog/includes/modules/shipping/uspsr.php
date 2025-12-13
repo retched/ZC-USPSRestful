@@ -733,19 +733,21 @@ class uspsr extends base
                         $servicesList = implode(", ", $method_labels);
                     }
 
-                    // Extra Services for method
+                    // Extra Services for method 
                     $price += $extraServices;
 
-                    // Handling as defined by the method
+                    // Handling as defined per method
                     $price += $method_item['handling'];
 
-                    // Handling for the USPS as a whole.
-                    // @todo: Should this be multiplied per order or per box?
-                    $price += $usps_handling_fee;
+                    // Multiply the quote times the number of shipping of boxes.
+                    // ZenCart calculates the number of boxes by "weight" and as such, it divides the quote by weight.
+                    // So this "restores" the quote to the full weight by multiplying the number of boxes.
+                    $price *= $shipping_num_boxes;
 
-                    // Final math (Final Quote = (Quoted Price + Handling Fee be Method + Handling Fee Overall + any surcharges/services) * number of boxes)
-                    $price *= (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
-
+                    // Handling for using USPS as a whole.
+                    $price += $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
+                    
+                    // Final Math: Price = ((Method Quote + Method Services (ie. Certified Mail, etc.) + Method Handling (the box on the far right of the method)) * the number of boxes) + (Overall USPS Handling Fee * number of boxes OR 1)
                     // Okay, we have the methods, we have the quotes: start building.
                     $quotes = [
                         'id' => 'usps'.$m,
