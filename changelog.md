@@ -10,17 +10,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor the version checker and updater
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 
-## [UNRELEASED]
+## 1.6.0 - 2025-12-13
 
-### Changed in [UNRELEASED]
+### Changed in 1.6.0
 
 - Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
+- Moved OAuth storage from system sessions to database storage instead. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
 
-### Fixed in [UNRELEASED]
+### Fixed in 1.6.0
 
 - Expanded the list of APO/DPO/FPO Zip Codes.
 - Fixed the values of the services to match the newer options that were added on upgrade. (They didn't align from the changes in 1.5.2.)
 - Fixed an issue involving the calculation of services and add-ons. Values are now additive and not multiplicative. [[#91](https://github.com/retched/ZC-USPSRestful/issues/91)]
+  - Also fixed the math in the calculation of the order quote itself. (There was ambiguity in how the method price and handling should apply. The math now works as stated [in the Wiki](https://github.com/retched/ZC-USPSRestful/wiki/How-Quotes-Are-Calculated).)
 - Fixed a potential issue when making service standards requests and the resultant JSON file isn't in the proper form. [[#93](https://github.com/retched/ZC-USPSRestful/issues/93)]
 
 ## 1.5.2 - 2025-10-19
