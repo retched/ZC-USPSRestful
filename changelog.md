@@ -10,13 +10,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor the version checker and updater
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 
-## 1.6.0 - 2025-12-13
+## 1.6.0 - 2025-12-17
 
 ### Changed in 1.6.0
 
 - Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
 - Moved OAuth storage from system sessions to database storage instead. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
-- Moved define based language definition files (/admin/includes/languages/english/extra_definitions/uspsr.php and /includes/languages/english/modules/shipping/uspsr.php) to separate folder on installation media. Having both files in the same directory would cause several debug errors regarding already defined constants. These language files have been moved to a directory labeled "Language Files for ZC 1.5.7 and below". Both forms of the language files are seldomly updated but having both of them in the same directory does store operators a lot of grief.
 
 ### Fixed in 1.6.0
 

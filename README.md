@@ -11,13 +11,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Latest Release: [1.6.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released October 19, 2025 for ZenCart 2.1.0._
+  _Released December 17, 2025 for ZenCart 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
 - 1.6.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0)  
-  Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers (added to delivery estimates).
+  Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates.
 - 1.5.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2)  
   Resolved issues regarding international packages and letters being missing from quotes.
 - 1.5.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1)  
