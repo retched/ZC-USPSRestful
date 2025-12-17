@@ -44,13 +44,11 @@ if (file_exists(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/usps.extra_
         && class_exists($pluginControlClass)
         && class_exists($pluginControlVersionClass)
     ) {
-        $plugin_manager = new $pluginManagerClass(
-            new $pluginControlClass(),
-            new $pluginControlVersionClass()
-        );
+        $plugin_manager = new $pluginManagerClass(new $pluginControlClass(), new $pluginControlVersionClass());
 
+        // In the event someone added both versions, don't include this one.
         // Load the necessary file
-        require $plugin_manager->getPluginVersionDirectory('USPSRestful', $plugin_manager->getInstalledPlugins())
+        if (!function_exists('zen_cfg_uspsr_dimmensions')) require $plugin_manager->getPluginVersionDirectory('USPSRestful', $plugin_manager->getInstalledPlugins())
             . 'catalog/' . DIR_WS_FUNCTIONS . 'extra_functions/usps.extra_functions.php';
     } 
 }
