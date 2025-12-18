@@ -96,7 +96,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         global $messageStack;
         
-        $messageStack->add_session('USPSRestful has started its upgrade. To finish the upgrade, please go to the <a href="' . zen_href_link(FILENAME_DEFAULT, "cmd=modules&set=shipping&module=uspsr&action=edit") .'">Shipping Modules</a> section of the admin to complete the upgrade!', 'warning');
+        $messageStack->add_session('USPSRestful has started its upgrade. To finish the upgrade, please go to the <a href="' . zen_href_link(FILENAME_DEFAULT, "cmd=modules&set=shipping&module=uspsr") .'">Shipping Modules</a> section of the admin to complete the upgrade!', 'warning');
 
         return true;
 
