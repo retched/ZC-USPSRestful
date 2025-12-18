@@ -99,9 +99,9 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
-| ZenCart 1.5.5* |         :x:        | :white_check_mark: |
-| ZenCart 1.5.6* |         :x:        | :white_check_mark: |
-| ZenCart 1.5.7* |         :x:        | :white_check_mark: |
+| ZenCart 1.5.5 |         :x:        | :white_check_mark: |
+| ZenCart 1.5.6 |         :x:        | :white_check_mark: |
+| ZenCart 1.5.7 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.8 |         :x:        | :white_check_mark: |
 | ZenCart 2.0.0 |      :wrench:      | :white_check_mark: |
 | ZenCart 2.0.1 |      :wrench:      | :white_check_mark: |
@@ -112,7 +112,6 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 - :x: = Not supported
 - :clipboard: = In testing, BUT it SHOULD work.
 - :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
-- \* = Needs define based language files.
 
 ### What is the difference between this version and the original USPS module?
 
@@ -171,10 +170,6 @@ SORT OF. You don't have the convert anything, but depending on the version of Ze
 
 If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
 
-### What is this "Language Files for ZC 1.5.7 and below" directory?
-
-As the name implies, they house the language define files for the admin and catalog area of the USPS module. Previously they were together in one directory however, one of the files started to cause conflicts because it was trying to create a define that was already "defined" by the language definition. Rather than try to come up with some overt way of having the files installed, I opted to move them away from the main module itself. If you are running ZenCart 1.5.7 or below: simply copy the directories from the "Language Files for ZC 1.5.7" directory into the root. The relevant directories have been mapped out to allow an easy copy/paste. (You will need to rename your admin directory to match your pathing.)
-
 ## Known Limitations/Issues
 
 - As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.
@@ -209,13 +204,13 @@ These are the file lists that should be included with this module, depending on 
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.6.0\manifest.php
+- \zc_plugins\USPSRestful\v1.6.0\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.6.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.6.0\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author

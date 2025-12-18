@@ -389,6 +389,7 @@ body,
 .github-markdown-body h4,
 .github-markdown-body h5,
 .github-markdown-body h6 {
+  margin-bottom: var(--base-size-16);
   font-weight: var(--base-text-weight-semibold, 600);
   line-height: 1.25;
 }
@@ -591,18 +592,6 @@ body,
 
 .github-markdown-body .anchor:focus {
   outline: none;
-}
-
-.github-markdown-body p,
-.github-markdown-body blockquote,
-.github-markdown-body ul,
-.github-markdown-body ol,
-.github-markdown-body dl,
-.github-markdown-body table,
-.github-markdown-body pre,
-.github-markdown-body details {
-  margin-top: 0;
-  margin-bottom: var(--base-size-16);
 }
 
 .github-markdown-body blockquote>:first-child {
@@ -3843,19 +3832,25 @@ body,
             data-light-theme="light"
             data-dark-theme="dark"
         >
-            <div class="github-markdown-content"><h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
+            <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true"
+                    data-dark-mode-theme="dark"
+                    data-light-mode-theme="default"
+                    data-max-text-size="50000"></span>
+                <h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
 <p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
 <p><img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP">  <img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0"> <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit">  <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release"></p>
 <p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.5.2</a><br>
-<em>Released October 19, 2025 for ZenCart 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.6.0</a><br>
+<em>Released December 17, 2025 for ZenCart 2.1.0.</em></li>
 <li>Next Version Number: ???</li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.6.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0">Download</a><br>
+Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates.</li>
 <li>1.5.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2">Download</a><br>
 Resolved issues regarding international packages and letters being missing from quotes.</li>
 <li>1.5.1: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1">Download</a><br>
@@ -3868,7 +3863,7 @@ Minor bug fix to ScriptedInstaller.php (encapsulated only)</li>
 Makes a change to the module to obey the selected shipping zone in the backend. In other words, if you choose to restrict the order to the continental US (all US states and territories except Alaska, Hawaii, Puerto Rico, Virgin Islands, Guam, etc.), using the shipping estimator (either version) will not return USPS quotes. Additionally made further bug fixes discovered in 1.3.2 (namely an errant comma in the old language file).</li>
 <li>1.3.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.3.2">Download</a><br>
 Fixes a code bug that was released with 1.3.1. v1.3.1 has been deleted and v1.3.2 replaces that.</li>
-<li>1.3.1<br>
+<li><s>1.3.1</s><br>
 Minor bug fix to re-add the four-cent difference between Metered First-Class Mail and non-metered First-Class Mail. Major bug fix for 1.3.0 that could potentially leave out configuration keys.</li>
 <li>1.3.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.3.0">Download</a><br>
 Added First Class Mail options to the queue of services available. Changed AuthToken storage to be based on the PHP Session instead of calling on every page.</li>
@@ -3876,7 +3871,7 @@ Added First Class Mail options to the queue of services available. Changed AuthT
 Fixed an issue where estimated dates and travel times were posted twice as part of the quote. Fixed an issue regarding compatibility with older versions of ZenCart.</li>
 <li>1.1.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.1.2">Download</a><br>
 Bugfix to mend the selection criteria being ignored during normal ZenCart checkout. (A shipping method would be selected, but would be ignored in favor of the &quot;first&quot; shipping method listed.)</li>
-<li>1.1.1<br>
+<li><s>1.1.1</s><br>
 Minor bug fixes with regards to the selection of the cheapest shipping method. Also fixed a conflict with OPC that prevented any method from being selected. Additionally, fixed an issue with regards to shipping method squashing.</li>
 <li>1.1.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.1.0">Download</a><br>
 Added in plugin version check. (Will ping the ZenCart database to see if there is a new version available.) Now, when you update the module, you no longer need to reset the module as a whole; the module will automatically handle whatever missing database keys and configs there are. Added ability to squash Ground Advantage Cubic and Ground Advantage rates to the lower one, same with Priority Mail Cubic and Priority Mail rates.</li>
@@ -4050,13 +4045,13 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.6.0\manifest.php
+- \zc_plugins\USPSRestful\v1.6.0\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.6.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.6.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.6.0\Installer\ScriptedInstaller.php
 </code></pre>
 <h2 id="support-the-author">Support the author</h2>
 <!-- Should this repository be forked, please remove this section -->
