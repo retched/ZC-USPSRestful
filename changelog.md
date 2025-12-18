@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue involving the calculation of services and add-ons. Values are now additive and not multiplicative. [[#91](https://github.com/retched/ZC-USPSRestful/issues/91)]
   - Also fixed the math in the calculation of the order quote itself. (There was ambiguity in how the method price and handling should apply. The math now works as stated [in the Wiki](https://github.com/retched/ZC-USPSRestful/wiki/How-Quotes-Are-Calculated).)
 - Fixed a potential issue when making service standards requests and the resultant JSON file isn't in the proper form. [[#93](https://github.com/retched/ZC-USPSRestful/issues/93)]
+- Fixed an issue that was preventing the configuration form from being submitted without an uninstall/reinstall on encapsulated installs during upgrading. [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]
 
 ## 1.5.2 - 2025-10-19
 

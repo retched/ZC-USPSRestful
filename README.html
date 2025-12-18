@@ -389,7 +389,6 @@ body,
 .github-markdown-body h4,
 .github-markdown-body h5,
 .github-markdown-body h6 {
-  margin-bottom: var(--base-size-16);
   font-weight: var(--base-text-weight-semibold, 600);
   line-height: 1.25;
 }
@@ -423,7 +422,6 @@ body,
 }
 
 .github-markdown-body p {
-  margin-top: 0;
   margin-bottom: 10px;
 }
 
@@ -592,6 +590,17 @@ body,
 
 .github-markdown-body .anchor:focus {
   outline: none;
+}
+
+.github-markdown-body p,
+.github-markdown-body blockquote,
+.github-markdown-body ul,
+.github-markdown-body ol,
+.github-markdown-body dl,
+.github-markdown-body table,
+.github-markdown-body pre,
+.github-markdown-body details {
+  margin-bottom: var(--base-size-16);
 }
 
 .github-markdown-body blockquote>:first-child {
@@ -3850,7 +3859,7 @@ body,
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
 <li>1.6.0: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0">Download</a><br>
-Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates.</li>
+Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates. Fixed &quot;stuck&quot; configuration issue that occurred when upgrading an encapsulated install.</li>
 <li>1.5.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2">Download</a><br>
 Resolved issues regarding international packages and letters being missing from quotes.</li>
 <li>1.5.1: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1">Download</a><br>
@@ -3907,7 +3916,7 @@ If you want to install the encapsulated version of the module, copy <strong>ONLY
 <h3 id="upgradingupdating">Upgrading/updating</h3>
 <ul>
 <li>Non-encapsulated version: <strong>Overwrite ALL files of the old version.</strong></li>
-<li>Encapsulated version: Simply upload the new release into the same <code>zc_plugins/</code> directory. Each release will have a separate folder containing that new version. (Example: Version <code>v1.0.0</code> will be uploaded into a folder named <code>v1.0.0</code>.) Once uploaded, visit the Plugin Manager in your admin area, selected the USPSRestful line in the table, and hit the &quot;Upgrade Available&quot; button and follow the prompts. When done, you can choose to delete the older versions.</li>
+<li>Encapsulated version: Simply upload the new release into the same <code>zc_plugins/</code> directory. Each release will have a separate folder containing that new version. (Example: Version <code>v1.0.0</code> will be uploaded into a folder named <code>v1.0.0</code>.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the &quot;Upgrade Available&quot; button and follow the prompts. You will then be prompted to visit the Shipping Modules section of your admin area to effectuate the upgrade.</li>
 </ul>
 <h2 id="uninstallation">Uninstallation</h2>
 <ul>
@@ -3926,7 +3935,6 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <p>This won't answer all the questions you may have, but it may answer some that I thought of.</p>
 <h3 id="what-version-of-zencart-does-this-module-support">What version of ZenCart does this module support?</h3>
 <p>Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the <a href="https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version">ZenCart server requirements</a> page. This module has only been tested with PHP 7 and PHP 8.)</p>
-<p><strong>UPDATE</strong>: There IS a <a href="https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764">clone of this module</a> available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)</p>
 <table>
 <thead>
 <tr>
@@ -3984,10 +3992,11 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <li>📋 = In testing, BUT it SHOULD work.</li>
 <li>🔧 = Can work but will need <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">core file edits</a> to make it work</li>
 </ul>
+<p><strong>UPDATE</strong>: There IS a <a href="https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764">clone of this module</a> available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)</p>
 <h3 id="what-is-the-difference-between-this-version-and-the-original-usps-module">What is the difference between this version and the original USPS module?</h3>
 <p>The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced that the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based API which this codebase uses.</p>
 <h3 id="i-already-have-a-userid-and-password-from-webtools-but-im-getting-error-messages-while-i-try-to-retrieve-quotes-what-happened">I already have a <code>USERID</code> and <code>PASSWORD</code> from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?</h3>
-<p>The older <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">on the USPS Developers website</a> and on the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.</p>
+<p>The old <code>USERID</code> and <code>PASSWORD</code> from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained <a href="https://developers.usps.com/getting-started">on the USPS Developers website</a> and on the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from a United States based zipcode.</p>
 <h3 id="why-should-i-use-this-version-versus-the-one-thats-out-there-now">Why should I use this version versus the one that's out there now?</h3>
 <p>The USPS created an &quot;in-before-the-lock&quot; situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access, but they will read you the &quot;riot act&quot; with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using it, continue to use it. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward.</p>
 <p><strong>UPDATE</strong> USPS has begun forcing people off of WebTools if they believe your account is &quot;inactive&quot;. Inactive can mean a bunch of things including not using the WebTools API to make a call in a long time, not acknowledging the deprecation changes, and more. If you're using WebTools currently, understand that USPS is set on forcing everyone to the OAuth version (which this module provides).</p>
@@ -4029,10 +4038,10 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <p>For the update</p>
 <ul>
 <li>retched (me)</li>
-<li>lat9 and scottcwilson for their help with the inclusion of the functions file</li>
+<li>lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it</li>
 </ul>
 <h2 id="file-listing">File Listing</h2>
-<p>These are the file lists that should be included with this module, depending on which version you're running.</p>
+<p>(not all files will be available in the zip file)</p>
 <pre><code class="language-text">- LICENSE
 - README.md (this file)
 - README.html
@@ -4076,7 +4085,6 @@ along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 </code></pre>
 </div>
         </div>
-            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
-            
+
         </body>
         </html>
