@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed in 1.6.0
 
 - Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
-- Moved OAuth storage from system sessions to database storage instead. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
+- Moved OAuth storage from system sessions to the database. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
 
 ### Fixed in 1.6.0
 
