@@ -17,7 +17,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ### Version/Release History
 
 - 1.6.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0)  
-  Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates.
+  Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates. Fixed "stuck" configuration issue that occurred when upgrading an encapsulated install.
 - 1.5.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2)  
   Resolved issues regarding international packages and letters being missing from quotes.
 - 1.5.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.1)  
@@ -73,7 +73,7 @@ You can find the full instructions to install the module, including how to obtai
 ### Upgrading/updating
 
 - Non-encapsulated version: **Overwrite ALL files of the old version.**
-- Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, selected the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts. When done, you can choose to delete the older versions.
+- Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts. You will then be prompted to visit the Shipping Modules section of your admin area to effectuate the upgrade.
 
 ## Uninstallation
 
@@ -95,8 +95,6 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.)
 
-**UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
-
 |               |    Encapsulated    |  Non-Encapsulated  |
 |---------------|:------------------:|:------------------:|
 | ZenCart 1.5.5 |         :x:        | :white_check_mark: |
@@ -113,13 +111,15 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 - :clipboard: = In testing, BUT it SHOULD work.
 - :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
 
+**UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
+
 ### What is the difference between this version and the original USPS module?
 
 The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced that the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based API which this codebase uses.
 
 ### I already have a `USERID` and `PASSWORD` from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?
 
-The older `USERID` and `PASSWORD` from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [on the USPS Developers website](https://developers.usps.com/getting-started) and on the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from the United States and a zipcode.
+The old `USERID` and `PASSWORD` from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [on the USPS Developers website](https://developers.usps.com/getting-started) and on the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from a United States based zipcode.
 
 ### Why should I use this version versus the one that's out there now?
 
@@ -176,20 +176,20 @@ If you have these two defines set correctly, you do not have to convert anything
 
 ## Credits
 
-For the original module
+For the original module  
 
 - Ajeh, the original poster of the ZC 1.5 module
 - lat9
 - The ZenCart Team
 
-For the update
+For the update  
 
 - retched (me)
-- lat9 and scottcwilson for their help with the inclusion of the functions file
+- lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it
 
 ## File Listing
 
-These are the file lists that should be included with this module, depending on which version you're running.
+(not all files will be available in the zip file)
 
 ``` text
 - LICENSE
