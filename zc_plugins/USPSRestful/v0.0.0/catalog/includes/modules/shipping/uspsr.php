@@ -728,7 +728,6 @@ class uspsr extends base
                     $extraServices = 0;
                     if (strpos($method_item['method'], "First-Class") === FALSE) {
                         $method_name   = $method_item['method'];
-                        $method_extra_services  = 0;         // tracks price total for this method
                         $method_labels = [];        // tracks names of extra services
 
                         foreach ($services as $s) {
@@ -741,9 +740,6 @@ class uspsr extends base
                                 $method_labels[] = $label . " (" . $currencies->format($method_price) . ")";
                             }
                         }
-
-                        // Add this method’s service total into the running total
-                        $services_total += $method_extra_services;
 
                         // Convert collected labels into a comma-separated string
                         $servicesList = implode(", ", $method_labels);
