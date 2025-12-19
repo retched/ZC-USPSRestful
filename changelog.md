@@ -7,8 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
-- Refactor the version checker and updater
+- Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
+
+## 1.6.1 - 2025-12-18
+
+### Fixed in 1.6.1
+
+- Fixed an issue that may cause upgrade/installation issues when a user upgrades an encapsulated install. (This was discovered after the 1.6.0 release. If you have a standard install, you can skip over this.)
 
 ## 1.6.0 - 2025-12-17
 
