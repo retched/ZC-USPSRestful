@@ -91,7 +91,7 @@ body:
     id: usps-logs
     attributes:
       label: Relevant Log Output
-      description: Please link to an **UNLISTED** Pastebin, **SECRET** Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of the USPSr log file that appeared in your logs directory from ZenCart. If desired, please email to me at retched@hotmail.com. (Subject Line\: USPS Debug Logs)<br><br>**__NOTE:__** Please keep in mind, this repo is NOT private. Anyone will be able to see this link and review the gist.
+      description: "Please link to an **UNLISTED** Pastebin, **SECRET** Github Gist, or similar service that has any relevant log output from either USPSr or ZenCart here. This would be the contents of the USPSr log file that appeared in your logs directory from ZenCart. If desired, please email to me at retched@hotmail.com. (Subject Line: USPS Debug Logs)<br><br>**__NOTE:__** Please keep in mind, this repo is NOT private. Anyone will be able to see this link and review the gist."
   - type: textarea
     id: zen-logs
     attributes:
