@@ -1789,7 +1789,6 @@ class uspsr extends base
             $this->checkConfiguration();
         }
 
-
         /**
          * Test to see if the upgrader should run?
          *
@@ -2069,9 +2068,9 @@ class uspsr extends base
                 case "v1.5.1": // Released 2025-10-17: No database changes
                     // There is a database change to the minimum value of the First Class Mail international letter weight limit, but that shouldn't be blindly applied to existing installs.
                 case "v1.5.2": // Released 2025-10-20: Adding new keys
-
+                case "v1.5.3": // Released 2025-12-17: No further changes
                     /**
-                     * NEW TO 1.5.3: Bearer Tokens Configuration Values
+                     * NEW TO 1.6.0: Bearer Tokens Configuration Values
                      */
 
                     $this->addConfigurationKey('MODULE_SHIPPING_USPSR_BEARER_TOKEN', [
@@ -2109,7 +2108,8 @@ class uspsr extends base
                         'sort_order' => 0,
                         'date_added' => 'now()'
                     ]);
-
+                case "v1.6.0": // Released 2025-12-17: No further changes
+                case "v1.6.1": // Released 2025-12-19: No further changes
                     break;
             }
 
@@ -2183,7 +2183,7 @@ class uspsr extends base
         }
 
         /**
-         * Are you using 0.0.0? Seriously, stop.
+         * Are you using 0.0.0? Proceed at your own risk.
          * Starting in 1.5.0, -rc version will designate the release as a release candidate... Should be prepared for stuff to not work.
          */
         if (self::USPSR_CURRENT_VERSION === "v0.0.0" || strpos(self::USPSR_CURRENT_VERSION, "-rc") !== FALSE)
@@ -2894,6 +2894,9 @@ class uspsr extends base
         // Add the last updated value to be updated to now()
         $sql_data_array['last_modified'] = "now()";
 
+        // Remove the date_added value from the array, as it's not being added.
+        unset($sql_data_array['date_added']);
+
         zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'update', "configuration_key = '$key_name'");
         
         // Checking to see if the function exists to avoid errors in the customer section of ZenCart
@@ -2912,12 +2915,20 @@ class uspsr extends base
         // Add the last updated value to be updated to now()
         $sql_data_array['last_modified'] = "now()";
 
-        zen_db_perform(TABLE_CONFIGURATION, $sql_data_array);
-        zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
+        // Check to see if the key already exists in the database
+        if (is_null($this->getConfigurationKey($key_name))) {
+            // If it doesn't exist, add it.
+            zen_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+            zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
+        } else {
+            // If it does exist, update it.
+            $this->updateConfigurationKey($key_name, $value_array);
+        }
+        
     }
 
     // Quick delete a config key, should be used sparingly.
-    protected function deleteConfigurationKeys(array $key_names): int
+    protected function deleteConfigurationKeys(array $key_names)
     {
         if (empty($key_names)) {
             return 0;
@@ -2933,6 +2944,19 @@ class uspsr extends base
         zen_record_admin_activity('Deleted configuration record(s): ' . $keys_list . ", $rows rows affected.", 'warning');
 
         return $rows;
+    }
+
+    protected function getConfigurationKey($key_name)
+    {
+        global $db;
+        $sql = "SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $key_name . "'";
+        $result = $db->Execute($sql);
+
+        if ($result->RecordCount() > 0) {
+            return $result->fields['configuration_value'];
+        }
+
+        return null;
     }
 
 }
