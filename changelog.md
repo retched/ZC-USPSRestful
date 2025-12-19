@@ -7,15 +7,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
-- Refactor the version checker and updater
+- Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
+
+## [UNRELEASED] - 0000-00-00
+
+### Changed in [UNRELEASED]
+
+- The module will no longer try to blindly add new configuration keys. Instead, it will check to see if the database key exists first and then try to insert it if it finds no match.
+
+## 1.6.1 - 2025-12-18
+
+### Fixed in 1.6.1
+
+- Fixed an issue that may cause upgrade/installation issues when a user upgrades an encapsulated install. (This was discovered after the 1.6.0 release. If you have a standard install, you can skip over this.)
 
 ## 1.6.0 - 2025-12-17
 
 ### Changed in 1.6.0
 
 - Handling days are now added into the shipping days estimations. [[#90](https://github.com/retched/ZC-USPSRestful/issues/90)]
-- Moved OAuth storage from system sessions to database storage instead. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
+- Moved OAuth storage from system sessions to the database. [[#88](https://github.com/retched/ZC-USPSRestful/issues/88)]
 
 ### Fixed in 1.6.0
 
@@ -24,6 +36,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue involving the calculation of services and add-ons. Values are now additive and not multiplicative. [[#91](https://github.com/retched/ZC-USPSRestful/issues/91)]
   - Also fixed the math in the calculation of the order quote itself. (There was ambiguity in how the method price and handling should apply. The math now works as stated [in the Wiki](https://github.com/retched/ZC-USPSRestful/wiki/How-Quotes-Are-Calculated).)
 - Fixed a potential issue when making service standards requests and the resultant JSON file isn't in the proper form. [[#93](https://github.com/retched/ZC-USPSRestful/issues/93)]
+- Fixed an issue that was preventing the configuration form from being submitted without an uninstall/reinstall on encapsulated installs during upgrading. [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]
 
 ## 1.5.2 - 2025-10-19
 

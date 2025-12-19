@@ -10,12 +10,14 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Latest Release: [1.6.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released December 17, 2025 for ZenCart 2.1.0._
+- Latest Release: [1.6.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+  _Released December 18, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 - Next Version Number: ???
 
 ### Version/Release History
 
+- 1.6.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.1)  
+  Fixed an issue that may affect some encapsulated installs.
 - 1.6.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0)  
   Resolved an issue with the calculation of services and add-ons. Moved OAuth session tokens to database. Handling days now more visible to customers as they are added to delivery estimates. Fixed "stuck" configuration issue that occurred when upgrading an encapsulated install.
 - 1.5.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.5.2)  
@@ -49,11 +51,11 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 - 0.1.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v0.1.0)  
  First "release".
 - 0.0.0  
- _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database [was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the repository is not recommended. Use the [Releases](https://github.com/retched/ZC-USPSRestful/releases) instead._
+  _Development version. This version contains an incomplete thought and should not be used in production unless you are sure what you are doing. The version from the ZenCart Module database [was only a placeholder](https://www.zen-cart.com/showthread.php?230478-pluginID-of-yet-to-be-submitted-encapsulated-plugin). Pulling from the repository is not recommended. Use the [Releases](https://github.com/retched/ZC-USPSRestful/releases) instead._
 
 ## Additional Links
 
-- [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of five APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, International Service Standards 3.0, and OAuth 3.0._
+- [USPS API Documentation](https://developers.usps.com/apis) - This API takes advantage of five APIs: _Domestic Prices 3.0, International Prices 3.0, Service Standards 3.0, International Service Standard 3.0, and OAuth 3.0._
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
 - [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module. For assistance with the original USPS module, which uses the WebTools API, you should post in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread) on the ZenCart forums.
 - [Personal Discord Server](https://discord.gg/cZCJ8za7zg) - You can use this reach out to me via DMs or by commenting in the appropriate channel. Please be mindful of etiquette and rules.
@@ -204,13 +206,13 @@ For the update
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\manifest.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.6.1\manifest.php
+- \zc_plugins\USPSRestful\v1.6.1\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.6.1\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.6.1\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author
