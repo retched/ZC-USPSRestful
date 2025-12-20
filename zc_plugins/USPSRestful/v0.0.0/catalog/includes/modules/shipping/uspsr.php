@@ -1020,7 +1020,7 @@ class uspsr extends base
             'configuration_description' => 'You have installed:',
             'configuration_group_id' => 6,
             'sort_order' => 0,
-            'set_function' => 'zen_cfg_read_only( ',
+            'set_function' => 'uspsr_read_only( ',
             'date_added' => 'now()',
         ]);
 
@@ -2116,7 +2116,7 @@ class uspsr extends base
             // After all this, update the modules version number as necessary.
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                 'configuration_value' => self::USPSR_CURRENT_VERSION,
-                'set_function' => "zen_cfg_read_only("
+                'set_function' => "uspsr_read_only("
 
             ]);
 

@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed in [UNRELEASED]
 
-- The module will no longer try to blindly add new configuration keys. Instead, it will check to see if the database key exists first and then try to insert it if it finds no match.
+- The module will no longer try to blindly add new configuration keys. Instead, it will check to see if the database key exists first and then try to insert it if it finds no match. Otherwise, it will update the value instead.
 
 ## 1.6.1 - 2025-12-18
 

@@ -52,3 +52,13 @@ if (file_exists(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/usps.extra_
             . 'catalog/' . DIR_WS_FUNCTIONS . 'extra_functions/usps.extra_functions.php';
     } 
 }
+
+
+// For some reason, the module was trying to use this function, but loading it with hidden values was gunking it up.
+function uspsr_read_only($text, $key = '')
+{
+    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+    $text = htmlspecialchars_decode($text, ENT_COMPAT);
+
+    return $text;
+}
