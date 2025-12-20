@@ -10,12 +10,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Latest Release: [1.6.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released December 18, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
-- Next Version Number: ???
+- Latest Release: [1.6.2](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+  _Released December 20, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
+- 1.6.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.2)  
+  Bug fix for the configuration setting issue. (FINALLY!)
 - 1.6.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.1)  
   Fixed an issue that may affect some encapsulated installs.
 - 1.6.0: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.0)  
@@ -206,13 +207,13 @@ For the update
 - includes\functions\extra_functions\usps.extra_functions.php
 - includes\modules\shipping\uspsr.php
 - includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.6.1\manifest.php
-- \zc_plugins\USPSRestful\v1.6.1\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v1.6.1\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.6.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.6.1\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.6.2\manifest.php
+- \zc_plugins\USPSRestful\v1.6.2\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.6.2\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.2\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.6.2\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.6.2\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.6.2\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author

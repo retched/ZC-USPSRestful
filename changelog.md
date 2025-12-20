@@ -10,17 +10,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 
-## [UNRELEASED] - 0000-00-00
+## 1.6.2 - 2025-12-20
 
-### Added in [UNRELEASED]
+### Added in 1.6.2
 
 - Added check so that when the module tries to add a key, if it sees that a key already exits, update it instead.
 
-### Changed in [UNRELEASED]
+### Changed in 1.6.2
 
 - The module will no longer try to blindly add new configuration keys. Instead, it will check to see if the database key exists first and then try to insert it if it finds no match. Otherwise, it will update the value instead.
 
-### Fixed in [UNRELEASED]
+### Fixed in 1.6.2
 
 - FINALLY got rid of the bug mentioned in [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]. This required a soft rewrite of the "read only" function. (Pretty much left the created "hidden" field off.) Will do more research into why this does not work.
 
