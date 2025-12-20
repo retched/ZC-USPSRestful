@@ -12,9 +12,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [UNRELEASED] - 0000-00-00
 
+### Added in [UNRELEASED]
+
+- Added check so that when the module tries to add a key, if it sees that a key already exits, update it instead.
+
 ### Changed in [UNRELEASED]
 
 - The module will no longer try to blindly add new configuration keys. Instead, it will check to see if the database key exists first and then try to insert it if it finds no match. Otherwise, it will update the value instead.
+
+### Fixed in [UNRELEASED]
+
+- FINALLY got rid of the bug mentioned in [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]. This required a soft rewrite of the "read only" function. (Pretty much left the created "hidden" field off.) Will do more research into why this does not work.
 
 ## 1.6.1 - 2025-12-18
 
