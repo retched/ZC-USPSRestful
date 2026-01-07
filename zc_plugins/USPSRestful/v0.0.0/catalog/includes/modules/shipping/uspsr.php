@@ -793,22 +793,46 @@ class uspsr extends base
                         $quote_message .= 'Price From Quote : ' . $currencies->format($lookup[$method_item['method']]['totalBasePrice']) . " , Method Handling : " . $currencies->format((float) $method_item['handling']) . " , Order Handling : " . $currencies->format($usps_handling_fee) . " , Extra Services: " . $currencies->format($extraServices) . "\n";
                         $quote_message .= "Final Price (Quote + Handling + Order Handling + Services) * # of Boxes ($shipping_num_boxes) : " . $currencies->format($price) . "\n";
 
-                        if ($this->is_us_shipment && isset($uspsStandards[$quotes['mailClass']])) { // Only do this for domestic shipments
-                            // If there is a standards request, add that line:
+                        // Is this a US shipment or an international shipment?
+                        if ($this->is_us_shipment) {
+                            // Is there a matching Standards entry?
+                            if (isset($uspsStandards[$quotes['mailClass']])) {
+                                switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) 
+                                {
+                                    case "Estimate Transit Time":
+                                        $total_days = (int)$uspsStandards[$quotes['mailClass']]['serviceStandard'] + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
+                                        $quote_message .= "Estimated Transit Time per Standards: " . (int)$uspsStandards[$quotes['mailClass']]['serviceStandard']  . " day(s) + Handling Days: " . (int) MODULE_SHIPPING_USPSR_HANDLING_TIME . " day(s) = Total Days: " . $total_days . " day(s)" . "\n";
+                                        break;
+                                    case "Estimate Delivery":
+                                        $est_delivery_raw = new DateTime($uspsStandards[$quotes['mailClass']]['delivery']['scheduledDeliveryDateTime']);
+                                        $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
+
+                                        $quote_message .= "Estimated Delivery Date per Standards: " . $est_delivery . "\n";
+                                        break;
+                                }
+                            }
+                        } else {
+                            // International Shipment
+                            $min_days = 8 + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
+                            $max_days = 30 + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
                             switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) 
                             {
                                 case "Estimate Transit Time":
-                                    $total_days = (int)$uspsStandards[$quotes['mailClass']]['serviceStandard'] + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
-                                    $quote_message .= "Estimated Transit Time per Standards: " . (int)$uspsStandards[$quotes['mailClass']]['serviceStandard']  . " day(s) + Handling Days: " . (int) MODULE_SHIPPING_USPSR_HANDLING_TIME . " day(s) = Total Days: " . $total_days . " day(s)" . "\n";
+                                    $quote_message .= "Estimated Transit Time (w/o Standards): At least 8-30 day(s) + Handling Days: " . (int) MODULE_SHIPPING_USPSR_HANDLING_TIME . " day(s) = Total Days: " . $min_days . "-" . $max_days . " day(s)" . "\n";
                                     break;
                                 case "Estimate Delivery":
-                                    $est_delivery_raw = new DateTime($uspsStandards[$quotes['mailClass']]['delivery']['scheduledDeliveryDateTime']);
-                                    $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
 
-                                    $quote_message .= "Estimated Delivery Date per Standards: " . $est_delivery . "\n";
+                                    $early = new DateTime();
+                                    $early->modify("+$min_days days");
+
+                                    $late = new DateTime();
+                                    $late->modify("+$max_days days");
+
+                                    $quote_message .= "Estimated Delivery Date (w/o Standards): At least " . $early->format(DATE_FORMAT) . " and at most " . $late->format(DATE_FORMAT) . "\n";
                                     break;
                             }
                         }
+
 
                     } elseif (!$match) {
                         // Order failed to match
@@ -891,22 +915,47 @@ class uspsr extends base
             }
 
             // Build Estimates Attachment
-            if (!empty($uspsStandards)) {
+            if ($this->is_us_shipment) {
+                if (!empty($uspsStandards)) {
+                    switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
+                        case "Estimate Transit Time":
+                            foreach ($build_quotes as &$quote) {
+                                if (isset($uspsStandards[$quote['mailClass']]['serviceStandard'])) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($uspsStandards[$quote['mailClass']]['serviceStandard']) . "]";
+                            }
+                            break;
+                        case "Estimate Delivery":
+                            foreach ($build_quotes as &$quote) {
+
+                                if (isset($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime'])) {
+                                    $est_delivery_raw = new DateTime($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime']);
+                                    $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
+
+                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
+                                }
+                            }
+                            break;
+                    }
+                }
+            } else {
                 switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
                     case "Estimate Transit Time":
                         foreach ($build_quotes as &$quote) {
-                            if (isset($uspsStandards[$quote['mailClass']]['serviceStandard'])) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($uspsStandards[$quote['mailClass']]['serviceStandard']) . "]";
+                            $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days("8-30") . ", varies by destination country" . "]";
                         }
                         break;
                     case "Estimate Delivery":
                         foreach ($build_quotes as &$quote) {
 
-                            if (isset($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime'])) {
-                                $est_delivery_raw = new DateTime($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime']);
-                                $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
+                            $early_handling  = 8  + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
+                            $latest_handling = 30 + (int) MODULE_SHIPPING_USPSR_HANDLING_TIME;
 
-                                $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
-                            }
+                            $early = new DateTime();
+                            $early->modify("+$early_handling days");
+
+                            $late = new DateTime();
+                            $late->modify("+$latest_handling days");
+
+                            $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $early->format(DATE_FORMAT) . " - " . $late->format(DATE_FORMAT) . ", varies by destination country]";
                         }
                         break;
                 }
