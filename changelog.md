@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 - Work on incorporating into Advanced Shipping Manager
 
+## [UNRELEASED]
+
+### Added in [UNRELEASED]
+
+- Added guesstimation of international shipment deliveries. Will warn customers that it varies by country but could be anywhere from 8 to as much as 30 days away. [[#105](https://github.com/retched/ZC-USPSRestful/issues/105)]
+
 ## 1.6.2 - 2025-12-20
 
 ### Added in 1.6.2

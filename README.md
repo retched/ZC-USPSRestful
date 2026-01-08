@@ -12,9 +12,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 - Latest Release: [1.6.2](https://github.com/retched/ZC-USPSRestful/releases/latest)  
   _Released December 20, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
+- Planned Version: [1.7.0](https://github.com/retched/ZC-USPSRestful/milestone/10)
 
 ### Version/Release History
 
+- 1.7.0 [_In Development_]  
+  Added the ability to guesstimate international shipments deliveries.
 - 1.6.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.2)  
   Bug fix for the configuration setting issue. (FINALLY!)
 - 1.6.1: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.1)  
@@ -226,7 +229,7 @@ For the update
 ``` text
 USPS Shipping (RESTful) for Zen Cart
 A shipping module for ZenCart, an e-commerce platform
-Copyright (C) 2025 Paul Williams (retched / retched@hotmail.com)
+Copyright (C) 2026 Paul Williams (retched / retched@hotmail.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
