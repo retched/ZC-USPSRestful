@@ -39,3 +39,4 @@ define('MODULE_SHIPPING_USPSR_TEXT_WEEKS' , 'weeks');
 define('MODULE_SHIPPING_USPSR_TEXT_VARIES' , 'Varies');
 define('MODULE_SHIPPING_USPSR_TEXT_ESTIMATED' , 'est.');
 define('MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY' , 'est. delivery');
+define('MODULE_SHIPPING_USPSR_TEXT_VARIES_BY_DESTINATION' , 'varies by destination country');
