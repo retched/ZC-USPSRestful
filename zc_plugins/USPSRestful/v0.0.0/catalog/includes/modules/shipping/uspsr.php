@@ -920,7 +920,7 @@ class uspsr extends base
                     switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
                         case "Estimate Transit Time":
                             foreach ($build_quotes as &$quote) {
-                                if (isset($uspsStandards[$quote['mailClass']]['serviceStandard'])) $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($uspsStandards[$quote['mailClass']]['serviceStandard']) . "]";
+                                if (isset($uspsStandards[$quote['mailClass']]['serviceStandard'])) $quote['title'] .= " (" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days($uspsStandards[$quote['mailClass']]['serviceStandard']) . ")";
                             }
                             break;
                         case "Estimate Delivery":
@@ -930,7 +930,7 @@ class uspsr extends base
                                     $est_delivery_raw = new DateTime($uspsStandards[$quote['mailClass']]['delivery']['scheduledDeliveryDateTime']);
                                     $est_delivery = $est_delivery_raw->format(DATE_FORMAT);
 
-                                    $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . "]";
+                                    $quote['title'] .= " (" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $est_delivery . ")";
                                 }
                             }
                             break;
@@ -940,7 +940,7 @@ class uspsr extends base
                 switch (MODULE_SHIPPING_USPSR_DISPLAY_TRANSIT) {
                     case "Estimate Transit Time":
                         foreach ($build_quotes as &$quote) {
-                            $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days("8-30") . ", varies by destination country" . "]";
+                            $quote['title'] .= " (" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED . " " . zen_uspsr_estimate_days("8-30") . ", " . MODULE_SHIPPING_USPSR_TEXT_VARIES_BY_DESTINATION .  ")";
                         }
                         break;
                     case "Estimate Delivery":
@@ -955,7 +955,7 @@ class uspsr extends base
                             $late = new DateTime();
                             $late->modify("+$latest_handling days");
 
-                            $quote['title'] .= " [" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $early->format(DATE_FORMAT) . " - " . $late->format(DATE_FORMAT) . ", varies by destination country]";
+                            $quote['title'] .= " (" . MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY . " " . $early->format(DATE_FORMAT) . "-" . $late->format(DATE_FORMAT) . ", " . MODULE_SHIPPING_USPSR_TEXT_VARIES_BY_DESTINATION . ")";
                         }
                         break;
                 }

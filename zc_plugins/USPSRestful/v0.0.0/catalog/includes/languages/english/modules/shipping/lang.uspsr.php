@@ -40,6 +40,7 @@ $define = [
     'MODULE_SHIPPING_USPSR_TEXT_ESTIMATED' => 'est.',
     'MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY' => 'est. delivery',
 
+    'MODULE_SHIPPING_USPSR_TEXT_VARIES_BY_DESTINATION' => 'varies by destination country',
 ];
 
 return $define;
