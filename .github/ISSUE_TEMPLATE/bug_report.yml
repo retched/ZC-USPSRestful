@@ -31,8 +31,9 @@ body:
         - 1.6.0
         - 1.6.1
         - 1.6.2
+        - 1.7.0
         - 0.0.0 (pulled off of repo)
-      default: 17
+      default: 18
     validations:
       required: true
   - type: dropdown
