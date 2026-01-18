@@ -10,13 +10,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Latest Release: [1.6.2](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released December 20, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
-- Planned Version: [1.7.0](https://github.com/retched/ZC-USPSRestful/milestone/10)
+- Latest Release: [1.7.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+  _Released January 19, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
-- 1.7.0 [_In Development_]  
+- 1.7.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0)  
   Added the ability to guesstimate international shipments deliveries.
 - 1.6.2: [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.2)  
   Bug fix for the configuration setting issue. (FINALLY!)
@@ -63,6 +62,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 - [ZenCart Plugins Directory Listing](https://www.zen-cart.com/downloads.php?do=file&id=2395) (or use the Releases function on the GitHub repository)
 - [ZenCart Support Thread](https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)) - This thread is only for THIS version of the USPS module. For assistance with the original USPS module, which uses the WebTools API, you should post in [its megathread](https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread) on the ZenCart forums.
 - [Personal Discord Server](https://discord.gg/cZCJ8za7zg) - You can use this reach out to me via DMs or by commenting in the appropriate channel. Please be mindful of etiquette and rules.
+- [Requesting a higher quota threshold](https://github.com/retched/ZC-USPSRestful/wiki/Requesting-a-higher-quota-threshold) - A guide on how to request a higher threshold for using the API. This is necessary if you are getting the `429 - Too Many Requests` error.
 
 ## Setup, Install, and Upgrading
 
@@ -178,7 +178,7 @@ If you have these two defines set correctly, you do not have to convert anything
 
 ## Known Limitations/Issues
 
-- As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.
+- As mentioned above in the FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.
 
 ## Credits
 
@@ -191,7 +191,7 @@ For the original module
 For the update  
 
 - retched (me)
-- lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it
+- lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it (this saved me a headache)
 
 ## File Listing
 

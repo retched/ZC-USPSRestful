@@ -9,13 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
-- Work on incorporating into Advanced Shipping Manager
+- Work on incorporating into Advanced Shipping Manager.
 
-## [UNRELEASED]
+## 1.7.0 - 2026-01-20
 
-### Added in [UNRELEASED]
+### Added in 1.7.0
 
-- Added guesstimation of international shipment deliveries. Will warn customers that it varies by country but could be anywhere from 8 to as much as 30 days away. [[#105](https://github.com/retched/ZC-USPSRestful/issues/105)]
+- Added guesstimation of international shipment deliveries. Will warn customers that it varies by country but could be anywhere from 8 to as much as 30 days away. The handling time is added onto these ranges and displayed as a result. [[#105](https://github.com/retched/ZC-USPSRestful/issues/105)]
 
 ## 1.6.2 - 2025-12-20
 

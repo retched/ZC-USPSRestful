@@ -435,6 +435,8 @@ body,
 
 .github-markdown-body ul,
 .github-markdown-body ol {
+  margin-top: 0;
+  margin-bottom: 0;
   padding-left: 2em;
 }
 
@@ -3840,11 +3842,13 @@ body,
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.6.2</a><br>
-<em>Released December 20, 2025 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.7.0</a><br>
+<em>Released January 19, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.7.0 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0">Download</a><br>
+Added the ability to guesstimate international shipments deliveries.</li>
 <li>1.6.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.2">Download</a><br>
 Bug fix for the configuration setting issue. (FINALLY!)</li>
 <li>1.6.1: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.1">Download</a><br>
@@ -3890,6 +3894,7 @@ First &quot;release&quot;.</li>
 <li><a href="https://www.zen-cart.com/downloads.php?do=file&amp;id=2395">ZenCart Plugins Directory Listing</a> (or use the Releases function on the GitHub repository)</li>
 <li><a href="https://www.zen-cart.com/showthread.php?230512-USPS-Shipping-(RESTful)-(USPSr)">ZenCart Support Thread</a> - This thread is only for THIS version of the USPS module. For assistance with the original USPS module, which uses the WebTools API, you should post in <a href="https://www.zen-cart.com/showthread.php?227284-USPS-Shipping-Module-Support-Thread">its megathread</a> on the ZenCart forums.</li>
 <li><a href="https://discord.gg/cZCJ8za7zg">Personal Discord Server</a> - You can use this reach out to me via DMs or by commenting in the appropriate channel. Please be mindful of etiquette and rules.</li>
+<li><a href="https://github.com/retched/ZC-USPSRestful/wiki/Requesting-a-higher-quota-threshold">Requesting a higher quota threshold</a> - A guide on how to request a higher threshold for using the API. This is necessary if you are getting the <code>429 - Too Many Requests</code> error.</li>
 </ul>
 <h2 id="setup-install-and-upgrading">Setup, Install, and Upgrading</h2>
 <p>Both versions (encapsulated and non-encapsulated) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)</p>
@@ -4017,7 +4022,7 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <p>If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.</p>
 <h2 id="known-limitationsissues">Known Limitations/Issues</h2>
 <ul>
-<li>As mentioned above in the last FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.</li>
+<li>As mentioned above in the FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.</li>
 </ul>
 <h2 id="credits">Credits</h2>
 <p>For the original module</p>
