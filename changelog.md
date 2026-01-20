@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
 - Work on incorporating into Advanced Shipping Manager.
 
-## 1.7.0 - 2026-01-20
+## 1.7.0 - 2026-01-19
 
 ### Added in 1.7.0
 
