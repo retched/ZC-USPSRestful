@@ -1636,7 +1636,7 @@ class uspsr extends base
     protected function uspsrDebug($message)
     {
         if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
-            error_log(date('Y-m-d H:i:s') . ': ' . str_replace("&nbsp;", " ", $message) . PHP_EOL, 3, $this->debug_filename);
+            error_log(date('Y-m-d H:i:s') . ': ' . html_entity_decode($message) . PHP_EOL, 3, $this->debug_filename);
         }
     }
 
