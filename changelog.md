@@ -8,8 +8,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
-- Refactor code to support PHP 5.x. _(Editor Note: This will likely be a separate repo.)_
+- Refactor code to support PHP 5.x. _(Editor Note: This will be a separate repo.)_
 - Work on incorporating into Advanced Shipping Manager.
+
+## [UNRELEASED] - 0000-00-00
+
+### Fixed in [UNRELEASED]
+
+- Fixed a minor formatting issue that resulted in some HTML entities being logged as part of the debug log.
+- Clarified the encapsulated uninstaller to look specifically for a file named uspsr.php. (Not uspsr(some character).php).
 
 ## 1.7.0 - 2026-01-19
 
