@@ -114,7 +114,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         // Shouldn't be empty... there SHOULD be a key returned as it's part of ZenCart's base install... but...
         // we're going to remove the uspsr.php; bit of it.
         if (zen_not_null($module_listing->fields['configuration_value'])) {
-            $updated_listing = preg_replace("/uspsr.php;?/", '', $module_listing->fields['configuration_value']);
+            $updated_listing = preg_replace("/uspsr\.php;?/", '', $module_listing->fields['configuration_value']);
 
             $this->executeInstallerSql("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $updated_listing . "' WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
         }
