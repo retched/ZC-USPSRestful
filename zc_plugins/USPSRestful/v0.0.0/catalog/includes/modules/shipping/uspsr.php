@@ -868,7 +868,7 @@ class uspsr extends base
 
                 // If both variants exist, remove the more expensive one
                 if (count($groundOptions) == 2) {
-                    //if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic'])) {
+                    //if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic']))
                     $removeKey = ($groundOptions[0]['cost'] > $groundOptions[1]['cost'])
                         ? $groundOptions[0]['key']
                         : $groundOptions[1]['key'];
@@ -900,7 +900,7 @@ class uspsr extends base
 
                 // If both variants exist, remove the more expensive one
                 if (count($priorityOptions) == 2) {
-                    //if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic'])) {
+                    //if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic']))
                     $removeKey = ($priorityOptions[0]['cost'] > $priorityOptions[1]['cost'])
                         ? $priorityOptions[0]['key']
                         : $priorityOptions[1]['key'];
