@@ -349,23 +349,6 @@ class uspsr extends base
                 break;
         }
 
-        /**
-         * Determine if package is machinable or not - Media Mail Only
-         * API will either return both the machinable rate and non-machinable rate or one or the other.
-         *
-         * The store owner will choose a preference. If the preference can be met, show that rate. If it can't be met, but there is only
-         * one rate available... show THAT rate.
-         *
-         * By definition, Media Mail Machinable parcels must weight less than 25lbs with no minimum. Additionally, a package to be machineable
-         * cannot be more than 22 inches long, 18 inches wide, 15 inches high. The USPS considers the longest measurement given to the length, the
-         * 2nd longest measurement is considered it's width, and the third longest it's height. (Actually it considers "length is the measurement of
-         * the longest dimension and girth is the distance around the thickest part".)
-         *
-         * If all else fails, follow the module setting.
-         *
-         * For all other services, this is handled by the API.
-         */
-
         // Rebuild the dimmensions array
         $pkg_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
         array_walk($pkg_dimensions, function (&$value) {
@@ -662,6 +645,15 @@ class uspsr extends base
                     if (strpos($name, "Connect Local") !== FALSE) $rate['productName'] = $rate['description'];
 
                     // ---------------------------------------------
+                    // Priority Mail Internationals
+                    // Drop the Machniable / Nonstandard indicators and just call it "Priority Mail (Express) International ISC Single-piece" since the API doesn't always return those in a consistent way.
+                    // ---------------------------------------------
+                    if (preg_match('/Priority Mail( Express)? International (Nonstandard|Machinable) ISC Single-piece/', $name, $matches)) {
+                        $name = "Priority Mail" . ($matches[1] ?? '') . " International ISC Single-piece";
+                        $rate['productName'] = $name;
+                    }
+
+                    // ---------------------------------------------
                     // Default: All is OK, add it to the list
                     // ---------------------------------------------
                     $lookup[$name] = $rate;
@@ -711,7 +703,6 @@ class uspsr extends base
                     $match = TRUE;
                     $made_weight = FALSE;
                     $quote_message = '';
-                    $services_total = 0;
 
                     // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
                     // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.

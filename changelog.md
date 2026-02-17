@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will be a separate repo.)_
 - Work on incorporating into Advanced Shipping Manager.
+- Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
+- Moving add-ons to separate order-total line?
 
 ## [UNRELEASED] - 0000-00-00
 
@@ -17,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fixed a minor formatting issue that resulted in some HTML entities being logged as part of the debug log.
 - Clarified the encapsulated uninstaller to look specifically for a file named uspsr.php. (Not uspsr(some character).php).
+- Fixed an issue (again) with the display of Priority Mail rates that were being hidden because of an uncaught Machinable/Nonstandard flag. This should work as necessary. This might pop up in other services, will keep an eye on it. [[#109](https://github.com/retched/ZC-USPSRestful/issues/109)]
 
 ## 1.7.0 - 2026-01-19
 
