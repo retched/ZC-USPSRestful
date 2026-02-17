@@ -59,7 +59,7 @@ class uspsr extends base
      * @var bool
      */
 
-    protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $bearerExpiration = 0, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
+    protected $debug_enabled = FALSE, $typeCheckboxesSelected = [], $debug_filename, $bearerToken, $bearerExpiration = 0, $quote_weight, $_check, $machinable, $shipment_value = 0, $insured_value = 0, $uninsured_value = 0, $orders_tax = 0, $items_weight = 0, $is_us_shipment, $is_apo_dest = FALSE, $usps_countries, $enable_media_mail;
     protected $api_base = 'https://apis.usps.com/';
     protected $_standard, $ltrQuote, $pkgQuote, $uspsStandards, $uspsLetter, $dimensions = [], $errors = [];
 
@@ -407,15 +407,16 @@ class uspsr extends base
         $this->quoteLogConfiguration();
 
         // Create the main quotes (both letters and packages)
-        $this->_getQuote();
-
-        // Notifier brought forward
-        $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $this->dimensions, $uspsQuote);
-
+        // Remove the tare weight from the quote weight first. If there is no weight, don't send.
+        if ($this->items_weight > 0) $this->_getQuote();
+       
         // There are two quote fields being used a package
-
+        
         // Start with package quote
         $uspsQuote = json_decode($this->pkgQuote, TRUE);
+        
+        // Notifier brought forward
+        $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $this->dimensions, $uspsQuote);
 
         if (!empty($uspsQuote['error'])) {
             // There was an error with the package quote, so prefix the title with "Packages: "
@@ -995,7 +996,10 @@ class uspsr extends base
                 // Should there be a warning that the dates are estimations?
 
             }  // If we made it this far, there is no point in outputting an error message of any kind.
+
         } else {
+            // We only get here if a quote went out and errors were returned.
+            // Only display the errors if debugging is enabled and the store owner has selected to show errors in debug mode.
             if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE) && empty($build_quotes)) {
 
                 // We have an error and error debugging is enabled, so output the error.
@@ -1014,7 +1018,41 @@ class uspsr extends base
                     'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>",
                 ];
 
+            } else {
+                $this->quotes = [
+                    'id' => $this->code,
+                    'icon' => zen_image($this->icon),
+                    'module' => $this->title,
+                    'methods' => [],
+                    'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
+                ];
             }
+
+        }
+
+        if ($this->items_weight <= 0) {
+
+            // If the total weight of the order is 0 or less: this can't be correct. Output an error message.
+            $this->quotes = [
+                'id' => $this->code,
+                'icon' => zen_image($this->icon),
+                'module' => $this->title,
+                'methods' => [],
+                'error' => MODULE_SHIPPING_NO_WEIGHT,
+            ];
+
+        } elseif (empty($build_quotes) && empty($this->errors)) {
+
+            // If we have no quotes to show, but we also have no errors, show a generic "no quotes" message.
+            // This should only show up if there isn't any API errors.
+
+            $this->quotes = [
+                'id' => $this->code,
+                'icon' => zen_image($this->icon),
+                'module' => $this->title,
+                'methods' => [],
+                'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
+            ];
 
         }
 
@@ -2899,6 +2937,8 @@ class uspsr extends base
             if ($item['products_virtual'] === 1) {
                 $this->shipment_value -= $item['final_price'];
                 $this->uninsured_value += $item['final_price'];
+            } else {// Item isn't virtual, add its weight.
+                $this->items_weight += $item['products_weight'] * $item['qty'];
             }
 
             if (in_array(zen_get_products_category_id($item['id']), $key_values)) {
@@ -2906,6 +2946,8 @@ class uspsr extends base
             }
 
         }
+
+
 
         if (!$this->is_us_shipment)
             $this->enable_media_mail = false;
