@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Work on incorporating into Advanced Shipping Manager.
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
 - Moving add-ons to separate order-total line?
+- Add warning about being on the "weakest" allotment of API pulls.
 
 ## [UNRELEASED] - 0000-00-00
 
@@ -20,6 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed a minor formatting issue that resulted in some HTML entities being logged as part of the debug log.
 - Clarified the encapsulated uninstaller to look specifically for a file named uspsr.php. (Not uspsr(some character).php).
 - Fixed an issue (again) with the display of Priority Mail rates that were being hidden because of an uncaught Machinable/Nonstandard flag. This should work as necessary. This might pop up in other services, will keep an eye on it. [[#109](https://github.com/retched/ZC-USPSRestful/issues/109)]
+- Fixed an issue that allowed a shop owner to effectively send out zero weight carts. The module will now not send a quote request unless at least ONE item has a non-zero weight to it. [[#108](https://github.com/retched/ZC-USPSRestful/issues/108)]
 
 ## 1.7.0 - 2026-01-19
 
