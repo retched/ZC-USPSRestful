@@ -662,6 +662,15 @@ class uspsr extends base
                     if (strpos($name, "Connect Local") !== FALSE) $rate['productName'] = $rate['description'];
 
                     // ---------------------------------------------
+                    // Priority Mail Internationals
+                    // Drop the Machniable / Nonstandard indicators and just call it "Priority Mail (Express) International ISC Single-piece" since the API doesn't always return those in a consistent way.
+                    // ---------------------------------------------
+                    if (preg_match('/Priority Mail( Express)? International (Nonstandard|Machinable) ISC Single-piece/', $name, $matches)) {
+                        $name = "Priority Mail" . ($matches[1] ?? '') . " International ISC Single-piece";
+                        $rate['productName'] = $name;
+                    }
+
+                    // ---------------------------------------------
                     // Default: All is OK, add it to the list
                     // ---------------------------------------------
                     $lookup[$name] = $rate;
@@ -711,7 +720,6 @@ class uspsr extends base
                     $match = TRUE;
                     $made_weight = FALSE;
                     $quote_message = '';
-                    $services_total = 0;
 
                     // If this package is NOT going to an APO/FPO/DPO, skip and continue to the next
                     // Currently this is the only rate which has a different rate for APO/FPO/DPO rates.
