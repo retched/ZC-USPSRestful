@@ -349,23 +349,6 @@ class uspsr extends base
                 break;
         }
 
-        /**
-         * Determine if package is machinable or not - Media Mail Only
-         * API will either return both the machinable rate and non-machinable rate or one or the other.
-         *
-         * The store owner will choose a preference. If the preference can be met, show that rate. If it can't be met, but there is only
-         * one rate available... show THAT rate.
-         *
-         * By definition, Media Mail Machinable parcels must weight less than 25lbs with no minimum. Additionally, a package to be machineable
-         * cannot be more than 22 inches long, 18 inches wide, 15 inches high. The USPS considers the longest measurement given to the length, the
-         * 2nd longest measurement is considered it's width, and the third longest it's height. (Actually it considers "length is the measurement of
-         * the longest dimension and girth is the distance around the thickest part".)
-         *
-         * If all else fails, follow the module setting.
-         *
-         * For all other services, this is handled by the API.
-         */
-
         // Rebuild the dimmensions array
         $pkg_dimensions = array_filter(explode(', ', MODULE_SHIPPING_USPSR_DIMMENSIONS));
         array_walk($pkg_dimensions, function (&$value) {
