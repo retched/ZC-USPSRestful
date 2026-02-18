@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Work on incorporating into Advanced Shipping Manager.
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
 - Moving add-ons to separate order-total line?
-- Add warning about being on the "weakest" allotment of API pulls.
+- Add warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provide user instructions on how to upgrade tiers.
 
 ## [UNRELEASED] - 0000-00-00
 
