@@ -69,7 +69,7 @@ body:
     id: install-style
     attributes:
       label: Installation Method
-      description: Which version of the module are you using? Encapsulated (you install via the plugin manager) or Standard (you install the files directly into the necessary directories)
+      description: Which version of the module are you using? Encapsulated (you install via the plugin manager) or Traditional (you install the files directly into the necessary directories)
       multiple: false
       options:
         - Encapsulated
@@ -82,7 +82,7 @@ body:
     attributes:
       label: Related Thread
       placeholder: Be sure to include the https:// in the front
-      description: Is this issued related to a thread/post from the ZenCart forums? If so, link it here.
+      description: Is this issued related to a thread/post from the ZenCart forums? If so, link it here. (Prefably link to the specific post, not just the thread. To get the link to the post, find the number of the post and right click on it. Your browser should have a "Copy link" option. Paste that result here.)
   - type: textarea
     id: what-happened
     attributes:
