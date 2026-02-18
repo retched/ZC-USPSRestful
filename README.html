@@ -3839,11 +3839,13 @@ body,
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.7.0</a><br>
-<em>Released January 19, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.8.0</a><br>
+<em>Released February 18, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.8.0 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0">Download</a><br>
+Added uninstaller script for traditional installs. Fixed issue with Priority Mail International quote requests. Stopped allowing zero weight carts from being made.</li>
 <li>1.7.0 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0">Download</a><br>
 Added the ability to guesstimate international shipments deliveries.</li>
 <li>1.6.2: <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.6.2">Download</a><br>
@@ -3916,7 +3918,7 @@ If you want to install the encapsulated version of the module, copy <strong>ONLY
 <ul>
 <li>
 <p><strong>Traditional</strong><br>
-To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. <strong>NEW</strong> Starting in version 1.8.0, a new menu item called &quot;USPSr Uninstaller&quot; will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.</p>
+To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. (**<strong>NEW</strong>**) Starting in version 1.8.0, a new menu item called &quot;USPSr Uninstaller&quot; will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.</p>
 </li>
 <li>
 <p><strong>Encapsulated</strong><br>
@@ -4003,11 +4005,12 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <p>That rate is only available for packages being sent to a known APO (Air/Army Post Office), DPO (Diplomatic Post Office), or FPO (Fleet Post Office) zip code. If the package's destination zip code is not one of those types of zip codes, the rate will not be offered. To obtain APO/DPO/FPO Flat Rate Boxes, visit the <a href="https://store.usps.com/store/product/shipping-supplies/priority-mail-flat-rate-apofpo-box-P_MILI_FRB">USPS Postal Store online</a> and request them. (Remember these boxes can ONLY be used for APO/DPO/FPO Mail. If you use them for regular domestic addresses, you may end up having that package returned for insufficient postage.) If there is a valid APO/FPO/DPO address being given and the rate is not offered, please contact me right away. It's likely that the destination zip code was not a known APO, DPO, or FPO when I published this script.</p>
 <h3 id="what-is-the-handling-field-for">What is the handling field for?</h3>
 <p>There are two sets of handling fields. One that can be used on the order as a whole (domestic or international) and one that can be applied on a per-method basis.</p>
-<p>The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods (or to the entire order, to each &quot;box&quot;, or both). If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method, and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both.)</p>
+<p>The handling field next to the selection of methods is generally for adding a surcharge to certain kinds of shipping methods. The &quot;global&quot; handling above the selection of methods is to apply a fee to all orders regardless of shipping method.</p>
+<p>If you wish to charge a surcharge for certain kinds of shipping methods, you can enter an amount in the entry box next to the method, and this amount that you enter will be added to the quoted shipping method. If instead, you want to add a surcharge to using USPS as a whole, you would use the single input boxes and not the individual method ones. (Or you can use both but be careful as this additive and depending on the site and other settings, multiplicative.)</p>
 <h3 id="what-is-the-minmax-box-for">What is the min/max box for?</h3>
 <p>The original USPS WebTools had a way to clamp the different modules based on the weight of each order. You would put two values into those boxes, and then the rate for that method would be offered if the total weight of the order fell between those two numbers. This is completely optional to use and should be left alone to its defaults if you're not actively using them. (<strong>NOTE:</strong> The number entered here will be converted into pounds, so if you're using kilograms as your standard, enter the amount in kilograms here. If you're using pounds, enter pounds here.)</p>
 <h3 id="does-this-module-use-the-length-width-and-height-boxes-of-zc-200">Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?</h3>
-<p>Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the &quot;average&quot; package thresholds of this module. A future update will see these included.</p>
+<p>Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the &quot;average&quot; package thresholds of this module. A future update will see these included. (You should still update them as the data could be useful in other modules.)</p>
 <h3 id="what-happened-to-the--and--symbols-that-were-on-the-original-module">What happened to the ® and ™ symbols that were on the original module?</h3>
 <p>Those symbols don't appear within the new USPS API calls as they do on the original one. I can modify the script to place them but they might be more trouble than anything.</p>
 <h3 id="my-stores-measurements-are-in-centimeters-and-kilograms-do-i-have-to-convert-everything">My store's measurements are in centimeters and kilograms. Do I have to convert everything?</h3>
@@ -4034,19 +4037,22 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <li>lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it (this saved me a headache)</li>
 </ul>
 <h2 id="file-listing">File Listing</h2>
-<p>(not all files will be available in the zip file)</p>
+<p>(not all files will be available in the zip file, depending on download)</p>
 <pre><code class="language-text">- LICENSE
 - README.md (this file)
+- README_1st.md
 - README.html
 - changelog.md
-- admin\includes\functions\extra_functions\usps.extra_functions.php
-- admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- admin\includes\languages\english\extra_definitions\uspsr.php
-- includes\languages\english\modules\shipping\lang.uspsr.php
-- includes\languages\english\modules\shipping\uspsr.php
-- includes\functions\extra_functions\usps.extra_functions.php
-- includes\modules\shipping\uspsr.php
-- includes\templates\template_default\images\icons\shipping_usps.gif
+- \admin\uspsr_uninstall.php (NEW FILE)
+- \admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \admin\includes\functions\extra_functions\usps.extra_functions.php
+- \admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \admin\includes\languages\english\extra_definitions\uspsr.php
+- \includes\languages\english\modules\shipping\lang.uspsr.php
+- \includes\languages\english\modules\shipping\uspsr.php
+- \includes\functions\extra_functions\usps.extra_functions.php
+- \includes\modules\shipping\uspsr.php
+- \includes\templates\template_default\images\icons\shipping_usps.gif
 - \zc_plugins\USPSRestful\v0.0.0\manifest.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
