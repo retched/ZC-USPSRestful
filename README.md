@@ -86,7 +86,7 @@ Regardless of which method
 ## Uninstallation
 
 - **Traditional**  
-  To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.
+  To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. (\*\***NEW**\*\*) Starting in version 1.8.0, a new menu item called "USPSr Uninstaller" will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.
 
 - **Encapsulated**  
   To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click "Uninstall". If desired, you can clean up the installation to have ZenCart delete the files for you.
@@ -115,8 +115,8 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 | ZenCart 2.2.0 |     :clipboard:    |     :clipboard:    |
 
 - :white_check_mark: = Fully supported
+- :x: = Not supported
 - :clipboard: = In testing, BUT it SHOULD work.
-- :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
 
 **UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
 

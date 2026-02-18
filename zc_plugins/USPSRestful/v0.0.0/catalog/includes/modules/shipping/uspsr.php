@@ -1601,8 +1601,9 @@ class uspsr extends base
 
         if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
             // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
-
-
+            // Add the Admin Page link for the module's uninstallation.
+            global $db;
+            $db->Execute("INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_INSTALLED');
@@ -1659,9 +1660,17 @@ class uspsr extends base
 
     public function remove()
     {
-        global $db;
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_USPSR_%' ");
+        global $messageStack;
+        //global $db;
+        //$db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_USPSR_%' ");
+        $this->deleteConfigurationKeys($this->keys());
+
         $this->notify('NOTIFY_SHIPPING_USPS_UNINSTALLED');
+
+        // Redirect to the Admin Page link for the module's final uninstallation.
+        if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
+            $messageStack->add_session('The module USPSr has been uninstalled and disabled. If you want to delete the files, you can visit the USPS Uninstaller to remove all associated files. Visit the <a href="' . zen_href_link(FILENAME_USPS_UNINSTALL) . '">USPSr Removal Tool</a> for additional steps.', 'success');
+        }
     }
 
     /**
@@ -2195,7 +2204,13 @@ class uspsr extends base
                 case "v1.6.0": // Released 2025-12-17: No further changes
                 case "v1.6.1": // Released 2025-12-19: No further changes
                 case "v1.6.2": // Released 2025-12-20: No further changes
-                case "v1.7.0": // Released 2026-01-19: No further changes
+                case "v1.7.0": // Released 2026-01-19: No database changes, only adding in a new Admin Page for the uninstallation of the module.
+                    if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
+                        // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
+                        // Add the Admin Page link for the module's uninstallation.
+                        global $db;
+                        $db->Execute("INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
+                    }
                     break;
             }
 

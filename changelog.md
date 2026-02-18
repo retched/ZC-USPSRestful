@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- Create an uninstall script for non-encapsulated installations. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will be a separate repo.)_
@@ -15,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add warning about being on the "weakest" allotment of API pulls.
 
 ## [UNRELEASED] - 0000-00-00
+
+### Added in [UNRELEASED]
+
+- Added an uninstall script for traditional installs of the module. This uninstaller will be available in the Tools menu, but can also be accessed by accessing `?cmd=uspsr_uninstall` in the admin area. This script will remove all files that you uploaded from the zip file (minus the USPS logo file), delete the entries in the configuration table, and self-delete the installer. This will only work if the module detects that it was not installed via encapsulation. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 
 ### Fixed in [UNRELEASED]
 
