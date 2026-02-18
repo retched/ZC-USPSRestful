@@ -51,8 +51,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'confirm') {
     $messageStack->add_session(MODULE_SHIPPING_USPSR_UNINSTALL_COMPLETE, 'success');
 
     // Delete the option for the Admin Page link for the module's uninstallation, if it exists.
-    $db->Execute("DELETE FROM admin_pages WHERE page_key = 'uspsUninstall'");
-    
+    $db->Execute("DELETE FROM admin_pages WHERE page_key = 'uspsrUninstall'");
+
     zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
