@@ -51,6 +51,7 @@ class ScriptedInstaller extends ScriptedInstallBase
             'MODULE_SHIPPING_USPSR_HANDLING_METHOD',
             'MODULE_SHIPPING_USPSR_HANDLING_TIME',
             'MODULE_SHIPPING_USPSR_INTL_LETTER_SERVICES',
+            'MODULE_SHIPPING_USPSR_INSTALL',
             'MODULE_SHIPPING_USPSR_INTL_SERVICES',
             'MODULE_SHIPPING_USPSR_LTR_DIMMENSIONS',
             'MODULE_SHIPPING_USPSR_LTR_MACHINEABLE_FLAGS',
@@ -76,9 +77,20 @@ class ScriptedInstaller extends ScriptedInstallBase
     {
 
         /**
-         * No, do not install the module from here!
-         * You should install the module from the Shipping Module section of the admin.
+         * Install ONE key to show that the module is installed, but the rest of the keys will be installed when you enable the module from the Shipping Modules section of the admin. 
+         * This key needs to be installed with a specific value so that the rest of the module knows not to install it to the database.
          */
+
+        $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INSTALL', [
+            'configuration_title' => 'USPSr Module Installation Type',
+            'configuration_value' => '1', // Simple flag. The value doesn't matter, the important part is that it's installed. The rest of the keys will be installed when you enable the module from the Shipping Modules section of the admin. This is to prevent the uninstallation script from being visible on the menu.
+            'configuration_description' => '<strong>FOR INTERNAL USE ONLY!</strong> This shows that the module is an encapsulated install. If this key is present, the uninstallation link for the module will not appear on the menu, and the module will be uninstalled by removing this key. This is to prevent users from accidentally uninstalling an encapsulated version of the module and breaking their site.',
+            'configuration_group_id' => 6,
+            'sort_order' => 0,
+            'set_function' => '',
+            'use_function' => '',
+            'date_added' => 'now()'
+        ]);
 
         return true;
 

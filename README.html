@@ -3831,10 +3831,7 @@ body,
             data-light-theme="light"
             data-dark-theme="dark"
         >
-            <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true"
-                    data-dark-mode-theme="dark"
-                    data-light-mode-theme="default"
-                    data-max-text-size="50000"></span>
+            <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true" data-config="{&quot;darkModeTheme&quot;:&quot;dark&quot;,&quot;lightModeTheme&quot;:&quot;default&quot;,&quot;maxTextSize&quot;:50000,&quot;clickDrag&quot;:&quot;alt&quot;,&quot;showControls&quot;:&quot;onHoverOrFocus&quot;,&quot;resizable&quot;:true,&quot;maxHeight&quot;:&quot;&quot;}"></span>
                 <h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
 <p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
 <p><img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP">  <img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0"> <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit">  <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release"></p>
@@ -3897,28 +3894,29 @@ First &quot;release&quot;.</li>
 <li><a href="https://github.com/retched/ZC-USPSRestful/wiki/Requesting-a-higher-quota-threshold">Requesting a higher quota threshold</a> - A guide on how to request a higher threshold for using the API. This is necessary if you are getting the <code>429 - Too Many Requests</code> error.</li>
 </ul>
 <h2 id="setup-install-and-upgrading">Setup, Install, and Upgrading</h2>
-<p>Both versions (encapsulated and non-encapsulated) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)</p>
+<p>Both versions (encapsulated and traditional) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)</p>
 <ul>
 <li>
-<p><strong>Non-encapsulated</strong> (ZC 1.5.5+)<br>
-If you want to install the non-encapsulated version of the module, copy <strong>ONLY</strong> the <code>admin/</code> and <code>includes/</code> directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (<strong>NOTE:</strong> Be sure to rename the <code>admin/</code> directory to match your admin directory in your ZenCart installation. <strong>DO NOT copy the <code>zc_plugins/</code> directory.</strong>)</p>
+<p><strong>Traditional</strong> (ZC 1.5.5+)<br>
+If you want to install the traditional version of the module, copy <strong>ONLY</strong> the <code>admin/</code> and <code>includes/</code> directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (<strong>NOTE:</strong> Be sure to rename the <code>admin/</code> directory to match your admin directory in your ZenCart installation. <strong>DO NOT copy the <code>zc_plugins/</code> directory.</strong>)</p>
 </li>
 <li>
-<p><strong>Encapsulated</strong> (ZC 2.1.0 or ZC 2.0.x <a href="https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142">with these modifications</a>)<br>
+<p><strong>Encapsulated</strong> (ZC 2.1.0+)<br>
 If you want to install the encapsulated version of the module, copy <strong>ONLY</strong> the contents of the <code>zc_plugins</code> directory into the matching <code>zc_plugins</code> directory of your ZenCart installation. <strong>DO NOT</strong> rename the <code>admin/</code> directory inside of the <code>zc_plugins/</code> directory!!! Copy the directories <strong>AS IS</strong>!!!</p>
 </li>
 </ul>
 <p>You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the <a href="https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing">related wiki page</a> from the Github repository.</p>
 <h3 id="upgradingupdating">Upgrading/updating</h3>
 <ul>
-<li>Non-encapsulated version: <strong>Overwrite ALL files of the old version.</strong></li>
-<li>Encapsulated version: Simply upload the new release into the same <code>zc_plugins/</code> directory. Each release will have a separate folder containing that new version. (Example: Version <code>v1.0.0</code> will be uploaded into a folder named <code>v1.0.0</code>.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the &quot;Upgrade Available&quot; button and follow the prompts. You will then be prompted to visit the Shipping Modules section of your admin area to effectuate the upgrade.</li>
+<li>Traditional version: <strong>Overwrite ALL files of the old version.</strong></li>
+<li>Encapsulated version: Simply upload the new release into the same <code>zc_plugins/</code> directory. Each release will have a separate folder containing that new version. (Example: Version <code>v1.0.0</code> will be uploaded into a folder named <code>v1.0.0</code>.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the &quot;Upgrade Available&quot; button and follow the prompts.</li>
 </ul>
+<p>Regardless of which method</p>
 <h2 id="uninstallation">Uninstallation</h2>
 <ul>
 <li>
-<p><strong>Non-encapsulated</strong><br>
-To uninstall the non-encapsulated version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.</p>
+<p><strong>Traditional</strong><br>
+To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. <strong>NEW</strong> Starting in version 1.8.0, a new menu item called &quot;USPSr Uninstaller&quot; will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.</p>
 </li>
 <li>
 <p><strong>Encapsulated</strong><br>
@@ -3936,7 +3934,7 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <tr>
 <th></th>
 <th style="text-align:center">Encapsulated</th>
-<th style="text-align:center">Non-Encapsulated</th>
+<th style="text-align:center">Traditional</th>
 </tr>
 </thead>
 <tbody>
@@ -4033,7 +4031,7 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 <p>For the update</p>
 <ul>
 <li>retched (me)</li>
-<li>lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it</li>
+<li>lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it (this saved me a headache)</li>
 </ul>
 <h2 id="file-listing">File Listing</h2>
 <p>(not all files will be available in the zip file)</p>

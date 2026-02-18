@@ -27,6 +27,8 @@
 
 define('MODULE_SHIPPING_USPSR_ERROR', '<strong>USPSr Error:</strong> '); // Leave the trailing space
 define('MODULE_SHIPPING_USPSR_NOTICE', '<strong>USPSr Notice:</strong> '); // Leave the trailing space
+define('BOX_USPS_UNINSTALLER', 'USPSr Uninstaller');
+
 
 $define = [
     'MODULE_SHIPPING_USPSR_ERROR_NO_QUOTES' => MODULE_SHIPPING_USPSR_ERROR . 'No services selected for USPSr module.',
@@ -44,6 +46,8 @@ $define = [
     'MODULE_SHIPPING_USPSR_DEVELOPMENTAL' => MODULE_SHIPPING_USPSR_NOTICE . "You are running a <strong>developmental</strong> version of the USPSr  module. Some things may not work as intended. Please be sure to report any problems on the <a href=\"https://github.com/retched/ZC-USPSRestful/issues\" target=\"_blank\">GitHub repository</a> or <a href=\"https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)\" target=\"_blank\">ZenCart support thread</a>.",
     'MODULE_SHIPPING_USPSR_HANDLING_DAYS' => MODULE_SHIPPING_USPSR_ERROR . 'The number of handling days must be a positive integer between 0 and 30! ',
 
+    'MODULE_SHIPPING_USPSR_UNINSTALL_COMPLETE' => MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully uninstalled and all related files have been removed.',
+    'MODULE_SHIPPING_USPSR_UNINSTALL_ERROR' => MODULE_SHIPPING_USPSR_ERROR . 'You cannot use this uninstaller because the module was installed by encapsulated means. Please use the standard uninstallation process from the <strong><a href="' . zen_href_link(FILENAME_MODULES, 'set=shipping&module=uspsr', 'NONSSL') . '">Admin > Modules > Shipping</a></strong> page to disable the module or use <strong><a href="' . zen_href_link(FILENAME_PLUGIN_MANAGER) . '">Admin > Plugin Manager</a></strong> to fully uninstall it.',
 
     // Adding because without this it breaks the backend
     'MODULE_SHIPPING_USPSR_TEXT_DAY' => 'day',
