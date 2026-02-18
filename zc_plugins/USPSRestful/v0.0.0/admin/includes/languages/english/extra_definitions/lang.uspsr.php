@@ -27,7 +27,7 @@
 
 define('MODULE_SHIPPING_USPSR_ERROR', '<strong>USPSr Error:</strong> '); // Leave the trailing space
 define('MODULE_SHIPPING_USPSR_NOTICE', '<strong>USPSr Notice:</strong> '); // Leave the trailing space
-define('BOX_USPS_UNINSTALLER', 'USPSr Uninstaller');
+define('BOX_USPSR_UNINSTALLER', 'USPSr Uninstaller');
 
 
 $define = [

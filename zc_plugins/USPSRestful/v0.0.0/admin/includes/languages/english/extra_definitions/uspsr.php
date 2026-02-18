@@ -27,7 +27,7 @@
 
 define('MODULE_SHIPPING_USPSR_ERROR' , '<strong>USPSr Error:</strong> '); // Leave the trailing space
 define('MODULE_SHIPPING_USPSR_NOTICE', '<strong>USPSr Notice:</strong> '); // Leave the trailing space
-define('BOX_USPS_UNINSTALLER', 'USPSr Uninstaller');
+define('BOX_USPSR_UNINSTALLER', 'USPSr Uninstaller');
 
 define('MODULE_SHIPPING_USPSR_ERROR_NO_QUOTES' , MODULE_SHIPPING_USPSR_ERROR . 'No services selected for USPSr module.');
 define('MODULE_SHIPPING_USPSR_ERROR_BAD_ORIGIN_ZIPCODE' , MODULE_SHIPPING_USPSR_ERROR . 'An invalid shipment origin ZIP code has been detected. Please enter a valid ZIP Code in the <a href="' . zen_href_link(FILENAME_DEFAULT, "cmd=configuration&gID=7&cID=211&action=edit") .'">Configuration > Shipping/Package > Postal Code</a> config setting.');
