@@ -1603,7 +1603,7 @@ class uspsr extends base
             // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
             // Add the Admin Page link for the module's uninstallation.
             global $db;
-            $db->Execute("INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
+            $db->Execute("INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 14000)");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_INSTALLED');
