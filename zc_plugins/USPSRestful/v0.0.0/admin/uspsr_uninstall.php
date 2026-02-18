@@ -34,7 +34,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (defined('MODULE_SHIPPING_USPSR_INSTALL')) {
     // This page should only be accessed if the module is installed by traditional means, 
     // so if the constant is defined, we know it's a encapsulated install and should not proceed.
-    $messageStack->add_session(MODULE_SHIPPING_USPSR_UNINSTALL_ERROR, 'warning');
+    $messageStack->add_session(MODULE_SHIPPING_USPSR_UNINSTALL_ERROR, 'error');
 
     zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }

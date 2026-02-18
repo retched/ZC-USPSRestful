@@ -47,7 +47,7 @@ $define = [
     'MODULE_SHIPPING_USPSR_HANDLING_DAYS' => MODULE_SHIPPING_USPSR_ERROR . 'The number of handling days must be a positive integer between 0 and 30! ',
 
     'MODULE_SHIPPING_USPSR_UNINSTALL_COMPLETE' => MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully uninstalled and all related files have been removed.',
-    'MODULE_SHIPPING_USPSR_UNINSTALL_ERROR' => MODULE_SHIPPING_USPSR_ERROR . 'You cannot use this uninstaller because the module was installed by encapsulated means. Please use the standard uninstallation process from the <strong><a href="' . zen_href_link(FILENAME_MODULES, 'set=shipping&module=uspsr', 'NONSSL') . '">Admin > Modules > Shipping</a></strong> page to disable the module or use <strong><a href="' . zen_href_link(FILENAME_PLUGIN_MANAGER) . '">Admin > Plugin Manager</a></strong> to fully uninstall it.',
+    'MODULE_SHIPPING_USPSR_UNINSTALL_ERROR' => MODULE_SHIPPING_USPSR_ERROR . 'You cannot use this uninstaller because the module was installed by encapsulated means. Please use the standard uninstallation process from the <strong><a href="' . zen_href_link(FILENAME_MODULES, 'set=shipping&module=uspsr', 'NONSSL') . '">Admin > Modules > Shipping</a></strong> page to disable the module or use <strong><a href="' . zen_href_link(FILENAME_PLUGIN_MANAGER) . '">Admin > Modules > Plugin Manager</a></strong> to fully uninstall it.',
 
     // Adding because without this it breaks the backend
     'MODULE_SHIPPING_USPSR_TEXT_DAY' => 'day',
