@@ -66,25 +66,27 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Setup, Install, and Upgrading
 
-Both versions (encapsulated and non-encapsulated) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)
+Both versions (encapsulated and traditional) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)
 
-- **Non-encapsulated** (ZC 1.5.5+)  
-  If you want to install the non-encapsulated version of the module, copy **ONLY** the `admin/` and `includes/` directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. **DO NOT copy the `zc_plugins/` directory.**)
+- **Traditional** (ZC 1.5.5+)  
+  If you want to install the traditional version of the module, copy **ONLY** the `admin/` and `includes/` directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. **DO NOT copy the `zc_plugins/` directory.**)
 
-- **Encapsulated** (ZC 2.1.0 or ZC 2.0.x [with these modifications](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142))  
+- **Encapsulated** (ZC 2.1.0+)  
   If you want to install the encapsulated version of the module, copy **ONLY** the contents of the `zc_plugins` directory into the matching `zc_plugins` directory of your ZenCart installation. **DO NOT** rename the `admin/` directory inside of the `zc_plugins/` directory!!! Copy the directories **AS IS**!!!
 
 You can find the full instructions to install the module, including how to obtain your USPS API credentials, by reading the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository.
 
 ### Upgrading/updating
 
-- Non-encapsulated version: **Overwrite ALL files of the old version.**
-- Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts. You will then be prompted to visit the Shipping Modules section of your admin area to effectuate the upgrade.
+- Traditional version: **Overwrite ALL files of the old version.**
+- Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts.
+
+Regardless of which method
 
 ## Uninstallation
 
-- **Non-encapsulated**  
-  To uninstall the non-encapsulated version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.
+- **Traditional**  
+  To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below.
 
 - **Encapsulated**  
   To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click "Uninstall". If desired, you can clean up the installation to have ZenCart delete the files for you.
@@ -101,19 +103,18 @@ This won't answer all the questions you may have, but it may answer some that I 
 
 Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT tested with ZenCart versions 1.5.4 and before. (ZenCart 1.5.4 and before only work with PHP versions earlier than PHP 5. You can see more details about the compatibility on the [ZenCart server requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/#php-version) page. This module has only been tested with PHP 7 and PHP 8.)
 
-|               |    Encapsulated    |  Non-Encapsulated  |
+|               |    Encapsulated    |     Traditional    |
 |---------------|:------------------:|:------------------:|
 | ZenCart 1.5.5 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.6 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.7 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.8 |         :x:        | :white_check_mark: |
-| ZenCart 2.0.0 |      :wrench:      | :white_check_mark: |
-| ZenCart 2.0.1 |      :wrench:      | :white_check_mark: |
+| ZenCart 2.0.0 |         :x:        | :white_check_mark: |
+| ZenCart 2.0.1 |         :x:        | :white_check_mark: |
 | ZenCart 2.1.0 | :white_check_mark: | :white_check_mark: |
 | ZenCart 2.2.0 |     :clipboard:    |     :clipboard:    |
 
 - :white_check_mark: = Fully supported
-- :x: = Not supported
 - :clipboard: = In testing, BUT it SHOULD work.
 - :wrench: = Can work but will need [core file edits](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) to make it work
 
