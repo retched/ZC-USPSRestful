@@ -94,11 +94,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'confirm') {
         
         <div class="container-fluid">
 
-            <h1>Uninstall and clean USPS Shipping (RESTful) Traditional</h1>
-            <p>By clicking this button below, you are confirming that you want to completely remove and uninstall the USPS Shipping (RESTful) module.</p>
-            <p>This will remove all configuration settings, database entries, and any other related data associated with the module.</p>
+            <h1><?=  MODULE_SHIPPING_USPSR_UNINSTALL_HEADER ?></h1>
+            <p><?=  MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM ?></p>
+            <h2><?= MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM_WARNING ?></h2>
             <?= zen_draw_form('uninstall_uspsr', FILENAME_USPS_UNINSTALL, 'action=confirm', 'post'); ?>
-                <input type="submit" class="btn btn-danger" value="Uninstall Module">
+                <input type="submit" class="btn btn-danger" value="<?= MODULE_SHIPPING_USPSR_UNINSTALL_BUTTON ?>">
             </form>
         </div>
 

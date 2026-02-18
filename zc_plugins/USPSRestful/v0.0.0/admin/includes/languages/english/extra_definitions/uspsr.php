@@ -46,6 +46,10 @@ define('MODULE_SHIPPING_USPSR_UPGRADE_AVAILABLE', MODULE_SHIPPING_USPSR_NOTICE .
 define('MODULE_SHIPPING_USPSR_DEVELOPMENTAL' , MODULE_SHIPPING_USPSR_NOTICE . "You are running a <strong>developmental</strong> version of the USPSr  module. Some things may not work as intended. Please be sure to report any problems on the <a href=\"https://github.com/retched/ZC-USPSRestful/issues\" target=\"_blank\">GitHub repository</a> or <a href=\"https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)\" target=\"_blank\">ZenCart support thread</a>.");
 define('MODULE_SHIPPING_USPSR_HANDLING_DAYS', MODULE_SHIPPING_USPSR_ERROR . 'The number of handling days must be a positive integer between 0 and 30! ');
 
+define('MODULE_SHIPPING_USPSR_UNINSTALL_BUTTON', 'Uninstall USPSr Module');
+define('MODULE_SHIPPING_USPSR_UNINSTALL_HEADER', 'Uninstall and remove USPS Shipping (RESTful) - Traditional Install');
+define('MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM', 'Are you sure you want to uninstall the USPS Shipping (RESTful) module?</p><p>This will remove all configuration settings, database entries, and any other related data (including files) associated with the module from your server.');
+define('MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM_WARNING', 'THIS IS A POINT OF NO RETURN');
 /**
  * Adding for the backarea
  */

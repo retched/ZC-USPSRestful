@@ -57,6 +57,11 @@ $define = [
     'MODULE_SHIPPING_USPSR_TEXT_ESTIMATED' => 'est.',
     'MODULE_SHIPPING_USPSR_TEXT_ESTIMATED_DELIVERY' => 'est. delivery',
 
+    'MODULE_SHIPPING_USPSR_UNINSTALL_BUTTON' => 'Uninstall USPSr Module',
+    'MODULE_SHIPPING_USPSR_UNINSTALL_HEADER' => 'Uninstall and remove USPS Shipping (RESTful) - Traditional Install',
+    'MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM' => 'Are you sure you want to uninstall the USPS Shipping (RESTful) module?</p><p>This will remove all configuration settings, database entries, and any other related data (including files) associated with the module from your server.',
+    'MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM_WARNING' => 'THIS IS A POINT OF NO RETURN',
+
 ];
 
 
