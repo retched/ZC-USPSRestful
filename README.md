@@ -86,7 +86,7 @@ Regardless of which method
 ## Uninstallation
 
 - **Traditional**  
-  To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. **NEW** Starting in version 1.8.0, a new menu item called "USPSr Uninstaller" will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.
+  To uninstall the traditional version, first uninstall the module from your Shipping Modules page if it was active. Then delete each of the files listed below. (\*\***NEW**\*\*) Starting in version 1.8.0, a new menu item called "USPSr Uninstaller" will be added to the Tools menu in your admin area that will automatically delete all related files and configurations related to this module.
 
 - **Encapsulated**  
   To uninstall the encapsulated version, simply visit your Plugin Manager (in the ZenCart admin area), then click on the row for USPS Restful, finally click "Uninstall". If desired, you can clean up the installation to have ZenCart delete the files for you.
