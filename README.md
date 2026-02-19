@@ -15,7 +15,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ### Version/Release History
 
-- 1.8.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0)  
+- 1.8.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.0)  
   Added uninstaller script for traditional installs. Fixed issue with Priority Mail International quote requests. Stopped allowing zero weight carts from being made.
 - 1.7.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0)  
   Added the ability to guesstimate international shipments deliveries.
