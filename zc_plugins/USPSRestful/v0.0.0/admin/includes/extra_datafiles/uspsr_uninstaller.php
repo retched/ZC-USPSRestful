@@ -25,4 +25,5 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-define('FILENAME_USPS_UNINSTALL', 'uspsr_uninstall');
+define('FILENAME_USPSR_UNINSTALL', 'uspsr_uninstall');
+define('FILENAME_USPSR_PURGE', 'uspsr_purge');

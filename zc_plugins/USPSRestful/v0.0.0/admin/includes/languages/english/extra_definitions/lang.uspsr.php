@@ -47,6 +47,7 @@ $define = [
     'MODULE_SHIPPING_USPSR_HANDLING_DAYS' => MODULE_SHIPPING_USPSR_ERROR . 'The number of handling days must be a positive integer between 0 and 30! ',
 
     'MODULE_SHIPPING_USPSR_UNINSTALL_COMPLETE' => MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully uninstalled and all related files have been removed.',
+    'MODULE_SHIPPING_USPSR_PURGE_COMPLETE' => MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully purged and all related files have been removed.',
     'MODULE_SHIPPING_USPSR_UNINSTALL_ERROR' => MODULE_SHIPPING_USPSR_ERROR . 'You cannot use this uninstaller because the module was installed by encapsulated means. Please use the standard uninstallation process from the <strong><a href="' . zen_href_link(FILENAME_MODULES, 'set=shipping&module=uspsr', 'NONSSL') . '">Admin > Modules > Shipping</a></strong> page to disable the module or use <strong><a href="' . zen_href_link(FILENAME_PLUGIN_MANAGER) . '">Admin > Modules > Plugin Manager</a></strong> to fully uninstall it.',
 
     // Adding because without this it breaks the backend
@@ -61,6 +62,12 @@ $define = [
     'MODULE_SHIPPING_USPSR_UNINSTALL_HEADER' => 'Uninstall and remove USPS Shipping (RESTful) - Traditional Install',
     'MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM' => 'Are you sure you want to uninstall the USPS Shipping (RESTful) module?</p><p>This will remove all configuration settings, database entries, and any other related data (including files) associated with the module from your server.',
     'MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM_WARNING' => 'THIS IS A POINT OF NO RETURN',
+    'MODULE_SHIPPING_USPSR_CONFIRM_CHECKBOX' => 'Click this checkbox to confirm!',
+    'MODULE_SHIPPING_USPSR_ERROR_NOCONFIRM' => MODULE_SHIPPING_USPSR_ERROR . 'You <strong>MUST</strong> confirm that you want to purge the installation.',
+
+    'MODULE_SHIPPING_USPSR_PURGE_BUTTON' => 'Purge USPSr Module',
+    'MODULE_SHIPPING_USPSR_PURGE_HEADER' => 'Uninstall, remove, and Purge USPS Shipping (RESTful)',
+    'MODULE_SHIPPING_USPSR_PURGE_CONFIRM' => 'Are you sure you want to <b>PURGE</b> the USPS Shipping (RESTful) module?</p><p>This will remove EVERYTHING associated with the module from your server. This option should be used if you made a mistake and copied everything from the download archive instead of just the two files. This script will delete <strong>EVERYTHING</strong> from USPSr off your server.',
 
 ];
 

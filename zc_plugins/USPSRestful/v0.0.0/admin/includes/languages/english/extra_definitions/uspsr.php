@@ -50,6 +50,14 @@ define('MODULE_SHIPPING_USPSR_UNINSTALL_BUTTON', 'Uninstall USPSr Module');
 define('MODULE_SHIPPING_USPSR_UNINSTALL_HEADER', 'Uninstall and remove USPS Shipping (RESTful) - Traditional Install');
 define('MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM', 'Are you sure you want to uninstall the USPS Shipping (RESTful) module?</p><p>This will remove all configuration settings, database entries, and any other related data (including files) associated with the module from your server.');
 define('MODULE_SHIPPING_USPSR_UNINSTALL_CONFIRM_WARNING', 'THIS IS A POINT OF NO RETURN');
+
+define('MODULE_SHIPPING_USPSR_PURGE_BUTTON', 'Purge USPSr Module');
+define('MODULE_SHIPPING_USPSR_PURGE_HEADER', 'Uninstall, remove, and Purge USPS Shipping (RESTful)');
+define('MODULE_SHIPPING_USPSR_PURGE_CONFIRM', 'Are you sure you want to <b>PURGE</b> the USPS Shipping (RESTful) module?</p><p>This will remove EVERYTHING associated with the module from your server. This option should be used if you made a mistake and copied everything from the download archive instead of just the two files. This script will delete <strong>EVERYTHING</strong> from USPSr off your server.');
+define('MODULE_SHIPPING_USPSR_CONFIRM_CHECKBOX', 'Click this checkbox to confirm!');
+define('MODULE_SHIPPING_USPSR_ERROR_NOCONFIRM' , MODULE_SHIPPING_USPSR_ERROR . 'You <strong>MUST</strong> confirm that you want to purge the installation.');
+define('MODULE_SHIPPING_USPSR_PURGE_COMPLETE', MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully purged and all related files have been removed.');
+
 /**
  * Adding for the backarea
  */
