@@ -72,10 +72,11 @@ if (!empty($module_listing->fields['configuration_value'])) {
     $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $updated_listing . "' WHERE configuration_key = 'MODULE_SHIPPING_INSTALLED'");
 }
 
+
+// NEXT: Delete all the files from the traditional install.
+
 // If the last character is not a slash, add it.
 $admin_area = rtrim($admin_area, '/\\') . DIRECTORY_SEPARATOR;
-
-// FINALLY: Delete all the files from the traditional install.
 $file_list = [
     DIR_FS_CATALOG . 'includes/functions/extra_functions/usps.extra_functions.php',
     DIR_FS_CATALOG . 'includes/languages/english/modules/shipping/uspsr.php',
@@ -94,6 +95,10 @@ $file_list = [
 foreach ($file_list as $file) {
     if (file_exists($file)) unlink($file);
 }
+
+// Lastly: Delete the page key, if it exists, from the menu.
+$db->Execute("DELETE FROM " . TABLE_ADMIN_PAGES . " WHERE page_key = 'uspsrUninstall'");
+
 
 // At this point all the files are now deleted. 
 echo "Unless error messages are shown above, USPSRestful has been purged from all places in the ZenCart system. (This file also no longer exists on your server.)";
