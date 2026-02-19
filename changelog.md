@@ -13,14 +13,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving add-ons to separate order-total line?
 - Add warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provide user instructions on how to upgrade tiers.
 
-## [UNRELEASED] - 0000-00-00
+## 1.8.0 - 2026-02-18
 
-### Added in [UNRELEASED]
+### Added in 1.8.0
 
 - Added an uninstall script for traditional installs of the module. This uninstaller will be available in the Tools menu, but can also be accessed by accessing `?cmd=uspsr_uninstall` in the admin area. This script will remove all files that you uploaded from the zip file (minus the USPS logo file), delete the entries in the configuration table, and self-delete the installer. This will only work if the module detects that it was not installed via encapsulation. [[#61](https://github.com/retched/ZC-USPSRestful/issues/61)]
 - Created a "Purge" script that will completely uninstall all parts of the module. It will remove files in the traditional install and the encapsulated install while removing any configuration keys related to the module. (I got annoyed when people were just copying the entire folder into the ZenCarts and then complaining about the white screens and error messages they would receive because of the conflicts.) The script will **NOT** be included in any release and can only be obtained from the GitHub repository. [[#114](https://github.com/retched/ZC-USPSRestful/issues/114)]
 
-### Fixed in [UNRELEASED]
+### Fixed in 1.8.0
 
 - Fixed a minor formatting issue that resulted in some HTML entities being logged as part of the debug log.
 - Clarified the encapsulated uninstaller to look specifically for a file named uspsr.php. (Not uspsr(some character).php).
