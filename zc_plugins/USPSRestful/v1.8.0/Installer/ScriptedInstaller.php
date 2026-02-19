@@ -107,6 +107,19 @@ class ScriptedInstaller extends ScriptedInstallBase
          */
 
         global $messageStack;
+
+        if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
+            $this->addConfigurationKey('MODULE_SHIPPING_USPSR_INSTALL', [
+                'configuration_title' => 'USPSr Module Installation Type',
+                'configuration_value' => '1', // Simple flag. The value doesn't matter, the important part is that it's installed. The rest of the keys will be installed when you enable the module from the Shipping Modules section of the admin. This is to prevent the uninstallation script from being visible on the menu.
+                'configuration_description' => '<strong>FOR INTERNAL USE ONLY!</strong> This shows that the module is an encapsulated install. If this key is present, the uninstallation link for the module will not appear on the menu, and the module will be uninstalled by removing this key. This is to prevent users from accidentally uninstalling an encapsulated version of the module and breaking their site.',
+                'configuration_group_id' => 6,
+                'sort_order' => 0,
+                'set_function' => '',
+                'use_function' => '',
+                'date_added' => 'now()'
+            ]);
+        }
         
         $messageStack->add_session('USPSRestful has started its upgrade. To finish the upgrade, please go to the <a href="' . zen_href_link(FILENAME_DEFAULT, "cmd=modules&set=shipping&module=uspsr") .'">Shipping Modules</a> section of the admin to complete the upgrade!', 'warning');
 
