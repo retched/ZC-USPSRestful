@@ -2957,11 +2957,11 @@ class uspsr extends base
         // Iterate over all the items in the order. If an item is flagged as products_virtual, that means the whole order is excluded.
         // Additionally deduct the value of the non-shipped item from the shipment_value
         foreach ($order->products as $item) {
-            if ($item['products_virtual'] === 1) {
+            if ($item['products_virtual'] == 1 || (preg_match('/^GIFT/i',$item['model']))) {
                 $this->shipment_value -= $item['final_price'];
                 $this->uninsured_value += $item['final_price'];
             } else {// Item isn't virtual, add its weight.
-                $this->items_weight += $item['products_weight'] * $item['qty'];
+                $this->items_weight += $item['weight'] * $item['qty'];
             }
 
             if (in_array(zen_get_products_category_id($item['id']), $key_values)) {
