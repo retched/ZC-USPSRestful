@@ -13,9 +13,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving add-ons to separate order-total line?
 - Add warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provide user instructions on how to upgrade tiers.
 
-## [UNRELEASED] - 0000-00-00
+## 1.8.1 - 2026-02-21
 
-### Fixed in [UNRELEASED]
+### Fixed in 1.8.1
 
 - Improved the uninstall script (`?cmd=uspsr_uninstall`) and purge (`?cmd=uspsr_purge`) scripts to run in the backend via either a link in the menu (traditional only) or direct access in the backend (traditional and encapsulated). This script is SEVERELY powerful. You MUST confirm that you want to run this script. (Which was noticebly absent on the first launch.) The "extras" folder version will still be available for advanced users and will not be included in the ZenCart Plugins Database release. (Will still be available on the GitHub repository.)
 - Fixed the weight checking algorithm that was introduced in 1.8.0. Older versions of ZenCart only have the `$order->products[$x]['weight']` field instead of `$order->products[$x]['products_weight']` that was being used. This caused an issue in earlier versions of ZenCart that didn't have that value set and thus was zero'd out which would mean the module has a zero weight.

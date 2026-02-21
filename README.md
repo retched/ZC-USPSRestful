@@ -221,18 +221,18 @@ For the update
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.8.1\admin\uspsr_purge.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.1\admin\uspsr_uninstall.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.1\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.1\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.1\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.1\admin\includes\languages\english\extra_definitions\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.1\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.1\catalog\includes\languages\english\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.1\catalog\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.1\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.1\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.8.1\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author
