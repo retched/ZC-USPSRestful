@@ -1,6 +1,6 @@
 # STOP! DO NOT COPY ALL THE FILES IN THIS DIRECTORY!!!
 
-![ZC-USPSRestful](https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=0&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
+![ZC-USPSRestful](https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=A%20USPS%20shipping%20module%20for%20ZenCart%20users&description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=0&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
 
 As the first line reads, DO NOT COPY ALL THE FILES INTO YOUR ZENCART!!
 
