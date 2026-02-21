@@ -10,11 +10,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 
 ## Module Version
 
-- Latest Release: [1.8.0](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+- Latest Release: [1.8.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
   _Released February 18, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
+- 1.8.1 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1)  
+  Bugfix for the weight checking introduced in 1.8.0
 - 1.8.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.0)  
   Added uninstaller script for traditional installs. Fixed issue with Priority Mail International quote requests. Stopped allowing zero weight carts from being made.
 - 1.7.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0)  
@@ -208,6 +210,7 @@ For the update
 - README_1st.md
 - README.html
 - changelog.md
+- \admin\uspsr_purge.php (NEW FILE)
 - \admin\uspsr_uninstall.php (NEW FILE)
 - \admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
 - \admin\includes\functions\extra_functions\usps.extra_functions.php
@@ -218,6 +221,7 @@ For the update
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php (NEW FILE)
 - \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
