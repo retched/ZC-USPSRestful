@@ -62,11 +62,3 @@ function uspsr_read_only($text, $key = '')
 
     return $text;
 }
-
-if (!function_exists('zen_draw_label')) { // Introduced in ZC 1.5.5
-  function zen_draw_label($text, $for, $parameters = ''){
-    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
-    return $label;
-  }
-
-}
