@@ -3833,17 +3833,21 @@ body,
         >
             <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true" data-config="{&quot;darkModeTheme&quot;:&quot;dark&quot;,&quot;lightModeTheme&quot;:&quot;default&quot;,&quot;maxTextSize&quot;:50000,&quot;clickDrag&quot;:&quot;alt&quot;,&quot;showControls&quot;:&quot;onHoverOrFocus&quot;,&quot;resizable&quot;:true,&quot;maxHeight&quot;:&quot;&quot;}"></span>
                 <h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
-<p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=This+module+provides+sellers+the+ability+to+offer+US+Postal+Service+shipping+rates+to+their+customers+during+checkout.&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
+<p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=A%20USPS%20shipping%20module%20for%20ZenCart%20users&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
 <p><img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP">  <img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0"> <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit">  <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release"></p>
 <p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
 <p>This module will work with the most recent versions of ZenCart using PHP 7 or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.8.0</a><br>
-<em>Released February 18, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.8.1</a><br>
+<em>Released February 24, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.8.2 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1">Download</a><br>
+Bugfix for encapsulated installs that were stuck trying to declare zen_draw_label.</li>
+<li>1.8.1 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1">Download</a><br>
+Bugfix for the weight checking introduced in 1.8.0</li>
 <li>1.8.0 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.0">Download</a><br>
 Added uninstaller script for traditional installs. Fixed issue with Priority Mail International quote requests. Stopped allowing zero weight carts from being made.</li>
 <li>1.7.0 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.7.0">Download</a><br>
@@ -4043,6 +4047,7 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - README_1st.md
 - README.html
 - changelog.md
+- \admin\uspsr_purge.php (NEW FILE)
 - \admin\uspsr_uninstall.php (NEW FILE)
 - \admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
 - \admin\includes\functions\extra_functions\usps.extra_functions.php
@@ -4053,17 +4058,18 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\uspsr_purge.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\uspsr_uninstall.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\languages\english\extra_definitions\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\languages\english\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.8.2\Installer\ScriptedInstaller.php
 </code></pre>
 <h2 id="support-the-author">Support the author</h2>
 <!-- Should this repository be forked, please remove this section -->

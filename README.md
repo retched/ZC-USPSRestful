@@ -11,10 +11,12 @@ This module will work with the most recent versions of ZenCart using PHP 7 or PH
 ## Module Version
 
 - Latest Release: [1.8.1](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released February 18, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
+  _Released February 24, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
+- 1.8.2 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1)  
+  Bugfix for encapsulated installs that were stuck trying to declare zen_draw_label.
 - 1.8.1 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1)  
   Bugfix for the weight checking introduced in 1.8.0
 - 1.8.0 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.0)  
@@ -221,18 +223,18 @@ For the update
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\uspsr_purge.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\uspsr_uninstall.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\admin\includes\languages\english\extra_definitions\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\languages\english\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v1.8.2\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v1.8.2\Installer\ScriptedInstaller.php
 ```
 
 ## Support the author
