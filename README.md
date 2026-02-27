@@ -16,7 +16,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 ### Version/Release History
 
 - 1.8.4 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.4)  
-  Fixed an issue that was caused by the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.
+  Fixed an issue that was caused when the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.
 - 1.8.3 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.3)  
   Bugfix for the traditional installer that kept trying to install the link to the uninstaller to the database. Bugfix for an add-on that doesn't have a service code.
 - 1.8.2 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.2)  
