@@ -665,10 +665,16 @@ class uspsr extends base
                 // ---------------------------------------------
                 if (isset($opt['extraServices'])) {
                     foreach ($opt['extraServices'] as $svc) {
-                        $lookup[$name]['extraService'][$svc['extraService']] = $svc;
+                        if (isset($svc['extraService'])) {
+                            $lookup[$name]['extraService'][$svc['extraService']] = $svc;
+                        } else {
+                            if ($svc['name'] == 'Registered Mail COD Charge') {
+                                // This is a special case since the API doesn't return a code for this service, but we need to track it.
+                                $lookup[$name]['extraService']['RMCC'] = $svc;
+                            }
+                        }
                     }
                 }
-
             } // Done with iterating the returned rates
 
             $message = "\n";

@@ -307,6 +307,7 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         934 => ['Insurance Restricted Delivery', 1 + 4],
         856 => ['Live Animal Transportation Fee', 1],
         857 => ['Hazardous Materials', 1 + 2],
+     'RMCC' => ['Registered Mail COD (Collect on Delivery) Charge', 1], // This is a special case since the API doesn't return a code for this service, but we need to track it.
     ];
 
     foreach ($options as $code => $service) {
@@ -372,6 +373,7 @@ function zen_cfg_uspsr_extraservices_display($key_value)
         934 => 'Insurance Restricted Delivery',
         856 => 'Live Animal Transportation Fee',
         857 => 'Hazardous Materials',
+     'RMCC' => 'Registered Mail COD Charge', // This is a special case since the API doesn't return a code for this service, but we need to track it.
     ];
 
     if (!empty($key_values)) {
