@@ -5,10 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Planned
 
-- ~~Add support for the Shipping Boxes Manager plugin OR~~ figure out what the Length, Width, and Height boxes all do.
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will be a separate repo.)_
-- Work on incorporating into Advanced Shipping Manager.
+- Work on incorporating into Advanced Shipper Manager.
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
 - Moving add-ons to separate order-total line?
 
@@ -17,7 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Added in [UNRELEASED]
 
 - Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provides user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request.)
-- Added the PHP Version and the ZenCart version into the Debug report. (You would be surprised on how many people forgot to include this information on any bug reports.)
+- Added the PHP Version and the ZenCart version into the Debug report. (You would be surprised on how many people forgot to include this information on any bug reports or logs they send in.)
 
 ## Fixed in [UNRELEASED]
 
