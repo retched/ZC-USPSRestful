@@ -11,11 +11,11 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 ## Module Version
 
 - Latest Release: [1.8.3](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released February 26, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
+  _Released February 27, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
-- 1.8.3 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v0.0.0)  
+- 1.8.3 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.3)  
   Bugfix for the traditional installer that kept trying to install the link to the uninstaller to the database. Bugfix for an add-on that doesn't have a service code.
 - 1.8.2 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.2)  
   Bugfix for encapsulated installs that were stuck trying to declare `zen_draw_label`.
@@ -126,7 +126,9 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 - :x: = Not supported
 - :clipboard: = In testing, BUT it SHOULD work.
 
-**UPDATE**: There IS a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it might be a bit behind in regards to updates. I will work on this one separately. I'm primarily focused on newer versions of PHP and ZenCart. (Please upgrade if you can.)
+### What about a PHP 5 version? I can't upgrade to PHP 7/8.
+
+I cannot stress this enough, **you should upgrade to PHP 7 or PHP 8**. That said, a version is currently being developed on a separate repository to accommodate users of PHP 5 compatible ZenCarts (ZenCart 1.5.x and 1.3.x). This requires a major rewrite of the entire module and will take time. There is a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it is based on an earlier version of this module. I'm primarily focused on newer versions of PHP and ZenCart. (Again, please upgrade if you can.)
 
 ### What is the difference between this version and the original USPS module?
 
@@ -214,9 +216,9 @@ For the update
 - README_1st.md
 - README.html
 - changelog.md
-- \admin\uspsr_purge.php (NEW FILE)
-- \admin\uspsr_uninstall.php (NEW FILE)
-- \admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \admin\uspsr_purge.php
+- \admin\uspsr_uninstall.php
+- \admin\includes\extra_datafiles\uspsr_uninstaller.php
 - \admin\includes\functions\extra_functions\usps.extra_functions.php
 - \admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - \admin\includes\languages\english\extra_definitions\uspsr.php
@@ -225,9 +227,9 @@ For the update
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
-- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
 - \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\uspsr.php
