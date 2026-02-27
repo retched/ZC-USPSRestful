@@ -13,6 +13,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving add-ons to separate order-total line?
 - Add warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provide user instructions on how to upgrade tiers.
 
+## [UNRELEASED] - 0000-00-00
+
+## Fixed in [UNRELEASED]
+
+- Fixed an issue that would generate PHP warning messages when a certain extraService was returned with no "extraService" code in the API. Resolved that by assigning it a psuedo-code and gave it a selection in the admin area. (This is a temporary fix until the API inevitably changes and gives it a number.) [[#120](https://github.com/retched/ZC-USPSRestful/issues/120)]
+
 ## 1.8.2 - 2026-02-24
 
 ### Fixed in 1.8.2
