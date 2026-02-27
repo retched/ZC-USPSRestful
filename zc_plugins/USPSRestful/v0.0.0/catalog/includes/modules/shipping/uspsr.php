@@ -2860,7 +2860,7 @@ class uspsr extends base
             $this->bearerExpiration = (int)$expiration_time;
 
             // Check for which version of 'api_products' is returned. If the value is [Public Access I], send a warning this is the weakest level of access and may cause 429 issues.
-            if (isset($body['api_products']) && (trim((string)$body['api_products']) === '[Public Access I]') && defined('IS_ADMIN_FLAG')) {
+            if (isset($body['api_products']) && (in_array((string)$body['api_products'], ['[Public Access]', '[Public Access I]'])) && (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG === true)) {
                 global $messageStack;
                 $messageStack->add_session(MODULE_SHIPPING_USPSR_WARNING_LOW_ACCESS, 'warning');
             }
