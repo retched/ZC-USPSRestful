@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Fixed in [UNRELEASED]
 
 - Fixed an issue that would generate PHP warning messages when a certain extraService was returned with no "extraService" code in the API. Resolved that by assigning it a psuedo-code and gave it a selection in the admin area. (This is a temporary fix until the API inevitably changes and gives it a number.) [[#120](https://github.com/retched/ZC-USPSRestful/issues/120)]
+- Fixed an issue that had the USPSr module try to run the DB call to install the Tools menu link to add the installer twice. (Once on upgrade and once on the same initial run.) Since the "Define" wasn't properly in place, it effectively tried to go at it twice. This generated an error. Now the module will check to see if the admin page exists first (using the ZenCart function `zen_page_key_exists`), and if it doesn't, THEN try to install the module link. [[#121](https://github.com/retched/ZC-USPSRestful/issues/121)]
 
 ## 1.8.2 - 2026-02-24
 

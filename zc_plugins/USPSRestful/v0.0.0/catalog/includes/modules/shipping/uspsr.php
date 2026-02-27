@@ -1605,11 +1605,11 @@ class uspsr extends base
             'date_added' => 'now()'
         ]);
 
-        if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
+        if (!defined('MODULE_SHIPPING_USPSR_INSTALL') && !zen_page_key_exists('uspsrUninstall')) {
             // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
             // Add the Admin Page link for the module's uninstallation.
             global $db;
-            $db->Execute("INSERT INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 14000)");
+            $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 14000)");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_INSTALLED');
@@ -2211,11 +2211,14 @@ class uspsr extends base
                 case "v1.6.1": // Released 2025-12-19: No further changes
                 case "v1.6.2": // Released 2025-12-20: No further changes
                 case "v1.7.0": // Released 2026-01-19: No database changes, only adding in a new Admin Page for the uninstallation of the module.
-                    if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
+                case "v1.8.0": // Released 2026-02-18: No changes, but this is a repair release
+                case "v1.8.1": // Released 2026-02-21: No changes, but this is a repair release
+                case "v1.8.2": // Released 2026-02-24: No changes, but this is a repair release
+                    if (!defined('MODULE_SHIPPING_USPSR_INSTALL') && !zen_page_key_exists('uspsrUninstall')) {
                         // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
                         // Add the Admin Page link for the module's uninstallation.
                         global $db;
-                        $db->Execute("INSERT INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
+                        $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
                     }
                     break;
             }
