@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Added in [UNRELEASED]
 
 - Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I") in the admin backend. (You'll normally see this when you install the module or upgrade from a version pre 1.8.x.) The warning will provide the user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request. So in theory, you have at best 30 requests.)
-- Added the PHP Version and the ZenCart version into the Debug report. (You would be surprised on how many people forgot to include this information on any bug reports or logs they send in.)
+- Added the PHP Version, the ZenCart version, and installation method into the debug config report. (You would be surprised on how many people forgot to include this information on any bug reports or logs they send in.)
 
 ## Fixed in [UNRELEASED]
 
