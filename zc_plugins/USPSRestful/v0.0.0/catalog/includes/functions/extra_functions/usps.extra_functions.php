@@ -183,7 +183,7 @@ function zen_cfg_uspsr_services($select_array, $key_value, $key = '')
                     '/Machinable( DDU)?/',
                     '/(Basic|Single-Piece)/i',
                     '/USPS\s+/',
-                    '/Non-Soft Pack Tier \d+/',
+                    '/(Non-)?Soft Pack Tier \d+/',
                 ],
                 [
                     'Intl',
@@ -424,7 +424,7 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
-                        '/Non-Soft Pack Tier \d+/',
+                        '/(Non-)?Soft Pack Tier \d+/',
                         '/\s{2,}/',
                     ],
                     [
@@ -472,7 +472,7 @@ function zen_cfg_uspsr_showservices($key_value)
                         '/Machinable\s+/',
                         '/(Basic|Single-Piece)/i',
                         '/USPS\s+/',
-                        '/Non-Soft Pack Tier \d+/',
+                        '/(Non-)?Soft Pack Tier \d+/',
                     ],
                     [
                         'Intl',
@@ -636,7 +636,7 @@ function uspsr_filter_gibberish($entry)
             '/Machinable( DDU)?/',
             '/(Basic|Single-Piece)/i',
             '/USPS\s+/',
-            '/Non-Soft Pack Tier \d+/',
+            '/(Non-)?Soft Pack Tier \d+/',
             '/Oversized/',
             '/Nonstandard/',
             '/(Non)?rectangular/i',
