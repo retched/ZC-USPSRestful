@@ -57,6 +57,7 @@ define('MODULE_SHIPPING_USPSR_PURGE_CONFIRM', 'Are you sure you want to <b>PURGE
 define('MODULE_SHIPPING_USPSR_CONFIRM_CHECKBOX', 'Click this checkbox to confirm!');
 define('MODULE_SHIPPING_USPSR_ERROR_NOCONFIRM' , MODULE_SHIPPING_USPSR_ERROR . 'You <strong>MUST</strong> confirm that you want to purge the installation.');
 define('MODULE_SHIPPING_USPSR_PURGE_COMPLETE', MODULE_SHIPPING_USPSR_NOTICE . 'The USPSr module has been successfully purged and all related files have been removed.');
+define('MODULE_SHIPPING_USPSR_WARNING_LOW_ACCESS', MODULE_SHIPPING_USPSR_NOTICE . 'Your API credentials only have [Public Access I] permissions. This is the lowest level of access and may cause you to have <pre>429 - Too Many Requests</pre> errors. If you start noticing USPS rates are not being returned, please consider <a href="https://github.com/retched/ZC-USPSRestful/wiki/Requesting-a-higher-quota-threshold" target="_blank">putting in a request for more API calls</a>.');
 
 /**
  * Adding for the backarea

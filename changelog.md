@@ -11,9 +11,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Work on incorporating into Advanced Shipping Manager.
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
 - Moving add-ons to separate order-total line?
-- Add warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provide user instructions on how to upgrade tiers.
 
 ## [UNRELEASED] - 0000-00-00
+
+## Added in [UNRELEASED]
+
+- Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provides user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request.)
+- Added the PHP Version and the ZenCart version into the Debug report. (You would be surprised on how many people forgot to include this information on any bug reports.)
 
 ## Fixed in [UNRELEASED]
 

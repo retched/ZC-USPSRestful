@@ -2853,6 +2853,12 @@ class uspsr extends base
             $this->bearerToken = $body['access_token'];
             $_SESSION['bearer_token'] = $this->bearerToken;
             $this->bearerExpiration = (int)$expiration_time;
+
+            // Check for which version of 'api_products' is returned. If the value is [Public Access I], send a warning this is the weakest level of access and may cause 429 issues.
+            if (isset($body['api_products']) && (trim((string)$body['api_products']) === '[Public Access I]') && defined('IS_ADMIN_FLAG')) {
+                global $messageStack;
+                $messageStack->add_session(MODULE_SHIPPING_USPSR_WARNING_LOW_ACCESS, 'warning');
+            }
         }
 
         return;
