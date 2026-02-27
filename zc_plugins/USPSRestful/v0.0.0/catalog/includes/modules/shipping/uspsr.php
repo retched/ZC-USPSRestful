@@ -1609,7 +1609,7 @@ class uspsr extends base
             // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
             // Add the Admin Page link for the module's uninstallation.
             global $db;
-            $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 14000)");
+            $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPSR_UNINSTALL', '', 'tools', 'Y', 14000)");
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_INSTALLED');
@@ -1675,7 +1675,7 @@ class uspsr extends base
 
         // Redirect to the Admin Page link for the module's final uninstallation.
         if (!defined('MODULE_SHIPPING_USPSR_INSTALL')) {
-            $messageStack->add_session('The module USPSr has been uninstalled and disabled. If you want to delete the files, you can visit the USPS Uninstaller to remove all associated files. Visit the <a href="' . zen_href_link(FILENAME_USPS_UNINSTALL) . '">USPSr Removal Tool</a> for additional steps.', 'success');
+            $messageStack->add_session('The module USPSr has been uninstalled and disabled. If you want to delete the files, you can visit the USPS Uninstaller to remove all associated files. Visit the <a href="' . zen_href_link(FILENAME_USPSR_UNINSTALL) . '">USPSr Removal Tool</a> for additional steps.', 'success');
         }
     }
 
@@ -2218,11 +2218,15 @@ class uspsr extends base
                 case "v1.8.0": // Released 2026-02-18: No changes, but this is a repair release
                 case "v1.8.1": // Released 2026-02-21: No changes, but this is a repair release
                 case "v1.8.2": // Released 2026-02-24: No changes, but this is a repair release
+                case "v1.8.3": // Released 2026-02-25: No changes, but this is a repair release
                     if (!defined('MODULE_SHIPPING_USPSR_INSTALL') && !zen_page_key_exists('uspsrUninstall')) {
                         // The "_INSTALL" flag was not defined, so this means this is not an encapsulated install.
                         // Add the Admin Page link for the module's uninstallation.
                         global $db;
-                        $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPS_UNINSTALL', '', 'tools', 'Y', 600)");
+                        $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPSR_UNINSTALL', '', 'tools', 'Y', 600)");
+                    } else {
+                        global $db;
+                        $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET main_page = 'FILENAME_USPSR_UNINSTALL' WHERE page_key = 'uspsrUninstall'");
                     }
                     break;
             }
