@@ -1734,7 +1734,8 @@ class uspsr extends base
         $message .= "=========================================================\n";
         $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . "\n";
         $message .= 'ZenCart Version: ' . PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR . "\n";
-        $message .= 'PHP Version: ' . PHP_VERSION . "\n\n";
+        $message .= 'PHP Version: ' . PHP_VERSION . "\n";
+        $message .= 'Installation Method: ' . (defined('MODULE_SHIPPING_USPSR_INSTALL') ? 'Encapsulated' : 'Manual') . "\n\n";
 
         $message .= 'USPSr Endpoint URI: ' . $this->api_base . "\n";
         $message .= 'Quote Request Rate Type: ' . MODULE_SHIPPING_USPSR_PRICING . "\n";
@@ -2474,6 +2475,10 @@ class uspsr extends base
 
             $services_ltr = $this->is_us_shipment ? $services_ltr_dmst : $services_ltr_intl;
 
+            // Filter out the non-numerical values of the services (to remove the RMCC value)
+            $services_ltr = array_values(array_filter($services_ltr, function ($service) {
+                return is_numeric($service) && $service > 0; // Keep only positive integers
+            }));
 
             // Letter Request Body
             $ltr_body = [
