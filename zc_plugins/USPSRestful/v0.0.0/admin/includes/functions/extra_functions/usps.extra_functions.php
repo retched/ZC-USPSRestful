@@ -39,11 +39,7 @@ if (file_exists(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/usps.extra_
     $pluginControlVersionClass = '\App\Models\PluginControlVersion';
 
     // Check that the classes exist before trying to use them
-    if (
-        class_exists($pluginManagerClass)
-        && class_exists($pluginControlClass)
-        && class_exists($pluginControlVersionClass)
-    ) {
+    if (class_exists($pluginManagerClass) && class_exists($pluginControlClass) && class_exists($pluginControlVersionClass)) {
         $plugin_manager = new $pluginManagerClass(new $pluginControlClass(), new $pluginControlVersionClass());
 
         // In the event someone added both versions, don't include this one.
