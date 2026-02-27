@@ -1,13 +1,13 @@
 <?php
 /**
  * USPS Shipping (RESTful) for Zen Cart
- * Version 0.0.0
+ * Version 1.8.3
  *
- * @copyright Copyright 2026 Paul Williams (retched)
+ * @copyright Portions Copyright 2004-2026 Zen Cart Team
  * @author Paul Williams (retched)
- * @version $Id: uspsr_uninstaller.php 0000-00-00 retched Version 0.0.0 $
- ****************************************************************************
-    USPS Shipping (RESTful) for Zen Cart
+ * @version $Id: manifest.php 2026-02-27 retched Version 1.8.3 $
+****************************************************************************
+    USPS Shipping (w/REST API) for Zen Cart
     A shipping module for ZenCart, an ecommerce platform
     Copyright (C) 2026 Paul Williams (retched / retched@hotmail.com)
 
@@ -25,5 +25,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ****************************************************************************/
 
-define('FILENAME_USPSR_UNINSTALL', 'uspsr_uninstall');
-define('FILENAME_USPSR_PURGE', 'uspsr_purge');
+return [
+    'pluginVersion' => 'v1.8.3',
+    'pluginName' => 'USPS Shipping (RESTful)',
+    'pluginDescription' => "This module provides sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS' REST API using OAuth.",
+    'pluginAuthor' => 'Paul Williams (retched)',
+    'pluginId' => 2395,
+    'zcVersions' => ['v210'],
+    'changelog' => 'https://github.com/retched/ZC-USPSRestful/releases',
+    'github_repo' => 'https://github.com/retched/ZC-USPSRestful',
+    'pluginGroups' => [],
+];
