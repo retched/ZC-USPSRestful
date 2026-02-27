@@ -134,15 +134,13 @@ I cannot stress this enough, **you should upgrade to PHP 7 or PHP 8**. That said
 
 The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced that the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based API which this codebase uses.
 
+### Why should I use this version versus the one that's out there now?
+
+The original "WebTools" API has been shut down as of January 25, 2026. That API as a whole is now considered retired and unusable. No new WebTools credentials will be issued. Any existing WebTools credentials will continue to work but will not be updated further and may be at any point be turned off by the USPS.
+
 ### I already have a `USERID` and `PASSWORD` from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?
 
 The old `USERID` and `PASSWORD` from the WebTools API are not valid for the new system. You will need to provision new credentials under the new USPS API system. Additionally, you SHOULD create an entire new USPS Business Account provided that you don't already have one for your business. The process is explained [on the USPS Developers website](https://developers.usps.com/getting-started) and on the [related wiki page](https://github.com/retched/ZC-USPSRestful/wiki/Getting%20Started#installing) from the Github repository. If you end up not getting quotes or the module disables itself, check to make sure that you are using actual OAuth Credentials and not the old WebTools API. Additionally, make sure you have configured your cart to ship from a United States based zipcode.
-
-### Why should I use this version versus the one that's out there now?
-
-The USPS created an "in-before-the-lock" situation concerning the original WebTools API. They will still allow access to the API by way of manually granting access, but they will read you the "riot act" with regards to enabling them. If you are still using the Web Tools API and have no issues accessing or using it, continue to use it. But know that in 2026, the older WebTools API will be completely disabled, and at that point, everyone will have to use the RESTful version of the API going forward.
-
-**UPDATE** USPS has begun forcing people off of WebTools if they believe your account is "inactive". Inactive can mean a bunch of things including not using the WebTools API to make a call in a long time, not acknowledging the deprecation changes, and more. If you're using WebTools currently, understand that USPS is set on forcing everyone to the OAuth version (which this module provides).
 
 ### What is this OAuth Token? Do I need to get one?
 
@@ -191,7 +189,7 @@ If you have these two defines set correctly, you do not have to convert anything
 
 ## Known Limitations/Issues
 
-- As mentioned above in the FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix, although if asked or suggested, I could theoretically put them back in the appropriate places.
+- As mentioned above in the FAQ, the registered trademark symbols do not appear in the API results sent from the server. This isn't something I care to fix as it is more effort to match them. I could theoretically put them back in the appropriate places, but I'd rather not. It is suggested that if you are using anything that needs the :tm: or ®, that you instead target just the names.
 
 ## Credits
 
