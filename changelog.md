@@ -11,6 +11,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
+## 1.8.4 - 2026-02-27
+
+## Fixed in 1.8.4
+
+- Resolved an error from a bad page name being inserted into the DB that would not let people run the USPSr Uninstaller. [[#126](https://github.com/retched/ZC-USPSRestful/issues/126)]
+- Fixed an issue that would create white page crashes on the customer side when a USPSr token would load in but the module tried to load an error message meant for the admin backend. [[#124](https://github.com/retched/ZC-USPSRestful/issues/124)]
+
 ## 1.8.3 - 2026-02-27
 
 ## Added in 1.8.3
