@@ -8,14 +8,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Refactor the version checker and updater (instead of branching the versions, just check to see if the key in question is installed.)
 - Refactor code to support PHP 5.x. _(Editor Note: This will be a separate repo.)_
 - Work on incorporating into Advanced Shipper Manager.
-- Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel.
+- Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
 ## [UNRELEASED] - 0000-00-00
 
 ## Added in [UNRELEASED]
 
-- Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I"). Provides user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request.)
+- Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I") in the admin backend. (You'll normally see this when you install the module or upgrade from a version pre 1.8.x.) The warning will provide the user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request. So in theory, you have at best 30 requests.)
 - Added the PHP Version and the ZenCart version into the Debug report. (You would be surprised on how many people forgot to include this information on any bug reports or logs they send in.)
 
 ## Fixed in [UNRELEASED]

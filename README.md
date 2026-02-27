@@ -16,7 +16,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 ### Version/Release History
 
 - 1.8.3 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v0.0.0)  
-  Several bugfixes to the installer and module.
+  Bugfix for the traditional installer that kept trying to install the link to the uninstaller to the database. Bugfix for an add-on that doesn't have a service code.
 - 1.8.2 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.2)  
   Bugfix for encapsulated installs that were stuck trying to declare `zen_draw_label`.
 - 1.8.1 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1)  
@@ -76,7 +76,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 
 Both versions (encapsulated and traditional) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)
 
-- **Traditional** (ZC 1.5.5+)  
+- **Traditional/Manual** (ZC 1.5.5+)  
   If you want to install the traditional version of the module, copy **ONLY** the `admin/` and `includes/` directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (**NOTE:** Be sure to rename the `admin/` directory to match your admin directory in your ZenCart installation. **DO NOT copy the `zc_plugins/` directory.**)
 
 - **Encapsulated** (ZC 2.1.0+)  

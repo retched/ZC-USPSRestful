@@ -3844,8 +3844,8 @@ body,
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
-<li>1.8.3 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.3">Download</a><br>
-Several bugfixes to the installer and module.</li>
+<li>1.8.3 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v0.0.0">Download</a><br>
+Bugfix for the traditional installer that kept trying to install the link to the uninstaller to the database. Bugfix for an add-on that doesn't have a service code.</li>
 <li>1.8.2 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.2">Download</a><br>
 Bugfix for encapsulated installs that were stuck trying to declare <code>zen_draw_label</code>.</li>
 <li>1.8.1 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.1">Download</a><br>
@@ -3905,7 +3905,7 @@ First &quot;release&quot;.</li>
 <p>Both versions (encapsulated and traditional) are now shared in the same release file on ZenCart. (The GitHub repository will still have a separate file.)</p>
 <ul>
 <li>
-<p><strong>Traditional</strong> (ZC 1.5.5+)<br>
+<p><strong>Traditional/Manual</strong> (ZC 1.5.5+)<br>
 If you want to install the traditional version of the module, copy <strong>ONLY</strong> the <code>admin/</code> and <code>includes/</code> directories in the root of the zip file to the matching directories in the root of your ZenCart installation. (<strong>NOTE:</strong> Be sure to rename the <code>admin/</code> directory to match your admin directory in your ZenCart installation. <strong>DO NOT copy the <code>zc_plugins/</code> directory.</strong>)</p>
 </li>
 <li>
@@ -4060,18 +4060,18 @@ To uninstall the encapsulated version, simply visit your Plugin Manager (in the 
 - \includes\functions\extra_functions\usps.extra_functions.php
 - \includes\modules\shipping\uspsr.php
 - \includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.8.3\admin\uspsr_purge.php (NEW FILE)
-- \zc_plugins\USPSRestful\v1.8.3\admin\uspsr_uninstall.php (NEW FILE)
-- \zc_plugins\USPSRestful\v1.8.3\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
-- \zc_plugins\USPSRestful\v1.8.3\admin\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v1.8.3\admin\includes\languages\english\extra_definitions\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.8.3\admin\includes\languages\english\extra_definitions\uspsr.php
-- \zc_plugins\USPSRestful\v1.8.3\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
-- \zc_plugins\USPSRestful\v1.8.3\catalog\includes\languages\english\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.8.3\catalog\includes\functions\extra_functions\usps.extra_functions.php
-- \zc_plugins\USPSRestful\v1.8.3\catalog\includes\modules\shipping\uspsr.php
-- \zc_plugins\USPSRestful\v1.8.3\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
-- \zc_plugins\USPSRestful\v1.8.3\Installer\ScriptedInstaller.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_purge.php (NEW FILE)
+- \zc_plugins\USPSRestful\v0.0.0\admin\uspsr_uninstall.php (NEW FILE)
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\extra_datafiles\uspsr_uninstaller.php (NEW FILE)
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\admin\includes\languages\english\extra_definitions\uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\lang.uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\languages\english\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\functions\extra_functions\usps.extra_functions.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\modules\shipping\uspsr.php
+- \zc_plugins\USPSRestful\v0.0.0\catalog\includes\templates\template_default\images\icons\shipping_usps.gif
+- \zc_plugins\USPSRestful\v0.0.0\Installer\ScriptedInstaller.php
 </code></pre>
 <h2 id="support-the-author">Support the author</h2>
 <!-- Should this repository be forked, please remove this section -->
