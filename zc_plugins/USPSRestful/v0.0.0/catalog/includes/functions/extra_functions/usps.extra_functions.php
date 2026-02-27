@@ -284,16 +284,17 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
     // Establish a list of codes.
     // Format: (API Code) => ['Name of Service', Bitfield (0 = Nope, 1 = Domestic Pkg, 2 = International Pkg, 4 = Domestic Letters, 8 = International Letters)]
     $options = [
-        910 => ['Certified Mail', 1 + 4],
         930 => ['Insurance', 1 + 2 + 4],
         925 => ['Priority Mail Express Merchandise Insurance', 1],
         923 => ['Adult Signature Restricted Delivery', 1],
         922 => ['Adult Signature Required', 1],
         940 => ['Registered Mail', 1 + 4 + 8],
+     'RMCC' => ['Registered Mail COD (Collect on Delivery) Charge', 1], // This is a special case since the API doesn't return a code for this service, but we need to track it.
         915 => ['Collect on Delivery', 1],
         955 => ['Return Receipt', 1 + 4 + 8],
         957 => ['Return Receipt Electronic', 1 + 4],
         921 => ['Signature Confirmation', 1],
+        910 => ['Certified Mail', 1 + 4],
         911 => ['Certified Mail Restricted Delivery', 1 + 4],
         912 => ['Certified Mail Adult Signature Required', 1],
         913 => ['Certified Mail Adult Signature Restricted Delivery', 1],
@@ -307,7 +308,6 @@ function zen_cfg_uspsr_extraservices($destination, $key_value, $key = '')
         934 => ['Insurance Restricted Delivery', 1 + 4],
         856 => ['Live Animal Transportation Fee', 1],
         857 => ['Hazardous Materials', 1 + 2],
-     'RMCC' => ['Registered Mail COD (Collect on Delivery) Charge', 1], // This is a special case since the API doesn't return a code for this service, but we need to track it.
     ];
 
     foreach ($options as $code => $service) {
@@ -350,22 +350,23 @@ function zen_cfg_uspsr_extraservices_display($key_value)
     $output = '';
     $options = [
         -1 => '', // Hidden placeholder, should not be visible.
-        910 => 'Certified Mail',
         930 => 'Insurance',
         925 => 'Priority Mail Express Merchandise Insurance',
         923 => 'Adult Signature Restricted Delivery',
         922 => 'Adult Signature Required',
         940 => 'Registered Mail',
+        'RMCC' => 'Registered Mail COD Charge', // This is a special case since the API doesn't return a code for this service, but we need to track it.
+        941 => 'Registered Mail Restricted Delivery',
         915 => 'Collect on Delivery',
         955 => 'Return Receipt',
         957 => 'Return Receipt Electronic',
         921 => 'Signature Confirmation',
+        910 => 'Certified Mail',
         911 => 'Certified Mail Restricted Delivery',
         912 => 'Certified Mail Adult Signature Required',
         913 => 'Certified Mail Adult Signature Restricted Delivery',
         917 => 'Collect on Delivery Restricted Delivery',
         924 => 'Signature Confirmation Restricted Delivery',
-        941 => 'Registered Mail Restricted Delivery',
         984 => 'Parcel Locker Delivery',
         981 => 'Signature Requested (Priority Mail Express only)',
         986 => 'PO to Addressee (Priority Mail Express only)',
@@ -373,7 +374,6 @@ function zen_cfg_uspsr_extraservices_display($key_value)
         934 => 'Insurance Restricted Delivery',
         856 => 'Live Animal Transportation Fee',
         857 => 'Hazardous Materials',
-     'RMCC' => 'Registered Mail COD Charge', // This is a special case since the API doesn't return a code for this service, but we need to track it.
     ];
 
     if (!empty($key_values)) {
