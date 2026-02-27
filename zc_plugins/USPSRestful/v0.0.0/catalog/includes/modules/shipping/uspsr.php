@@ -1732,7 +1732,10 @@ class uspsr extends base
         $message = '' . "\n\n";
         $message .= "USPSRestful Configuration Report\n";
         $message .= "=========================================================\n";
-        $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . "\n\n";
+        $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . "\n";
+        $message .= 'ZenCart Version: ' . PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR . "\n";
+        $message .= 'PHP Version: ' . PHP_VERSION . "\n\n";
+
         $message .= 'USPSr Endpoint URI: ' . $this->api_base . "\n";
         $message .= 'Quote Request Rate Type: ' . MODULE_SHIPPING_USPSR_PRICING . "\n";
         $message .= 'Quote from main_page: ' . $_GET['main_page'] . "\n";
