@@ -89,6 +89,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'confirm' && $_POST['validate'
     // Alert the user that the uninstallation is complete and redirect them to the main admin page.
     $messageStack->add_session(MODULE_SHIPPING_USPSR_PURGE_COMPLETE, 'success');
 
+    // Delete the Configuration Group too
+    $db->Execute("DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_title = 'USPS RESTful Shipping Module'");
+
     zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
 } elseif (isset($_GET['action']) && $_GET['action'] === 'confirm') {
     // The button was clicked but not confirm, send a messageStack error

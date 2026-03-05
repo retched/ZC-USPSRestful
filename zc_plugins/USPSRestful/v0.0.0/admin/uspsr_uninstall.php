@@ -79,6 +79,9 @@ if ((isset($_GET['action']) && $_GET['action'] === 'confirm') && (isset($_POST['
     // Delete the option for the Admin Page link for the module's uninstallation, if it exists.
     $db->Execute("DELETE FROM admin_pages WHERE page_key = 'uspsrUninstall'");
 
+    // Delete the Configuration Group too
+    $db->Execute("DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_title = 'USPS RESTful Shipping Module'");
+
     zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
 } elseif (isset($_GET['action']) && $_GET['action'] === 'confirm') {
     // The button was clicked but not confirm, send a messageStack error
