@@ -13,9 +13,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [UNRELEASED] - 0000-00-00
 
+## Added in [UNRELEASED]
+
+- Added new debug log message that will generate when the module installs or upgrades to the next version. Also improved the comparison mechanism between when the versios differ. (This prevents accidental downgrades.)
+
 ## Removed in [UNRELEASED]
 
 - Dropped the warning about lower tiered API access. The USPS has bumped all tiers from 60 requests per hour to 20,000 requests per day. At that point, if you have a high demand site that you're getting 10,000 hits per day, at that point you want to reach out and requests a higher level of access. [[#128](https://github.com/retched/ZC-USPSRestful/issues/128)]
+- Dropped the warning about lower-tiered API access. The USPS has bumped the request limits for basic tiers from 60 requests per hour to 20,000 requests per day. At that point, if you have a high-demand site that receives 10,000 hits per day, you should then reach out and request a higher level of access. [[#128](https://github.com/retched/ZC-USPSRestful/issues/128)]
 
 ## 1.8.4 - 2026-02-27
 
