@@ -1612,6 +1612,20 @@ class uspsr extends base
             $db->Execute("INSERT IGNORE INTO " . TABLE_ADMIN_PAGES . " (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('uspsrUninstall', 'BOX_USPSR_UNINSTALLER', 'FILENAME_USPSR_UNINSTALL', '', 'tools', 'Y', 14000)");
         }
 
+        // Create a log file saying the module was installed.
+        $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
+
+        $message = 'The USPS RESTful Shipping Module was installed on ' . date('Y-m-d H:i:s') . '.' . "\n\n";;
+
+        $message .= "USPSRestful Configuration Report - New Install\n";
+        $message .= "=========================================================\n";
+        $message .= 'USPSr build: ' . self::USPSR_CURRENT_VERSION. "\n";
+        $message .= 'ZenCart Version: ' . PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR . "\n";
+        $message .= 'PHP Version: ' . PHP_VERSION . "\n";
+        $message .= 'Installation Method: ' . (defined('MODULE_SHIPPING_USPSR_INSTALL') ? 'Encapsulated' : 'Manual') . "\n\n";
+
+        $this->uspsrDebug($message, true);
+
         $this->notify('NOTIFY_SHIPPING_USPS_INSTALLED');
     }
 
@@ -1683,9 +1697,9 @@ class uspsr extends base
      * If debug-logging is enabled, write the requested message to the log-file determined in this
      * module's class-constructor.
      */
-    protected function uspsrDebug($message)
+    protected function uspsrDebug($message, $override = false)
     {
-        if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) {
+        if (($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) || $override) {
             error_log(date('Y-m-d H:i:s') . ': ' . html_entity_decode($message) . PHP_EOL, 3, $this->debug_filename);
         }
     }
@@ -1794,7 +1808,7 @@ class uspsr extends base
         $message .= 'Uninsurable Portion: ' . $currencies->format($this->uninsured_value) . "\n";
         $message .= 'Insurable Price: ' . (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $currencies->format($this->shipment_value) : $currencies->format(5)) . "\n";
 
-        $this->uspsrDebug($message);
+        $this->uspsrDebug($message, $override);
     }
 
     public function update_status()
@@ -1877,7 +1891,7 @@ class uspsr extends base
 
     protected function adminInitializationChecks()
     {
-        global $messageStack;
+        global $messageStack, $db;
 
         if ($this->debug_enabled === true) {
             $this->title .= '<span class="alert"> (Debug is ON: ' . MODULE_SHIPPING_USPSR_DEBUG_MODE . ')</span>';
@@ -2231,6 +2245,21 @@ class uspsr extends base
                     break;
             }
 
+            // Create a log file saying the module was installed.
+            $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_UPGRADE_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
+
+            $message = 'The USPS RESTful Shipping Module was upgrade on ' . date('Y-m-d H:i:s') . '.' . "\n\n";;
+
+            $message .= "USPSRestful Configuration Report - Upgrade\n";
+            $message .= "=========================================================\n";
+            $message .= 'USPSr build: ' . MODULE_SHIPPING_USPSR_VERSION . " -> " . self::USPSR_CURRENT_VERSION . "\n";
+            $message .= 'ZenCart Version: ' . PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR . "\n";
+            $message .= 'PHP Version: ' . PHP_VERSION . "\n";
+            $message .= 'Installation Method: ' . (defined('MODULE_SHIPPING_USPSR_INSTALL') ? 'Encapsulated' : 'Manual') . "\n\n";
+
+            $this->uspsrDebug($message, true);
+
+
             // After all this, update the modules version number as necessary.
             $this->updateConfigurationKey('MODULE_SHIPPING_USPSR_VERSION', [
                 'configuration_value' => self::USPSR_CURRENT_VERSION,
@@ -2239,7 +2268,7 @@ class uspsr extends base
             ]);
 
             // The applies to all versions BEFORE 1.3.0
-            if (version_compare(str_replace("v", "", MODULE_SHIPPING_USPSR_VERSION), "1.3.0", "<")) {
+            if (version_compare(ltrim(MODULE_SHIPPING_USPSR_VERSION, 'v'), "1.3.0", "<")) {
                 /**
                  * Adding new methods into the shipping methods datatable.
                  *
