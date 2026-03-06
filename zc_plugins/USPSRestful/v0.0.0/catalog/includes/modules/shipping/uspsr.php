@@ -1808,7 +1808,7 @@ class uspsr extends base
         $message .= 'Uninsurable Portion: ' . $currencies->format($this->uninsured_value) . "\n";
         $message .= 'Insurable Price: ' . (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $currencies->format($this->shipment_value) : $currencies->format(5)) . "\n";
 
-        $this->uspsrDebug($message, $override);
+        $this->uspsrDebug($message);
     }
 
     public function update_status()
