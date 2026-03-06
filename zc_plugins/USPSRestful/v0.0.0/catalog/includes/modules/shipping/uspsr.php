@@ -2248,7 +2248,7 @@ class uspsr extends base
             // Create a log file saying the module was installed.
             $this->debug_filename = DIR_FS_LOGS . '/SHIP_uspsr_Debug_UPGRADE_' . (IS_ADMIN_FLAG ? 'adm_' : '') . date('Ymd_His') . '.log';
 
-            $message = 'The USPS RESTful Shipping Module was upgrade on ' . date('Y-m-d H:i:s') . '.' . "\n\n";;
+            $message = 'The USPS RESTful Shipping Module was upgraded on ' . date('Y-m-d H:i:s') . '.' . "\n\n";;
 
             $message .= "USPSRestful Configuration Report - Upgrade\n";
             $message .= "=========================================================\n";
