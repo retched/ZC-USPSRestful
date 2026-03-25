@@ -36,8 +36,9 @@ body:
         - 1.8.1
         - 1.8.2
         - 1.8.3
+        - 1.8.4
         - 0.0.0 (pulled off of repo)
-      default: 22
+      default: 23
     validations:
       required: true
   - type: dropdown
