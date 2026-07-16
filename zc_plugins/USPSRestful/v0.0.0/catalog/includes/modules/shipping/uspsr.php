@@ -406,17 +406,35 @@ class uspsr extends base
         $this->_calcCart();
         $this->quoteLogConfiguration();
 
-        // Create the main quotes (both letters and packages)
-        // Remove the tare weight from the quote weight first. If there is no weight, don't send.
-        if ($this->items_weight > 0) $this->_getQuote();
+        // === POLISHED ZERO-WEIGHT HANDLING === (from dbltoe on ZC forums)
+        // Initialize these to prevent json_decode(null) deprecation warnings in PHP 8.4+
+        // when the cart contains only free shipping items (weight = 0).
+        $this->pkgQuote = '';
+        $this->ltrQuote = '';
+        $this->uspsStandards = [];
+
+
+        // Skip USPS API calls entirely for zero-weight carts.
+        // Free shipping / zero-weight items are now properly handled by the core
+        // Free Shipper + Free Charger modules.
+        if ($this->items_weight > 0) {
+            $this->_getQuote();
+        } else {
+            $this->uspsrDebug('Skipping USPS quote request: items_weight is zero (free shipping item).');
+        }
        
         // There are two quote fields being used a package
         
         // Start with package quote
         $uspsQuote = json_decode($this->pkgQuote, TRUE);
-        
+        if (!is_array($uspsQuote)) {
+            $uspsQuote = [];
+        }
+
+
         // Notifier brought forward
         $this->notify('NOTIFY_SHIPPING_USPS_AFTER_GETQUOTE', [], $order, $this->quote_weight, $shipping_num_boxes, $this->dimensions, $uspsQuote);
+
 
         if (!empty($uspsQuote['error'])) {
             // There was an error with the package quote, so prefix the title with "Packages: "
@@ -426,31 +444,39 @@ class uspsr extends base
             ];
         }
 
+
         // Take the Letters Quote and add it to a temp holder
         $_letter = json_decode($this->ltrQuote, TRUE);
 
+
         // If there isn't a quote in letters don't bother.
-        if (isset($_letter['rates'])) {
-            // Force the details of the Letter Request to match the other pieces from packages (adding a Mail Class to match Standards result, productName, and processingCategory)
-            $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING); // This should yield something: FIRST-CLASS_MAIL_FLATS
-            $_letter['rates'][0]['productName'] = ($this->is_us_shipment ? 'First-Class Mail Letter' : 'First-Class Mail International Letter' );
+        if (is_array($_letter) && isset($_letter['rates'])) {
+            // Force the details of the Letter Request to match the other pieces from packages
+            $_letter['rates'][0]['mailClass'] .= "_" . strtoupper(MODULE_SHIPPING_USPSR_LTR_PROCESSING);
+            $_letter['rates'][0]['productName'] = ($this->is_us_shipment ? 'First-Class Mail Letter' : 'First-Class Mail International Letter');
             $_letter['rates'][0]['processingCategory'] = MODULE_SHIPPING_USPSR_LTR_PROCESSING;
 
-            # Bug fix for letters since the Domestic metered rate from the API is four cents off. (International seems to come through as normal.)
-            # @todo Maybe toggle if First Class Mail is metered or not?
+
+            // Add the 4 cent surcharge for non-metered letters (The API doesn't return the surcharge, so we have to add it manually)
             if ($this->is_us_shipment) {
                 $_letter['rates'][0]['price'] += 0.04;
                 $_letter['totalBasePrice'] += 0.04;
             }
 
+
             $uspsQuote['rateOptions'][] = $_letter;
-        } else { // We likely have an error, so add that error to the list of errors.
 
-            $this->errors[] = [
-                'message' => "Letters: " . $_letter['error']['message'],
-                'code' => $_letter['error']['code']
-            ];
 
+        } else {
+            // Safe handling for zero-weight carts or when no letter rates are returned
+            if (is_array($_letter) && isset($_letter['error']['message']) && isset($_letter['error']['code'])) {
+                $this->errors[] = [
+                    'message' => "Letters: " . $_letter['error']['message'],
+                    'code' => $_letter['error']['code']
+                ];
+            } else {
+                $this->uspsrDebug('No valid letter quote response (zero weight cart or no letter services configured).');
+            }
         }
 
         if (isset($uspsQuote['rateOptions']) && is_array($uspsQuote['rateOptions'])) {
@@ -1037,15 +1063,15 @@ class uspsr extends base
         }
 
         if ($this->items_weight <= 0) {
-
-            // If the total weight of the order is 0 or less: this can't be correct. Output an error message.
+            // Zero weight cart — Free Shipper + Free Charger modules are handling this.
+            // Return no methods so we don't interfere with other shipping/payment options.
             $this->quotes = [
                 'id' => $this->code,
                 'icon' => zen_image($this->icon),
                 'module' => $this->title,
                 'methods' => [],
-                'error' => MODULE_SHIPPING_NO_WEIGHT,
             ];
+
 
         } elseif (empty($build_quotes) && empty($this->errors)) {
 
