@@ -593,6 +593,18 @@ body,
   outline: none;
 }
 
+.github-markdown-body p,
+.github-markdown-body blockquote,
+.github-markdown-body ul,
+.github-markdown-body ol,
+.github-markdown-body dl,
+.github-markdown-body table,
+.github-markdown-body pre,
+.github-markdown-body details {
+  margin-top: 0;
+  margin-bottom: var(--base-size-16);
+}
+
 .github-markdown-body blockquote>:first-child {
   margin-top: 0;
 }
@@ -3831,21 +3843,24 @@ body,
             data-light-theme="light"
             data-dark-theme="dark"
         >
-            <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true" data-config="{&quot;darkModeTheme&quot;:&quot;dark&quot;,&quot;lightModeTheme&quot;:&quot;default&quot;,&quot;maxTextSize&quot;:50000,&quot;clickDrag&quot;:&quot;alt&quot;,&quot;showControls&quot;:&quot;onHoverOrFocus&quot;,&quot;resizable&quot;:true,&quot;maxHeight&quot;:&quot;&quot;}"></span>
-                <h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
-<p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=A%20USPS%20shipping%20module%20for%20ZenCart%20users&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
+            <div class="github-markdown-content"><span id="markdown-mermaid" aria-hidden="true" data-config="{&quot;darkModeTheme&quot;:&quot;default&quot;,&quot;lightModeTheme&quot;:&quot;default&quot;,&quot;maxTextSize&quot;:50000,&quot;clickDrag&quot;:&quot;alt&quot;,&quot;showControls&quot;:&quot;onHoverOrFocus&quot;,&quot;resizable&quot;:true,&quot;maxHeight&quot;:&quot;&quot;}"></span>
+                <span id="markdown-mermaid" aria-hidden="true" data-config="{&quot;darkModeTheme&quot;:&quot;vscode&quot;,&quot;lightModeTheme&quot;:&quot;vscode&quot;,&quot;maxTextSize&quot;:50000,&quot;clickDrag&quot;:&quot;alt&quot;,&quot;showControls&quot;:&quot;onHoverOrFocus&quot;,&quot;resizable&quot;:true,&quot;maxHeight&quot;:&quot;&quot;}"></span>
+				<h1 id="usps-shipping-restful-for-zen-cart">USPS Shipping (RESTful) for Zen Cart</h1>
+<p><img src="https://socialify.git.ci/retched/ZC-USPSRestful/image?custom_description=A%20USPS%20shipping%20module%20for%20ZenCart%20for%20PHP%207.1%2B%20%2F%20PHP%208&amp;description=1&amp;font=Inter&amp;forks=1&amp;issues=1&amp;language=1&amp;name=1&amp;owner=0&amp;pattern=Signal&amp;pulls=1&amp;stargazers=1&amp;theme=Auto" alt="ZC-USPSRestful"></p>
 <p><img src="https://img.shields.io/badge/php-purple?style=flat&amp;logo=php&amp;logoColor=white&amp;labelColor=black" alt="Coded with PHP">  <img src="https://img.shields.io/badge/license-GPL-black?style=flat&amp;logoColor=black&amp;label=license&amp;labelColor=black&amp;color=851185" alt="License via GPL 3.0"> <img src="https://badgen.net/github/last-commit/retched/ZC-USPSRestful?color=851185&amp;labelColor=white" alt="Last Commit">  <img src="https://badgen.net/github/release/retched/ZC-USPSRestful/stable?color=851185&amp;labelColor=black&amp;labelColor=white" alt="Latest Release"></p>
 <p>This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.</p>
-<p>This module will work with the most recent versions of ZenCart using PHP 7 (at least PHP 7.1) or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0.</p>
+<p>This module will work with the most recent versions of ZenCart using PHP 7 (at least PHP 7.1) or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0. (Should work with 2.2.x but hasn't been tested directly.)</p>
 <h2 id="module-version">Module Version</h2>
 <ul>
-<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.8.4</a><br>
-<em>Released February 27, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
+<li>Latest Release: <a href="https://github.com/retched/ZC-USPSRestful/releases/latest">1.8.5</a><br>
+<em>Released July 16, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0.</em></li>
 </ul>
 <h3 id="versionrelease-history">Version/Release History</h3>
 <ul>
+<li>1.8.5 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.5">Download</a><br>
+Fixed an issue with zero weight carts that would cause the module to not request or display the rates. Dropped the API warning for version.</li>
 <li>1.8.4 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.4">Download</a><br>
-Fixed an issue that was caused by the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.</li>
+Fixed an issue that was caused when the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.</li>
 <li>1.8.3 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.3">Download</a><br>
 Bugfix for the traditional installer that kept trying to install the link to the uninstaller to the database. Bugfix for an add-on that doesn't have a service code.</li>
 <li>1.8.2 <a href="https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.2">Download</a><br>

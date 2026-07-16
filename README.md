@@ -6,16 +6,16 @@
 
 This module provides ZenCart sellers the ability to offer United States Postal Service (USPS) shipping rates to their customers during checkout. This is done by pulling the rates directly from the USPS RestAPI.
 
-This module will work with the most recent versions of ZenCart using PHP 7 (at least PHP 7.1) or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0. (Should work with 2.2.x.)
+This module will work with the most recent versions of ZenCart using PHP 7 (at least PHP 7.1) or PHP 8. It has been tested with Zencart 1.5.5 and onward up to 2.1.0. (Should work with 2.2.x but hasn't been tested directly.)
 
 ## Module Version
 
-- Latest Release: [1.8.4](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released February 27, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
+- Latest Release: [1.8.5](https://github.com/retched/ZC-USPSRestful/releases/latest)  
+  _Released July 16, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
 
 ### Version/Release History
 
-- *[UNRELEASED]*  
+- 1.8.5 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.5)  
   Fixed an issue with zero weight carts that would cause the module to not request or display the rates. Dropped the API warning for version.
 - 1.8.4 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.4)  
   Fixed an issue that was caused when the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.
