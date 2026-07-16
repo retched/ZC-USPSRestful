@@ -15,7 +15,7 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 
 ### Version/Release History
 
-- *[UNRELEASED]*
+- *[UNRELEASED]*  
   Fixed an issue with zero weight carts that would cause the module to not request or display the rates. Dropped the API warning for version.
 - 1.8.4 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.4)  
   Fixed an issue that was caused when the client side tried to display an error meant for admin side. Fixed an issue with the menu link for the uninstaler in traditional installs.
