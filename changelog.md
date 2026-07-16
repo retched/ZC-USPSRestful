@@ -11,17 +11,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
-## [UNRELEASED] - 0000-00-00
+## 1.8.5 - 2026-07-16
 
-## Added in [UNRELEASED]
+## Added in 1.8.5
 
 - Added new debug log message that will generate when the module installs or upgrades to the next version. Also improved the comparison mechanism between when the versios differ. (This prevents accidental downgrades.)
 
-## Removed in [UNRELEASED]
+## Removed in 1.8.5
 
 - Dropped the warning about lower-tiered API access. The USPS has bumped the request limits for basic tiers from 60 requests per hour to 10,000 requests per day. At that point, if you have a high-demand site that receives 10,000 hits per day, you should then reach out and request a higher level of access. [[#128](https://github.com/retched/ZC-USPSRestful/issues/128)]
 
-## Fixed in [UNRELEASED]
+## Fixed in 1.8.5
 
 - Once again fixed the issue of the zero weight carts not causing the cart to progress correctly. (This bug should have been fixed in 1.8.0 but it wasn't. dbltoe from the Forums gave a fix that should patch it). [[#133](https://github.com/retched/ZC-USPSRestful/pull/133)]
 
