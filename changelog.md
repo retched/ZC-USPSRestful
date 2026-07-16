@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Dropped the warning about lower-tiered API access. The USPS has bumped the request limits for basic tiers from 60 requests per hour to 10,000 requests per day. At that point, if you have a high-demand site that receives 10,000 hits per day, you should then reach out and request a higher level of access. [[#128](https://github.com/retched/ZC-USPSRestful/issues/128)]
 
+## Fixed in [UNRELEASED]
+
+- Once again fixed the issue of the zero weight carts not causing the cart to progress correctly. (This bug should have been fixed in 1.8.0 but it wasn't. dbltoe from the Forums gave a fix that should patch it). [[#133](https://github.com/retched/ZC-USPSRestful/pull/133)]
+
 ## 1.8.4 - 2026-02-27
 
 ## Fixed in 1.8.4
