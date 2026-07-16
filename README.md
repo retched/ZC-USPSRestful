@@ -207,6 +207,7 @@ For the update
 
 - retched (me)
 - lat9 and scottcwilson for their help with the inclusion of the functions file without duplicating it (this saved me a headache)
+- dbltoe for their help with the zero weight cart issue (fixed in 1.8.5)
 
 ## File Listing
 
