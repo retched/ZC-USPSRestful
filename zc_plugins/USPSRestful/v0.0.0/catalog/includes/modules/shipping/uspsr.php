@@ -2268,6 +2268,8 @@ class uspsr extends base
                         global $db;
                         $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET main_page = 'FILENAME_USPSR_UNINSTALL' WHERE page_key = 'uspsrUninstall'");
                     }
+                case "v1.8.4": // Released 2026-02-27: No changes, but this is a repair release
+                case "v1.8.5": // Released 2026-07-17: No major database changes.
                     break;
             }
 
