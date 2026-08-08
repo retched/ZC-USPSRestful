@@ -3030,7 +3030,8 @@ class uspsr extends base
         $this->insured_value = $this->shipment_value - $this->uninsured_value;
 
         // Breakout the category of exemptions for Media Mail
-        $key_values = preg_split('/[\s+]/', MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE);
+        // Categories can be separated by space or comma.
+        $key_values = preg_split('/[\s,+]/', MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE);
 
         // Iterate over all the items in the order. If an item is flagged as products_virtual, that means the whole order is excluded.
         // Additionally deduct the value of the non-shipped item from the shipment_value
