@@ -37,8 +37,9 @@ body:
         - 1.8.2
         - 1.8.3
         - 1.8.4
+        - 1.8.5
         - 0.0.0 (pulled off of repo)
-      default: 23
+      default: 24
     validations:
       required: true
   - type: dropdown
@@ -48,12 +49,12 @@ body:
       description: What version of ZenCart are you running? If you're running an older or non-published version, please selected "Older/Other" and describe in the "What happened?" section below.
       multiple: false
       options:
-        - 2.2.x (dev)
-        - 2.1.x (live)
+        - 2.2.x (live)
+        - 2.1.x
         - 2.0.x
         - 1.5.x
         - Older/Other
-      default: 1
+      default: 0
     validations:
       required: true
   - type: dropdown
