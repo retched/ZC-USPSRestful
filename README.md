@@ -93,7 +93,7 @@ You can find the full instructions to install the module, including how to obtai
 - Traditional version: **Overwrite ALL files of the old version.**
 - Encapsulated version: Simply upload the new release into the same `zc_plugins/` directory. Each release will have a separate folder containing that new version. (Example: Version `v1.0.0` will be uploaded into a folder named `v1.0.0`.) Once uploaded, visit the Plugin Manager in your admin area, select the USPSRestful line in the table, and hit the "Upgrade Available" button and follow the prompts.
 
-Regardless of which method
+Regardless of which install method is used, be sure that after you completed the steps above, visit the Shipping module listing to lock in the upgrade fully.
 
 ## Uninstallation
 
