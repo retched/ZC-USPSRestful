@@ -3029,8 +3029,35 @@ class uspsr extends base
         $this->shipment_value = (float)number_format(($order->info['subtotal'] > 0) ? ($order->info['subtotal'] + $this->orders_tax) : $_SESSION['cart']->total, 2);
         $this->insured_value = $this->shipment_value - $this->uninsured_value;
 
-        // Breakout the category of exemptions for Media Mail
-        $key_values = preg_split('/[\s+]/', MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE);
+        // Breakout the category of exemptions for Media Mail.
+        // Categories can be separated by whitespace or comma.
+        $key_values = preg_split('/[\s,]+/', MODULE_SHIPPING_USPSR_MEDIA_MAIL_EXCLUDE, -1, PREG_SPLIT_NO_EMPTY);
+
+        // Some items can be listed as a range of categories (like ID 55-60).
+        // Expand those ranges into individual category IDs.
+        $expanded_key_values = [];
+
+        foreach ($key_values as $value) {
+            if (strpos($value, '-') !== false) {
+                [$start, $end] = explode('-', $value, 2);
+
+                $start = (int)$start;
+                $end   = (int)$end;
+
+                // If the start is greater than the end, swap them.
+                if ($start > $end) {
+                    [$start, $end] = [$end, $start];
+                }
+
+                for ($i = $start; $i <= $end; $i++) {
+                    $expanded_key_values[] = $i;
+                }
+            } else {
+                $expanded_key_values[] = (int)$value;
+            }
+        }
+
+        $key_values = $expanded_key_values;
 
         // Iterate over all the items in the order. If an item is flagged as products_virtual, that means the whole order is excluded.
         // Additionally deduct the value of the non-shipped item from the shipment_value
