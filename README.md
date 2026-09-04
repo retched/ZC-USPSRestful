@@ -11,10 +11,13 @@ This module will work with the most recent versions of ZenCart using PHP 7 (at l
 ## Module Version
 
 - Latest Release: [1.8.5](https://github.com/retched/ZC-USPSRestful/releases/latest)  
-  _Released July 16, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._
+  _Released July 16, 2026 for ZenCart 1.5.5, 1.5.6, 1.5.7, 1.5.8, 2.0.x, 2.1.0._  
+  Update incoming: Version 1.8.6
 
 ### Version/Release History
 
+- 1.8.6 <!--[Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.6)-->  
+  Minor bug fixes to squelch an undefined constant error. Fixed zipcode listing to actually be zip and space separated. (Also added ranges.)
 - 1.8.5 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.5)  
   Fixed an issue with zero weight carts that would cause the module to not request or display the rates. Dropped the API warning for version.
 - 1.8.4 [Download](https://github.com/retched/ZC-USPSRestful/releases/tag/v1.8.4)  

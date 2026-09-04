@@ -11,6 +11,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
+## 1.8.6 - 0000-00-00
+
+## Fixed in 1.8.6
+
+- Fixed undefined constant warning that appeared in earlier versions of ZenCart (no Plugin Manager). [[#137](https://github.com/retched/ZC-USPSRestful/issues/137)]
+- Fixed an issue regarding the list of zip codes in the USPS Local. (Also added the ability to provide ranges.0 [[[#135](https://github.com/retched/ZC-USPSRestful/issues/135)]])
+
 ## 1.8.5 - 2026-07-16
 
 ## Added in 1.8.5
