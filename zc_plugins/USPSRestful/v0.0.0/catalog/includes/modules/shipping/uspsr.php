@@ -577,6 +577,16 @@ class uspsr extends base
                     $rate['totalBasePrice'] = $totalBasePrice ?? $rate['price']; // default to price if null/unset
 
                     // ---------------------------------------------
+                    // If there are any zero base price rates, skip them. 
+                    // This is a USPS API issue and can't be fixed by this script.
+                    // ---------------------------------------------
+
+                    if ($rate['totalBasePrice'] <= 0) {
+                        $this->uspsrDebug("Skipping rate for \"" . $rate['productName'] . "\": it has a zero or negative totalBasePrice.");
+                        continue;
+                    }
+
+                    // ---------------------------------------------
                     // Possible outcomes from the rate listings
                     // Possible outcomes:
                     // Priority Mail: Machinable + SP or Nonstandard + SP/DR/DN
