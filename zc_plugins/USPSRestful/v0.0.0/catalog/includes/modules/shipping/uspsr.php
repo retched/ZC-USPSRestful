@@ -558,7 +558,7 @@ class uspsr extends base
 
                 if ($totalBasePrice <= 0) {
                     $productName = $opt['rates'][0]['productName'] ?? $opt['rates'][0]['description'] ?? 'Unknown';
-                    $this->uspsrDebug("Skipping rate for \"" . $productName . "\": it has a zero or negative totalBasePrice.");
+                    $this->uspsrDebug("Skipping rate for \"" . trim($productName) . "\": it has a zero or negative totalBasePrice.");
                     continue;
                 }
 
