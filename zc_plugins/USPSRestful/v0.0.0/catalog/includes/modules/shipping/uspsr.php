@@ -2460,6 +2460,14 @@ class uspsr extends base
             }
         }
 
+        // Convert the weight to pounds if the weight setting is in kilograms.
+        if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === "kgs") {
+            $package_weight = (float) $shipping_weight * 2.20462;
+        } else {
+            $package_weight = $shipping_weight;
+        }
+
+        
         // Sort out each of the dimmensions as necessary.
 
         /**
@@ -2505,7 +2513,7 @@ class uspsr extends base
             $pkg_body = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 'destinationZIPCode' => $destination_zip,
-                'weight' => $shipping_weight,
+                'weight' => $package_weight,
                 'length' => $this->dimensions['pkg_length'],
                 'width' => $this->dimensions['pkg_width'],
                 'height' => $this->dimensions['pkg_height'],
@@ -2543,7 +2551,7 @@ class uspsr extends base
 
             // Letter Request Body
             $ltr_body = [
-                "weight" => $shipping_weight * 16, // The cart weight is in pounds, the letters API takes the request in ounces
+                "weight" => $package_weight * 16, // The cart weight is in pounds, the letters API takes the request in ounces
                 "length" => $this->dimensions['ltr_length'],
                 "height" => $this->dimensions['ltr_height'],
                 "thickness" => $this->dimensions['ltr_thickness'],
@@ -2592,7 +2600,13 @@ class uspsr extends base
 
             // Send pkg_body to make pkgQuote.
             $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-domestic');
-            $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-domestic');
+            
+            // If the order is heaver than 13 oz, don't make a letter request. The USPS API will return a guaranteed error if the weight is over 13 oz.
+            if ($package_weight <= 13/16) {
+                $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-domestic');
+            } else {
+                $this->uspsrDebug("SKIPPING Letter Request: Order is heavier than 13 oz");
+            }
 
             $this->notify('NOTIFY_SHIPPING_USPS_US_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
         } else { // It's not going to the US, so it's international
@@ -2639,7 +2653,9 @@ class uspsr extends base
 
             // Send pkg_body to make pkgQuote.
             $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-intl');
-            $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
+
+            // If the order is heaver than 15.994 oz, don't make a letter request. The USPS API will return a guaranteed error if the weight is over 15.994 oz.
+            if ($package_weight <= 0.999625) $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
 
             $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
             
