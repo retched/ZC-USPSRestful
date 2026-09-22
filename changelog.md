@@ -21,6 +21,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue that could cause the module to output a blank when there was no weight. Now the module will self cancel itself if the total items weight is zero or less. (A reminder that your items should have weights to them.)
 - Fixed an issue that might have caused the "Quotes not found" error message to display even if "Show Errors" was not selected in the configuration. Now if there are no quotes available, either because of no return from the API or no matching methods, the module will soft cancel (aka, it hides itself). If you want to display the "Please contact the store owner" message, enable "Show Errors" in the configuration.
 
+## Changed in 1.8.6
+
+- Stopped sending letter quote requests for items that are too heavy for First-Class Mail (13 oz) or First-Class Mail International (15.994 oz). (These will ALWAYS generate an error... so rather than waste the request call, don't send it.)
+
 ## 1.8.5 - 2026-07-16
 
 ## Added in 1.8.5
