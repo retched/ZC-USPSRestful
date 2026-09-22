@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
-## 1.8.6 - 2026-09-22
+## [1.8.6] - 2026-09-22
 
 ### Fixed in 1.8.6
 
@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Stopped sending letter quote requests for items that are too heavy for First-Class Mail (13 oz) or First-Class Mail International (15.994 oz). (These will ALWAYS generate an error... so rather than waste the request call, don't send it.)
 
-## 1.8.5 - 2026-07-16
+## [1.8.5] - 2026-07-16
 
 ### Added in 1.8.5
 
@@ -40,14 +40,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Once again fixed the issue of the zero weight carts not causing the cart to progress correctly. (This bug should have been fixed in 1.8.0 but it wasn't. dbltoe from the Forums gave a fix that should patch it). [[#133](https://github.com/retched/ZC-USPSRestful/pull/133)]
 
-## 1.8.4 - 2026-02-27
+## [1.8.4] - 2026-02-27
 
 ### Fixed in 1.8.4
 
 - Resolved an error from a bad page name being inserted into the DB that would not let people run the USPSr Uninstaller. [[#126](https://github.com/retched/ZC-USPSRestful/issues/126)]
 - Fixed an issue that would create white page crashes on the customer side when a USPSr token would load in but the module tried to load an error message meant for the admin backend. [[#124](https://github.com/retched/ZC-USPSRestful/issues/124)]
 
-## 1.8.3 - 2026-02-27
+## [1.8.3] - 2026-02-27
 
 ### Added in 1.8.3
 
@@ -60,13 +60,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue that had the USPSr module try to run the DB call to install the Tools menu link to add the uninstaller twice. (Once on upgrade and once on the same initial run.) Since the "Define" wasn't properly in place, it effectively tried to go at it twice. This generated an error. Now the module will check to see if the admin page exists first (using the ZenCart function `zen_page_key_exists`), and if it doesn't, THEN try to install the module link. [[#121](https://github.com/retched/ZC-USPSRestful/issues/121)]
 - Fixed the renaming algorithm of the USPS name returns to affect both "Non-Soft" and "Soft" returns. (This was an internal facing change and was kind of made redundant with the change in 1.5.0.)
 
-## 1.8.2 - 2026-02-24
+## [1.8.2] - 2026-02-24
 
 ### Fixed in 1.8.2
 
 - Fixed a white screen crash caused by the redeclaration of `zen_draw_label` that was meant for the PHP5 version of module. [[#117](https://github.com/retched/ZC-USPSRestful/issues/117)]
 
-## 1.8.1 - 2026-02-21
+## [1.8.1] - 2026-02-21
 
 ### Fixed in 1.8.1
 
@@ -74,7 +74,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed the weight checking algorithm that was introduced in 1.8.0. Older versions of ZenCart only have the `$order->products[$x]['weight']` field instead of `$order->products[$x]['products_weight']` that was being used. This caused an issue in earlier versions of ZenCart that didn't have that value set and thus was zero'd out which would mean the module has a zero weight.
 - Fixed a type-casting bug for product type check. (`=== 1` vs. `== 1` in short.) Also added a check for Gift Certificates to disqualify it from insurable value calculations.
 
-## 1.8.0 - 2026-02-18
+## [1.8.0] - 2026-02-18
 
 ### Added in 1.8.0
 
@@ -88,13 +88,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue (again) with the display of Priority Mail rates that were being hidden because of an uncaught Machinable/Nonstandard flag. This should work as necessary. This might pop up in other services, will keep an eye on it. [[#109](https://github.com/retched/ZC-USPSRestful/issues/109)]
 - Fixed an issue that allowed a shop owner to effectively send out zero weight carts. The module will now not send a quote request unless at least ONE item has a non-zero weight to it. [[#108](https://github.com/retched/ZC-USPSRestful/issues/108)]
 
-## 1.7.0 - 2026-01-19
+## [1.7.0] - 2026-01-19
 
 ### Added in 1.7.0
 
 - Added guesstimation of international shipment deliveries. Will warn customers that it varies by country but could be anywhere from 8 to as much as 30 days away. The handling time is added onto these ranges and displayed as a result. [[#105](https://github.com/retched/ZC-USPSRestful/issues/105)]
 
-## 1.6.2 - 2025-12-20
+## [1.6.2] - 2025-12-20
 
 ### Added in 1.6.2
 
@@ -108,13 +108,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - FINALLY got rid of the bug mentioned in [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]. This required a soft rewrite of the "read only" function. (Pretty much left the created "hidden" field off.) Will do more research into why this does not work.
 
-## 1.6.1 - 2025-12-18
+## [1.6.1] - 2025-12-18
 
 ### Fixed in 1.6.1
 
 - Fixed an issue that may cause upgrade/installation issues when a user upgrades an encapsulated install. (This was discovered after the 1.6.0 release. If you have a standard install, you can skip over this.)
 
-## 1.6.0 - 2025-12-17
+## [1.6.0] - 2025-12-17
 
 ### Changed in 1.6.0
 
@@ -130,14 +130,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed a potential issue when making service standards requests and the resultant JSON file isn't in the proper form. [[#93](https://github.com/retched/ZC-USPSRestful/issues/93)]
 - Fixed an issue that was preventing the configuration form from being submitted without an uninstall/reinstall on encapsulated installs during upgrading. [[#78](https://github.com/retched/ZC-USPSRestful/issues/78)]
 
-## 1.5.2 - 2025-10-19
+## [1.5.2] - 2025-10-19
 
 ### Fixed in 1.5.2
 
 - Fixed an issue that prevented international shipping rates from being displayed due to a deleted variable instead of the class property set up in 1.5.1. [[#86](https://github.com/retched/ZC-USPSRestful/issues/86)]
 - Fixed an issue that disadvantaged some users of First Class Mail International unnecessarily. Adjusted the default value of First Class Mail International to compensate. (If you're using First Class Mail International, this value will not be automatically adjusted on existed installs. For pounds, you can safely change the value to 0.999625 as First Class Mail International's maximum. For kilograms, you can safely change the maximum value to 0.4534228 as its maximum instead.)
 
-## 1.5.1 - 2025-10-17
+## [1.5.1] - 2025-10-17
 
 ### Added in 1.5.1
 
@@ -152,7 +152,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed the admin area functions file to search out for the catalog area functions file and `include` that one instead of duplicating it. (Continuing the change from 1.5.0.)
 - Fixed an issue that would generate a PHP warning when errors are generated and a key was not found. [[#83](https://github.com/retched/ZC-USPSRestful/issues/83)]
 
-## 1.5.0 - 2025-10-03
+## [1.5.0] - 2025-10-03
 
 ### Added in 1.5.0
 
