@@ -824,7 +824,12 @@ class uspsr extends base
                     // If everything passes their checks (match, observer, make weight....) add it.
                     
                     // If $method is not empty, compare it to the $quotes id. If it matches, add it
-                    if (!empty($method) && ($method !== $quotes['id'])) $match = FALSE;
+                    if (!empty($method) && ($method !== $quotes['id'])) {
+                        $match = FALSE;
+                            
+                        // Adding the quoted 'servicesAdded' to the $_GLOBALS variable to request it later for an order_total module.
+                        $this->servicesAdded = $quotes['servicesAdded'];
+                    }
 
                     // Did the order make weight?
                     if ($this->quote_weight >= $method_item['min_weight'] && $this->quote_weight <= $method_item['max_weight']) $made_weight = TRUE;
@@ -2460,14 +2465,6 @@ class uspsr extends base
             }
         }
 
-        // Convert the weight to pounds if the weight setting is in kilograms.
-        if (defined('SHIPPING_WEIGHT_UNITS') && SHIPPING_WEIGHT_UNITS === "kgs") {
-            $package_weight = (float) $shipping_weight * 2.20462;
-        } else {
-            $package_weight = $shipping_weight;
-        }
-
-        
         // Sort out each of the dimmensions as necessary.
 
         /**
@@ -2513,7 +2510,7 @@ class uspsr extends base
             $pkg_body = [
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 'destinationZIPCode' => $destination_zip,
-                'weight' => $package_weight,
+                'weight' => $this->quote_weight,
                 'length' => $this->dimensions['pkg_length'],
                 'width' => $this->dimensions['pkg_width'],
                 'height' => $this->dimensions['pkg_height'],
@@ -2551,7 +2548,7 @@ class uspsr extends base
 
             // Letter Request Body
             $ltr_body = [
-                "weight" => $package_weight * 16, // The cart weight is in pounds, the letters API takes the request in ounces
+                "weight" => $this->quote_weight * 16, // The cart weight is in pounds, the letters API takes the request in ounces
                 "length" => $this->dimensions['ltr_length'],
                 "height" => $this->dimensions['ltr_height'],
                 "thickness" => $this->dimensions['ltr_thickness'],
@@ -2574,7 +2571,7 @@ class uspsr extends base
                 'originZIPCode' => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 'destinationZIPCode' => $destination_zip,
                 'mailClass' => 'ALL',
-                'weight' => $shipping_weight
+                'weight' => $this->quote_weight,
             ];
 
             $todays_date = new DateTime();
@@ -2602,10 +2599,12 @@ class uspsr extends base
             $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-domestic');
             
             // If the order is heaver than 13 oz, don't make a letter request. The USPS API will return a guaranteed error if the weight is over 13 oz.
-            if ($package_weight <= 13/16) {
+            if ($this->quote_weight <= 13/16) {
                 $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-domestic');
             } else {
-                $this->uspsrDebug("SKIPPING Letter Request: Order is heavier than 13 oz");
+                $pounds = floor($this->quote_weight);
+                $ounces = round(($this->quote_weight - $pounds) * 16);
+                $this->uspsrDebug("SKIPPING First Class Mail Request: Order is heavier than 13 oz. (Order weight: {$pounds} lbs. {$ounces} oz.)\n");
             }
 
             $this->notify('NOTIFY_SHIPPING_USPS_US_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
@@ -2615,7 +2614,7 @@ class uspsr extends base
                 "originZIPCode" => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 "foreignPostalCode" => $order->delivery['postcode'],
                 "destinationCountryCode" => $order->delivery['country']['iso_code_2'],
-                "weight" => $shipping_weight,
+                "weight" => $this->quote_weight,
                 'length' => $this->dimensions['pkg_length'],
                 'width' => $this->dimensions['pkg_width'],
                 'height' => $this->dimensions['pkg_height'],
@@ -2626,7 +2625,7 @@ class uspsr extends base
 
             // Letter Request Body
             $ltr_body = [
-                "weight" => $shipping_weight,
+                "weight" => $this->quote_weight,
                 "length" => $this->dimensions['ltr_length'],
                 "height" => $this->dimensions['ltr_height'],
                 "thickness" => $this->dimensions['ltr_thickness'],
@@ -2655,8 +2654,14 @@ class uspsr extends base
             $this->pkgQuote = $this->_makeQuotesCall($pkg_body, 'package-intl');
 
             // If the order is heaver than 15.994 oz, don't make a letter request. The USPS API will return a guaranteed error if the weight is over 15.994 oz.
-            if ($package_weight <= 0.999625) $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
-
+            if ($this->quote_weight <= 0.999625) {
+                $this->ltrQuote = $this->_makeQuotesCall($ltr_body, 'letters-intl');
+            } else {
+                $pounds = floor($this->quote_weight);
+                $ounces = round(($this->quote_weight - $pounds) * 16);
+                $this->uspsrDebug("SKIPPING First Class Mail International Request: Order is heavier than 15.994 oz. (Order weight: {$pounds} lbs. {$ounces} oz.)\n");
+            }
+            
             $this->notify('NOTIFY_SHIPPING_USPS_INTL_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
             
         }
