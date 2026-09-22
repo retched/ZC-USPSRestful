@@ -184,6 +184,7 @@ class uspsr extends base
         $this->sort_order = (defined('MODULE_SHIPPING_USPSR_SORT_ORDER')) ? MODULE_SHIPPING_USPSR_SORT_ORDER : null;
 
         if ($this->sort_order === null) {
+            $this->enabled = false; // If we don't have a sort_order, then the module is not properly installed, block it from running.
             return false;
         }
 
@@ -421,8 +422,8 @@ class uspsr extends base
             $this->_getQuote();
         } else {
             $this->uspsrDebug('Cancelling USPS quote request: items_weight is zero (free shipping order?).');
-            return false;
-            // This prevents the module for being called for zero weight items. (Go configure your items weight!)
+            $this->enabled = false; // Stops the module from being considered enabled at run time.
+            return false; // This prevents the module from proceeding with zero weight items. (Go configure your items weight!)
         }
 
 
@@ -1071,7 +1072,7 @@ class uspsr extends base
                     'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>",
                 ];
 
-            } elseif (empty($this->errors)) {
+            } elseif (empty($this->errors) && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error")) ) {
                 // No errors, but no quotes either. This is a generic "no quotes" message.
                 $this->quotes = [
                     'id' => $this->code,
@@ -1081,7 +1082,8 @@ class uspsr extends base
                     'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
                 ];
             } else {
-                // We're not configured to show errors of any kind, so return nothing.
+                // We're not configured to show errors of any kind, so return nothing and consider the module disabled.
+                $this->enabled = false; 
                 return false;
             }
         }
