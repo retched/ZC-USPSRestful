@@ -16,8 +16,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Fixed in 1.8.6
 
 - Fixed undefined constant warning that appeared in earlier versions of ZenCart (no Plugin Manager). [[#137](https://github.com/retched/ZC-USPSRestful/issues/137)]
-- Fixed an issue regarding the list of zip codes in the USPS Local. (Also added the ability to provide ranges.0 [[[#135](https://github.com/retched/ZC-USPSRestful/issues/135)]])
+- Fixed an issue regarding the list of zip codes in the USPS Local. (Also added the ability to provide ranges of Zip Codes.) [[[#135](https://github.com/retched/ZC-USPSRestful/issues/135)]]
 - Fixed an issue caused by bad returns from the USPS API that would generate possible $0.00 quotes for shipping methods when it didn't apply. [[#139](https://github.com/retched/ZC-USPSRestful/issues/139)]
+- Fixed an issue that could cause the module to output a blank when there was no weight. Now the module will self cancel itself if the total items weight is zero or less. (A reminder that your items should have weights to them.)
+- Fixed an issue that might have caused the "Quotes not found" error message to display even if "Show Errors" was not selected in the configuration. Now if there are no quotes available, either because of no return from the API or no matching methods, the module will soft cancel (aka, it hides itself). If you want to display the "Please contact the store owner" message, enable "Show Errors" in the configuration.
 
 ## 1.8.5 - 2026-07-16
 

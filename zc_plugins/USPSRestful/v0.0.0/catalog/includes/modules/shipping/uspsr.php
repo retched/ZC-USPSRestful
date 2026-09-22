@@ -420,9 +420,12 @@ class uspsr extends base
         if ($this->items_weight > 0) {
             $this->_getQuote();
         } else {
-            $this->uspsrDebug('Skipping USPS quote request: items_weight is zero (free shipping item).');
+            $this->uspsrDebug('Cancelling USPS quote request: items_weight is zero (free shipping order?).');
+            return false;
+            // This prevents the module for being called for zero weight items. (Go configure your items weight!)
         }
-       
+
+
         // There are two quote fields being used a package
         
         // Start with package quote
@@ -469,7 +472,7 @@ class uspsr extends base
 
         } else {
             // Safe handling for zero-weight carts or when no letter rates are returned
-            if (is_array($_letter) && isset($_letter['error']['message']) && isset($_letter['error']['code'])) {
+            if (is_array($_letter) && isset($_letter['error']['message']) && isset($_letter['error']['code']) && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE)) {
                 $this->errors[] = [
                     'message' => "Letters: " . $_letter['error']['message'],
                     'code' => $_letter['error']['code']
@@ -557,7 +560,7 @@ class uspsr extends base
                 }
 
                 if ($totalBasePrice <= 0) {
-                    $productName = $opt['rates'][0]['productName'] ?? $opt['rates'][0]['description'] ?? 'Unknown';
+                    $productName = (!empty($opt['rates'][0]['productName']) ? $opt['rates'][0]['productName'] : $opt['rates'][0]['description']);
                     $this->uspsrDebug("Skipping rate for \"" . trim($productName) . "\": it has a zero or negative totalBasePrice.");
                     continue;
                 }
@@ -908,9 +911,7 @@ class uspsr extends base
                 // If both variants exist, remove the more expensive one
                 if (count($groundOptions) == 2) {
                     //if (isset($groundOptions['Ground Advantage']) && isset($groundOptions['Ground Advantage Cubic']))
-                    $removeKey = ($groundOptions[0]['cost'] > $groundOptions[1]['cost'])
-                        ? $groundOptions[0]['key']
-                        : $groundOptions[1]['key'];
+                    $removeKey = ($groundOptions[0]['cost'] > $groundOptions[1]['cost']) ? $groundOptions[0]['key'] : $groundOptions[1]['key'];
 
                     $removal_message = '';
                     $removal_message .= "\n" . 'SQUASHED option : ' . $build_quotes[$removeKey]['title'] . "\n";
@@ -940,9 +941,7 @@ class uspsr extends base
                 // If both variants exist, remove the more expensive one
                 if (count($priorityOptions) == 2) {
                     //if (isset($priorityOptions['Priority Mail']) && isset($priorityOptions['Priority Mail Cubic']))
-                    $removeKey = ($priorityOptions[0]['cost'] > $priorityOptions[1]['cost'])
-                        ? $priorityOptions[0]['key']
-                        : $priorityOptions[1]['key'];
+                    $removeKey = ($priorityOptions[0]['cost'] > $priorityOptions[1]['cost']) ? $priorityOptions[0]['key'] : $priorityOptions[1]['key'];
 
                     // Removal Message for Debug
                     $removal_message = '';
@@ -1044,10 +1043,17 @@ class uspsr extends base
 
             }  // If we made it this far, there is no point in outputting an error message of any kind.
 
-        } else {
-            // We only get here if a quote went out and errors were returned.
+        } 
+        
+        if (empty($build_quotes)) {
+
+            // If we have no quotes to show, do we have errors to show?
+            // If there are errors, show them.
+            // Otherwise, show a generic "no quotes" message.
+
+            // We only get here if a quote went out and ONLY errors were returned.
             // Only display the errors if debugging is enabled and the store owner has selected to show errors in debug mode.
-            if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE) && empty($build_quotes)) {
+            if ($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Error") !== FALSE) && (!empty($this->errors))) {
 
                 // We have an error and error debugging is enabled, so output the error.
                 // (Can't show both errors and quotes at the same time.)
@@ -1065,7 +1071,8 @@ class uspsr extends base
                     'error' => MODULE_SHIPPING_USPSR_TEXT_SERVER_ERROR . '<br><pre style="white-space: pre-wrap;word-wrap: break-word;">' . $error_str . "</pre>",
                 ];
 
-            } else {
+            } elseif (empty($this->errors)) {
+                // No errors, but no quotes either. This is a generic "no quotes" message.
                 $this->quotes = [
                     'id' => $this->code,
                     'icon' => zen_image($this->icon),
@@ -1073,34 +1080,10 @@ class uspsr extends base
                     'methods' => [],
                     'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
                 ];
+            } else {
+                // We're not configured to show errors of any kind, so return nothing.
+                return false;
             }
-
-        }
-
-        if ($this->items_weight <= 0) {
-            // Zero weight cart — Free Shipper + Free Charger modules are handling this.
-            // Return no methods so we don't interfere with other shipping/payment options.
-            $this->quotes = [
-                'id' => $this->code,
-                'icon' => zen_image($this->icon),
-                'module' => $this->title,
-                'methods' => [],
-            ];
-
-
-        } elseif (empty($build_quotes) && empty($this->errors)) {
-
-            // If we have no quotes to show, but we also have no errors, show a generic "no quotes" message.
-            // This should only show up if there isn't any API errors.
-
-            $this->quotes = [
-                'id' => $this->code,
-                'icon' => zen_image($this->icon),
-                'module' => $this->title,
-                'methods' => [],
-                'error' => MODULE_SHIPPING_USPSR_TEXT_ERROR,
-            ];
-
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
