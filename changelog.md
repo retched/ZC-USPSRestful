@@ -11,9 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Moving selection of add-ons (ie. Certified Mail, etc.) to a separate control panel to allow selections on a per method basis.
 - Moving add-ons to separate order-total line?
 
-## 1.8.6 - 0000-00-00
+## 1.8.6 - 2026-09-22
 
-## Fixed in 1.8.6
+### Fixed in 1.8.6
 
 - Fixed undefined constant warning that appeared in earlier versions of ZenCart (no Plugin Manager). [[#137](https://github.com/retched/ZC-USPSRestful/issues/137)]
 - Fixed an issue regarding the list of zip codes in the USPS Local. (Also added the ability to provide ranges of Zip Codes.) [[#135](https://github.com/retched/ZC-USPSRestful/issues/135)]
@@ -22,39 +22,39 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fixed an issue that might have caused the "Quotes not found" error message to display even if "Show Errors" was not selected in the configuration. Now if there are no quotes available, either because of no return from the API or no matching methods, the module will soft cancel (aka, it hides itself). If you want to display the "Please contact the store owner" message, enable "Show Errors" in the configuration.
 - Fixed an issue where the module was inconsistently sending the full weight of the order versus ZenCart's "box weight".
 
-## Changed in 1.8.6
+### Changed in 1.8.6
 
 - Stopped sending letter quote requests for items that are too heavy for First-Class Mail (13 oz) or First-Class Mail International (15.994 oz). (These will ALWAYS generate an error... so rather than waste the request call, don't send it.)
 
 ## 1.8.5 - 2026-07-16
 
-## Added in 1.8.5
+### Added in 1.8.5
 
 - Added new debug log message that will generate when the module installs or upgrades to the next version. Also improved the comparison mechanism between when the versios differ. (This prevents accidental downgrades.)
 
-## Removed in 1.8.5
+### Removed in 1.8.5
 
 - Dropped the warning about lower-tiered API access. The USPS has bumped the request limits for basic tiers from 60 requests per hour to 10,000 requests per day. At that point, if you have a high-demand site that receives 10,000 hits per day, you should then reach out and request a higher level of access. [[#128](https://github.com/retched/ZC-USPSRestful/issues/128)]
 
-## Fixed in 1.8.5
+### Fixed in 1.8.5
 
 - Once again fixed the issue of the zero weight carts not causing the cart to progress correctly. (This bug should have been fixed in 1.8.0 but it wasn't. dbltoe from the Forums gave a fix that should patch it). [[#133](https://github.com/retched/ZC-USPSRestful/pull/133)]
 
 ## 1.8.4 - 2026-02-27
 
-## Fixed in 1.8.4
+### Fixed in 1.8.4
 
 - Resolved an error from a bad page name being inserted into the DB that would not let people run the USPSr Uninstaller. [[#126](https://github.com/retched/ZC-USPSRestful/issues/126)]
 - Fixed an issue that would create white page crashes on the customer side when a USPSr token would load in but the module tried to load an error message meant for the admin backend. [[#124](https://github.com/retched/ZC-USPSRestful/issues/124)]
 
 ## 1.8.3 - 2026-02-27
 
-## Added in 1.8.3
+### Added in 1.8.3
 
 - Added a warning about being on the "weakest" allotment of API pulls (aka "Public Support I") in the admin backend. (You'll normally see this when you install the module or upgrade from a version pre 1.8.x.) The warning will provide the user instructions on how to upgrade tiers. (Public Support I generally allots 60 requests per hour. At a minimum, this module eats 2 on each request. So in theory, you have at best 30 requests.)
 - Added the PHP Version, the ZenCart version, and installation method into the debug config report. (You would be surprised on how many people forgot to include this information on any bug reports or logs they send in.)
 
-## Fixed in 1.8.3
+### Fixed in 1.8.3
 
 - Fixed an issue that would generate PHP warning messages when a certain extraService was returned with no "extraService" code in the API. Resolved that by assigning it a psuedo-code and gave it a selection in the admin area. (This is a temporary fix until the API inevitably changes and gives it a number.) [[#120](https://github.com/retched/ZC-USPSRestful/issues/120)]
 - Fixed an issue that had the USPSr module try to run the DB call to install the Tools menu link to add the uninstaller twice. (Once on upgrade and once on the same initial run.) Since the "Define" wasn't properly in place, it effectively tried to go at it twice. This generated an error. Now the module will check to see if the admin page exists first (using the ZenCart function `zen_page_key_exists`), and if it doesn't, THEN try to install the module link. [[#121](https://github.com/retched/ZC-USPSRestful/issues/121)]
