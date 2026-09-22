@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Fixed undefined constant warning that appeared in earlier versions of ZenCart (no Plugin Manager). [[#137](https://github.com/retched/ZC-USPSRestful/issues/137)]
 - Fixed an issue regarding the list of zip codes in the USPS Local. (Also added the ability to provide ranges.0 [[[#135](https://github.com/retched/ZC-USPSRestful/issues/135)]])
+- Fixed an issue caused by bad returns from the USPS API that would generate possible $0.00 quotes for shipping methods when it didn't apply. [[#139](https://github.com/retched/ZC-USPSRestful/issues/139)]
 
 ## 1.8.5 - 2026-07-16
 

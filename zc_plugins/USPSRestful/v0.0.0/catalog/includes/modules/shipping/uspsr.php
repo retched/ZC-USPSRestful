@@ -547,6 +547,21 @@ class uspsr extends base
                 // Base Price of the rate, more in a second.
                 $totalBasePrice = $opt['totalBasePrice'] ?? null; // get totalBasePrice if it exists
 
+                // ---------------------------------------------
+                // If there are any zero base price rates, skip them. 
+                // This is a USPS API issue and can't be fixed by this script.
+                // ---------------------------------------------
+
+                if ($totalBasePrice === null) {
+                    $totalBasePrice = $opt['rates'][0]['price'] ?? 0;
+                }
+
+                if ($totalBasePrice <= 0) {
+                    $productName = $opt['rates'][0]['productName'] ?? $opt['rates'][0]['description'] ?? 'Unknown';
+                    $this->uspsrDebug("Skipping rate for \"" . trim($productName) . "\": it has a zero or negative totalBasePrice.");
+                    continue;
+                }
+
                 // Main rates
                 foreach ($opt['rates'] as $rate) {
 
@@ -574,7 +589,7 @@ class uspsr extends base
                     // For Packages: This will be the base fee plus any special fees. Will not include any services.
                     // For Letters: This will automatically add any special fees but will NOT add services
                     // ---------------------------------------------
-                    $rate['totalBasePrice'] = $totalBasePrice ?? $rate['price']; // default to price if null/unset
+                    $rate['totalBasePrice'] = $totalBasePrice; // default to price if null/unset
 
                     // ---------------------------------------------
                     // Possible outcomes from the rate listings
