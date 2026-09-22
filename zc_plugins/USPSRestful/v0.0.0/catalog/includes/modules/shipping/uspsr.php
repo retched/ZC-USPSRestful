@@ -52,7 +52,7 @@ if (version_compare(PROJECT_VERSION_MAJOR . "." . PROJECT_VERSION_MINOR, '2.0.0'
 
 class uspsr extends base
 {
-    public $code, $icon, $title, $enabled, $description, $tax_class, $tax_basis, $sort_order = 0, $quotes = [];
+    public $code, $icon, $title, $enabled, $description, $tax_class, $tax_basis, $sort_order = 0, $quotes = [], $servicesAdded = '';
     /**
      * Flag to see if Debug mode is enabled, print error_logs where necessary.
      *
@@ -782,8 +782,7 @@ class uspsr extends base
                             }
                         }
 
-                        // Convert collected labels into a comma-separated string
-                        $servicesList = implode(", ", $method_labels);
+                        $servicesList = $method_labels;
                     }
 
                     // Extra Services for method 
@@ -797,7 +796,7 @@ class uspsr extends base
                     // So this "restores" the quote to the full weight by multiplying the number of boxes.
                     $price *= $shipping_num_boxes;
 
-                    // Handling for using USPS as a whole.
+                    // Handling for using USPS as a whole. (If done on a box by box basis, multiple by that. Otherwise, times 1)
                     $price += $usps_handling_fee * (MODULE_SHIPPING_USPSR_HANDLING_METHOD === 'Box' ? $shipping_num_boxes : 1);
                     
                     // Final Math: Price = ((Method Quote + Method Services (ie. Certified Mail, etc.) + Method Handling (the box on the far right of the method)) * the number of boxes) + (Overall USPS Handling Fee * number of boxes OR 1)
@@ -822,12 +821,7 @@ class uspsr extends base
                     // If everything passes their checks (match, observer, make weight....) add it.
                     
                     // If $method is not empty, compare it to the $quotes id. If it matches, add it
-                    if (!empty($method) && ($method !== $quotes['id'])) {
-                        $match = FALSE;
-                            
-                        // Adding the quoted 'servicesAdded' to the $_GLOBALS variable to request it later for an order_total module.
-                        $this->servicesAdded = $quotes['servicesAdded'];
-                    }
+                    if (!empty($method) && ($method !== $quotes['id'])) $match = FALSE;
 
                     // Did the order make weight?
                     if ($this->quote_weight >= $method_item['min_weight'] && $this->quote_weight <= $method_item['max_weight']) $made_weight = TRUE;
@@ -879,10 +873,9 @@ class uspsr extends base
                             }
                         }
 
-
                     } elseif (!$match) {
                         // Order failed to match
-                        $quote_message .= "\n" . 'Skipping the method :"' . $quotes['title'] . '" because it did not match the target.' . "\n";
+                        $quote_message .= "\n" . 'Skipping the method :"' . $quotes['title'] . '" because it did not match the selection.' . "\n";
                     } elseif (!$method_to_add) {
                         // Observer blocked this
                         $quote_message .= 'An observer class blocked the method "' . $quotes['title'] . '" from being added to the list. So it was set aside.';
@@ -891,6 +884,12 @@ class uspsr extends base
                         $quote_message .= "Order failed to make weight for " . $method_item['method'] . ". (Minimum Weight : " . $method_item['min_weight'] . " , Maximum Weight: " . $method_item['max_weight'] . ")\n";
                     } else {
                         $quote_message .= "Something else went wrong...";
+                    }
+
+                    // Adding the quoted 'servicesAdded' to the $_GLOBALS variable to request it later for an order_total module.
+                    if ($method == $quotes['id']) {
+                        $this->servicesAdded = $quotes['servicesAdded'];
+                        $this->uspsrDebug("Adding the servicesAdded for the selected method to the global variable");
                     }
 
                     if (!empty($quote_message)) $this->uspsrDebug($quote_message);
