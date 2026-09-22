@@ -124,26 +124,18 @@ Only ZenCart versions 1.5.5 and onward work with the module. This module is NOT 
 | ZenCart 1.5.6 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.7 |         :x:        | :white_check_mark: |
 | ZenCart 1.5.8 |         :x:        | :white_check_mark: |
-| ZenCart 2.0.0 |         :x:        | :white_check_mark: |
-| ZenCart 2.0.1 |         :x:        | :white_check_mark: |
+| ZenCart 2.0.0 |  :x:<sup>1</sup>   | :white_check_mark: |
+| ZenCart 2.0.1 |  :x:<sup>1</sup>   | :white_check_mark: |
 | ZenCart 2.1.0 | :white_check_mark: | :white_check_mark: |
-| ZenCart 2.2.0 |     :clipboard:    |     :clipboard:    |
+| ZenCart 2.2.0 | :white_check_mark: | :white_check_mark: |
 
 - :white_check_mark: = Fully supported
 - :x: = Not supported
-- :clipboard: = In testing, BUT it SHOULD work.
+- :x:<sup>1</sup> = Can work if some [file modifications](https://gist.github.com/lat9/9deb64d3325081d18bb0db5534bcf142) are made. Otherwise, use Traditional.
 
 ### What about a PHP 5 version? I can't upgrade to PHP 7/8.
 
 I cannot stress this enough, **you should upgrade to PHP 7 or PHP 8**. That said, a version is currently being developed on a separate repository to accommodate users of PHP 5 compatible ZenCarts (ZenCart 1.5.x and 1.3.x). This requires a major rewrite of the entire module and will take time. There is a [clone of this module](https://www.zen-cart.com/showthread.php/230512-USPS-Shipping-(RESTful)-(USPSr)?p=1408764#post1408764) available that will allow you to use it with PHP 5.6 but it is based on an earlier version of this module. I'm primarily focused on newer versions of PHP and ZenCart. (Again, please upgrade if you can.)
-
-### What is the difference between this version and the original USPS module?
-
-The original USPS module works by using the older USPS WebTools API. For years, that API was the defacto API in use when it came to retrieving the estimated shipping costs of the USPS' various services as well as the estimated times of delivery. In 2024, the USPS began deprecating the Web Tools API. In 2025, the USPS announced that the WebTools API will be fully out of service in 2026. The Web Tools API is being replaced with the new OAuth-based API which this codebase uses.
-
-### Why should I use this version versus the one that's out there now?
-
-The original "WebTools" API has been shut down as of January 25, 2026. That API as a whole is now considered retired and unusable. No new WebTools credentials will be issued. Any existing WebTools credentials will continue to work but will not be updated further and may be at any point be turned off by the USPS.
 
 ### I already have a `USERID` and `PASSWORD` from WebTools, but I'm getting error messages while I try to retrieve quotes. What happened?
 
@@ -179,7 +171,7 @@ The original USPS WebTools had a way to clamp the different modules based on the
 
 ### Does this module use the Length, Width, and Height boxes of ZC 2.0.0+?
 
-Not at this time. Research is still being done on how to work that into the quote. For now, you should still set those on the product details AND set the "average" package thresholds of this module. A future update will see these included. (You should still update them as the data could be useful in other modules.)
+No. Those boxes are product page display only. They are not taken into account in this module for dispatching quote requests. You should enter the average shipping container size where prompted in the module.
 
 ### What happened to the ® and ™ symbols that were on the original module?
 
@@ -189,7 +181,7 @@ Those symbols don't appear within the new USPS API calls as they do on the origi
 
 SORT OF. You don't have the convert anything, but depending on the version of ZenCart you are running, you must make a configuration change.
 
-- Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely "Shipping Weight Units" and "Shipping Dimension Units".
+- Running ZenCart 2.0.0 and newer? You must make sure that your settings in Shipping/Packaging are correct BEFORE installing the module. Namely "Shipping Weight Units" and "Shipping Dimension Units". (If you change that setting after installation, you will need to make the conversions on your own.)
 - Running ZenCart 1.5.8 or older? You must make a file edit to `/includes/modules/shipping/usps.php`. Around lines 44 and 50, you will see two constant defines that can be edited. Simply follow the instructions there. Be sure to leave single quotation marks and to match the values as listed. (That is, you must enter either `"inches"` or `"centimeters"` (case sensitive) and `kgs` or `lbs` (case sensitive, and no period at the end).)
 
 If you have these two defines set correctly, you do not have to convert anything. The module will take care of everything and will convert to imperial units as necessary.
@@ -214,7 +206,7 @@ For the update
 
 ## File Listing
 
-(not all files will be available in the zip file, depending on download)
+Depending on where the file was downloaded, not all files are included.
 
 ``` text
 - LICENSE
