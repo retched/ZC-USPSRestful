@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [1.8.6] - 2026-09-22
 
+_Starting with this issue, the purge_uspsr.php file will be included with the release archives. This script serves as an "extra" script, meant to completely purge the filesystem and database of anything USPSr related. **CAUTION:** This script is NOT authenticated and requires a hard edit for it to function. It will be included in the extras folder._
+
 ### Fixed in 1.8.6
 
 - Fixed undefined constant warning that appeared in earlier versions of ZenCart (no Plugin Manager). [[#137](https://github.com/retched/ZC-USPSRestful/issues/137)]
