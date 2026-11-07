@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed in [UNRELEASED]
 
 - Another attempt at speeding the script up. The module will now no longer send out unneeded classes to call rates for. (Example: If you are not using Priority Mail, the module will not make a request for Priority Mail.) International shipments work in a similar manner. (If you're using more than one service, it will send for all. But if it's only using one, it will send for just that one.) [[#143](https://github.com/retched/ZC-USPSRestful/issues/143)]
+- Changed the `uspsrDebug` class method to a public method instead of a protected method so that uspsr-based modules can access the debug logger function for backtracing.
 
 ## [1.8.6] - 2026-09-22
 
