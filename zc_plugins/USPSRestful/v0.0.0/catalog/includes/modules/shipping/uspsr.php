@@ -1024,15 +1024,6 @@ class uspsr extends base
                     break;
             }
 
-            $message = "\n";
-            $message .= '===============================================' . "\n";
-            $message .= 'Displayed options' . "\n";
-            $message .= 'Sorting the returned quotes by: ' . MODULE_SHIPPING_USPSR_QUOTE_SORT . "\n";
-            $message .= print_r($build_quotes, TRUE) . "\n";
-            $message .= '===============================================' . "\n";
-
-            $this->uspsrDebug($message);
-
             if (count($build_quotes) > 0) {
                 // Close off and make the final array.
                 $this->quotes = [
@@ -1091,6 +1082,16 @@ class uspsr extends base
         }
 
         $this->notify('NOTIFY_SHIPPING_USPS_QUOTES_READY_TO_RETURN');
+
+        $message = "\n\n";
+        $message .= '===============================================' . "\n";
+        $message .= 'Displayed options' . "\n";
+        $message .= 'Sorting the returned quotes by: ' . MODULE_SHIPPING_USPSR_QUOTE_SORT . "\n";
+        $message .= print_r($this->quotes['methods'], TRUE) . "\n";
+        $message .= '===============================================' . "\n";
+
+        $this->uspsrDebug($message);
+
         return $this->quotes;
     }
 
@@ -1725,7 +1726,7 @@ class uspsr extends base
      * If debug-logging is enabled, write the requested message to the log-file determined in this
      * module's class-constructor.
      */
-    protected function uspsrDebug($message, $override = false)
+    public function uspsrDebug($message, $override = false)
     {
         if (($this->debug_enabled === true && (strpos(MODULE_SHIPPING_USPSR_DEBUG_MODE, "Logs") !== FALSE)) || $override) {
             error_log(date('Y-m-d H:i:s') . ': ' . html_entity_decode($message) . PHP_EOL, 3, $this->debug_filename);
