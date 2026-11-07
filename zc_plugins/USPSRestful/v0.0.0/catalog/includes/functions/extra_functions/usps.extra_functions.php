@@ -670,6 +670,10 @@ function uspsr_get_categories($key_value)
 
 function uspsr_check_connect_local($lookup)
 {
+    // Check if Connect Local is even in use.
+    
+    if (strpos(MODULE_SHIPPING_USPSR_TYPES, "Connect Local") === false) return FALSE;
+
     $connect_local = FALSE;
 
     // Disabling the search for CONNECT_LOCAL as you can't just drop your package at any post office.
@@ -685,7 +689,6 @@ function uspsr_check_connect_local($lookup)
     }
 
     return $connect_local;
-
 }
 
 function uspsr_get_connect_zipcodes($data)
