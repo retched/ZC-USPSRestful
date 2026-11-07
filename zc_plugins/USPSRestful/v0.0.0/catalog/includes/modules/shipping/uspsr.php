@@ -2666,7 +2666,7 @@ class uspsr extends base
             if ((int)$check_priority_intl + (int)$check_priority_intl_express + (int)$check_fcmi > 1) {
                 $mailClasses = "ALL";
             } elseif ($check_fcmi) {
-                $mailClasses = "FIRST_CLASS_MAIL_INTERNATIONAL";
+                $mailClasses = "FIRST-CLASS_PACKAGE_INTERNATIONAL_SERVICE";
             } elseif ($check_priority_intl) {
                 $mailClasses = "PRIORITY_MAIL_INTERNATIONAL";
             } elseif ($check_priority_intl_express) {
