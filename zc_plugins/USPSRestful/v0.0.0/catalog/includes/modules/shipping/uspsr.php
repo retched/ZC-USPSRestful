@@ -2504,7 +2504,6 @@ class uspsr extends base
                 if ($this->enable_media_mail && strpos($requested_type, "Media Mail") === 0) {
                     $check_media_mail = true;
                 }
-
             }
 
             // Check for any of the USPS Ground Advantages
@@ -2633,6 +2632,43 @@ class uspsr extends base
             $this->notify('NOTIFY_SHIPPING_USPS_US_DELIVERY_REQUEST_READY', [], $pkg_body, $ltr_body);
         } else { // It's not going to the US, so it's international
 
+            // Try to filter the mailclasses as necessary. If there are multiple conditions, send ALL.
+            // Establish empty array for the package classes.
+            
+            $check_fcmi = false;
+            $check_priority_intl = false;
+            $check_priority_intl_express = false;
+            $mailClasses = "";
+
+            foreach ($this->typeCheckboxesSelected as $requested_type) {
+                if (is_numeric($requested_type)) {
+                    continue;
+                }
+
+                if (strpos($requested_type, "First-Class Package International") === 0) {
+                    $check_fcmi = true;
+                }
+
+                if (strpos($requested_type, "Priority Mail International") === 0) {
+                    $check_priority_intl = true;
+                }
+
+                if (strpos($requested_type, "Priority Mail Express International") === 0) {
+                    $check_priority_intl_express = true;
+                }
+            }
+
+            if ((int)$check_priority_intl + (int)$check_priority_intl_express + (int)$check_fcmi > 1) {
+                $mailClasses = "ALL";
+            } elseif ($check_fcmi) {
+                $mailClasses = "FIRST_CLASS_MAIL_INTERNATIONAL";
+            } elseif ($check_priority_intl) {
+                $mailClasses = "PRIORITY_MAIL_INTERNATIONAL";
+            } elseif ($check_priority_intl_express) {
+                $mailClasses = "PRIORITY_MAIL_EXPRESS_INTERNATIONAL";
+            }
+
+
             $pkg_body = [
                 "originZIPCode" => uspsr_validate_zipcode(SHIPPING_ORIGIN_ZIP),
                 "foreignPostalCode" => $order->delivery['postcode'],
@@ -2642,7 +2678,7 @@ class uspsr extends base
                 'width' => $this->dimensions['pkg_width'],
                 'height' => $this->dimensions['pkg_height'],
                 "priceType" => strtoupper(MODULE_SHIPPING_USPSR_PRICING),
-                "mailClass" => "ALL", // Do not change this. There is no "mailClasses" on the International API, so we have to pull all of them.
+                "mailClass" => $mailClasses, // Do not change this. There is no "mailClasses" on the International API, so we have to pull all of them.
                 'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
             ];
 
