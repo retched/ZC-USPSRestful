@@ -2492,6 +2492,11 @@ class uspsr extends base
                     continue;
                 }
 
+                if (strpos($requested_type, "USPS Ground Advantage") === 0) {
+                    $check_ground_advantage = true;
+                }
+
+
                 if (strpos($requested_type, "Priority Mail") === 0 &&
                     strpos($requested_type, "Priority Mail Express") !== 0) {
                     $check_priority_mail = true;
