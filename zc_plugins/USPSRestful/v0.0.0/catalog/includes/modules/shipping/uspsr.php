@@ -2643,7 +2643,7 @@ class uspsr extends base
             $check_fcmi = false;
             $check_priority_intl = false;
             $check_priority_intl_express = false;
-            $mailClasses = "";
+            $mailClass = "";
 
             foreach ($this->typeCheckboxesSelected as $requested_type) {
                 if (is_numeric($requested_type)) {
@@ -2664,13 +2664,13 @@ class uspsr extends base
             }
 
             if ((int)$check_priority_intl + (int)$check_priority_intl_express + (int)$check_fcmi > 1) {
-                $mailClasses = "ALL";
+                $mailClass = "ALL";
             } elseif ($check_fcmi) {
-                $mailClasses = "FIRST-CLASS_PACKAGE_INTERNATIONAL_SERVICE";
+                $mailClass = "FIRST-CLASS_PACKAGE_INTERNATIONAL_SERVICE";
             } elseif ($check_priority_intl) {
-                $mailClasses = "PRIORITY_MAIL_INTERNATIONAL";
+                $mailClass = "PRIORITY_MAIL_INTERNATIONAL";
             } elseif ($check_priority_intl_express) {
-                $mailClasses = "PRIORITY_MAIL_EXPRESS_INTERNATIONAL";
+                $mailClass = "PRIORITY_MAIL_EXPRESS_INTERNATIONAL";
             }
 
 
@@ -2683,7 +2683,7 @@ class uspsr extends base
                 'width' => $this->dimensions['pkg_width'],
                 'height' => $this->dimensions['pkg_height'],
                 "priceType" => strtoupper(MODULE_SHIPPING_USPSR_PRICING),
-                "mailClass" => $mailClasses, // Do not change this. There is no "mailClasses" on the International API, so we have to pull all of them.
+                "mailClass" => $mailClass, // Do not change this. There is no "mailClass" on the International API, so we have to pull all of them.
                 'itemValue' => (MODULE_SHIPPING_USPSR_DISPATCH_CART_TOTAL == "Yes" ? $this->shipment_value : 5),
             ];
 
