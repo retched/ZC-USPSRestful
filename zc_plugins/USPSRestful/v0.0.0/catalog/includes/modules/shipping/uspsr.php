@@ -2479,28 +2479,53 @@ class uspsr extends base
 
         if ($this->is_us_shipment) {
 
-            // There are only three classes needed: Ground Advantage, Priority Mail, Priority Mail Express
-            $mailClasses = [
-                "USPS_GROUND_ADVANTAGE",
-                "PRIORITY_MAIL",
-                "PRIORITY_MAIL_EXPRESS"
-            ];
+            // Establish empty array for the package classes.
+            $mailClasses = [];
+
+            $check_ground_advantage = false;
+            $check_priority_mail = false;
+            $check_priority_mail_express = false;
+            $check_media_mail = false;
+
+            foreach ($this->typeCheckboxesSelected as $requested_type) {
+                if (is_numeric($requested_type)) {
+                    continue;
+                }
+
+                if (strpos($requested_type, "Priority Mail") === 0 &&
+                    strpos($requested_type, "Priority Mail Express") !== 0) {
+                    $check_priority_mail = true;
+                }
+
+                if (strpos($requested_type, "Priority Mail Express") === 0) {
+                    $check_priority_mail_express = true;
+                }
+
+                if ($this->enable_media_mail && strpos($requested_type, "Media Mail") === 0) {
+                    $check_media_mail = true;
+                }
+
+            }
+
+            // Check for any of the USPS Ground Advantages
+            if ($check_ground_advantage) $mailClasses[] = "USPS_GROUND_ADVANTAGE";
+            
+            // Check for any of the REGULAR USPS Priority Mail
+            if ($check_priority_mail) $mailClasses[] = "PRIORITY_MAIL";
+
+            // Check for any of the USPS Priority Mail Express
+            if ($check_priority_mail_express) $mailClasses[] = "PRIORITY_MAIL_EXPRESS";
+
+            // Check for USPS Media Mail
+            if ($check_media_mail) $mailClasses[] = "MEDIA_MAIL";
+
+            // Check to see if the order fits for USPS Connect Local
+            if (uspsr_check_connect_local($order->delivery['postcode'])) $mailClasses[] = "USPS_CONNECT_LOCAL";
 
             /**
                 * Is this package going to a APO/FPO/DPO?
             */
             $this->is_apo_dest = in_array(uspsr_validate_zipcode($order->delivery['postcode']), self::USPSR_MILITARY_MAIL_ZIP);
-
-            /**
-                * Check to see if the products in the cart are ALL eligible for USPS Media Mail.
-            */
-            if ($this->enable_media_mail) {
-                $mailClasses[] = "MEDIA_MAIL";
-            }
-
-            // Check to see if the order fits for USPS Connect Local
-            if (uspsr_check_connect_local($order->delivery['postcode']))
-                $mailClasses[] = "USPS_CONNECT_LOCAL";
 
             $destination_zip = uspsr_validate_zipcode($order->delivery['postcode']);
 
