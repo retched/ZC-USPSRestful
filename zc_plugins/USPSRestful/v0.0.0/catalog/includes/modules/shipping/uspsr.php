@@ -1537,7 +1537,7 @@ class uspsr extends base
         ]);
 
         $this->addConfigurationKey('MODULE_SHIPPING_USPSR_CONTRACT_TYPE', [
-            'configuration_title' => 'NSA Contract Type',
+            'configuration_title' => 'Contract Type',
             'configuration_value' => 'None',
             'configuration_description' => 'What kind of payment account do you have with the US Postal Service?<br><br><em>EPS</em> - Enterprise Payment System<br><br><em>Permit</em> - If you have a Mailing Permit whcih would entitle you a special discount on postage pricing, choose this option.<br><br><em>Meter</em> - If you have a licensed postage meter that grants you a special discount with the USPS, choose this option.',
             'configuration_group_id' => 6,
