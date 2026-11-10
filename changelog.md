@@ -13,14 +13,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [UNRELEASED] - 0000-00-00
 
-### Changed in [UNRELEASED]
+### Changed in UNRELEASED
 
 - Another attempt at speeding the script up. The module will now no longer send out unneeded classes to call rates for. (Example: If you are not using Priority Mail, the module will not make a request for Priority Mail.) International shipments work in a similar manner. (If you're using more than one service, it will send for all. But if it's only using one, it will send for just that one.) [[#143](https://github.com/retched/ZC-USPSRestful/issues/143)]
-- Changed the `uspsrDebug` class method to a public method instead of a protected method so that uspsr-based modules can access the debug logger function for backtracing.
+- Changed the `uspsrDebug` class method to a public method instead of a protected method so that uspsr-based modules can access the debug logger.
 
 ## [1.8.6] - 2026-09-22
 
-_Starting with this issue, the purge_uspsr.php file will be included with the release archives. This script serves as an "extra" script, meant to completely purge the filesystem and database of anything USPSr related. **CAUTION:** This script is NOT authenticated and requires a hard edit for it to function. It will be included in the extras folder._
+_Starting with this issue, the purge_uspsr.php file will be included with the release archives. This script serves as an "extra" script, meant to completely purge the filesystem and database of anything USPSr related. **CAUTION:** This script is NOT authenticated and requires a "hard" edit for it to function. It will be included in the extras folder._
 
 ### Fixed in 1.8.6
 
@@ -33,7 +33,7 @@ _Starting with this issue, the purge_uspsr.php file will be included with the re
 
 ### Changed in 1.8.6
 
-- Stopped sending letter quote requests for items that are too heavy for First-Class Mail (13 oz) or First-Class Mail International (15.994 oz). (These will ALWAYS generate an error... so rather than waste the request call, don't send it.)
+- Stopped sending letter quote requests for items that are too heavy for First-Class Mail (13 oz) or First-Class Mail International (15.994 oz).
 
 ## [1.8.5] - 2026-07-16
 
